@@ -1,10 +1,22 @@
 # VarMQ Benchmarks - Worker Pool Performance Testing
 
+[![View Benchmark Charts](https://img.shields.io/badge/📊_View_Interactive-Benchmark_Charts-blue?style=for-the-badge&logo=chart.js&logoColor=white)](https://varmq-benchmarks.netlify.app/)
+
 A comprehensive benchmark suite comparing Go worker pool implementations, focusing on VarMQ and PondV2 performance across different workload patterns.
 
-## Why PondV2 was chosen for comparison
+## Why I chose PondV2 for comparison
 
-PondV2 was selected as the comparison benchmark because it provides similar worker pool features to VarMQ, making it an ideal candidate for performance analysis. Interestingly, VarMQ was inspired by some design patterns from PondV2, creating a meaningful comparison between these two Go worker pool implementations.
+I selected PondV2 as the comparison benchmark because it provides similar worker pool features to VarMQ, making it an ideal candidate for performance analysis. Interestingly, VarMQ was inspired by some design patterns from PondV2, creating a meaningful comparison between these two Go worker pool implementations.
+
+## 🌐 Live Interactive Charts
+
+**👉 [View Full Benchmark Results](https://varmq-benchmarks.netlify.app/)** - Interactive charts with detailed performance analysis across different CPU configurations.
+
+The live site includes:
+
+- 📊 **Interactive Performance Charts** - Compare VarMQ vs PondV2 across all workload patterns
+- 🖥️ **Multiple CPU Configurations** - Results for 4, 8, and 24 CPU cores
+- 📈 **Detailed Metrics** - Execution time, memory usage, and allocation analysis
 
 ## Overview
 
@@ -19,7 +31,7 @@ This project benchmarks worker pool libraries to understand their performance ch
 - **[VarMQ](https://github.com/goptics/varmq)** - High-performance Message queue and worker pool with job queuing
 - **[PondV2](https://github.com/alitto/pond)** - Minimalistic and High-performance goroutine worker pool written in Go
 
-## Development Setup
+## Local Setup
 
 ### Prerequisites
 
