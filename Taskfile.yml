@@ -1,0 +1,162 @@
+version: "3"
+
+vars:
+  BINARY_NAME: varmq-benchmarks
+  BUILD_DIR: ./bin
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  deps:
+    desc: Download and tidy dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  build:
+    desc: Build the binary
+    deps: [deps]
+    cmds:
+      - mkdir -p {{.BUILD_DIR}}
+      - go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}} .
+
+  test:
+    desc: Run all tests
+    deps: [deps]
+    cmds:
+      - go test -v ./...
+
+  bench:
+    desc: Run all benchmarks with default settings
+    deps: [deps]
+    cmds:
+      - go test -bench=. -benchtime=3x -benchmem
+
+  bench-quick:
+    desc: Run quick benchmarks (1x iteration)
+    deps: [deps]
+    cmds:
+      - go test -bench=. -benchtime=1x -benchmem
+
+  bench-sleep:
+    desc: Run only Sleep10ms benchmarks
+    deps: [deps]
+    cmds:
+      - go test -bench=BenchmarkTasks/Sleep10ms -benchtime=3x -benchmem
+
+  bench-loop:
+    desc: Run only Loop10 benchmarks
+    deps: [deps]
+    cmds:
+      - go test -bench=BenchmarkTasks/Loop10 -benchtime=3x -benchmem
+
+  bench-mixed:
+    desc: Run only Sleep5Loop5 benchmarks
+    deps: [deps]
+    cmds:
+      - go test -bench=BenchmarkTasks/Sleep5Loop5 -benchtime=3x -benchmem
+
+  bench-varmq:
+    desc: Run benchmarks for VarMQ only
+    deps: [deps]
+    cmds:
+      - go test -bench=VarMQ -benchtime=3x -benchmem
+
+  bench-pond:
+    desc: Run benchmarks for PondV2 only
+    deps: [deps]
+    cmds:
+      - go test -bench=PondV2 -benchtime=3x -benchmem
+
+  bench-profile:
+    desc: Run benchmarks with CPU profiling
+    deps: [deps]
+    cmds:
+      - go test -bench=. -benchtime=1x -cpuprofile=cpu.prof -memprofile=mem.prof
+
+  # Vizb Visualization Tasks
+  vizb:
+    desc: Generate benchmark charts with default CPU count
+    deps: [deps]
+    cmds:
+      - mkdir -p charts
+      - go test -bench=. -benchmem -json | vizb -t s -m kb -a k -o charts/bench
+
+  vizb-8cpu:
+    desc: Generate benchmark charts with 8 CPU cores
+    deps: [deps]
+    cmds:
+      - mkdir -p charts
+      - go test -bench=. -benchmem -json -cpu=8 | vizb -t s -m kb -a k -o charts/bench-8cpu
+
+  vizb-4cpu:
+    desc: Generate benchmark charts with 4 CPU cores
+    deps: [deps]
+    cmds:
+      - mkdir -p charts
+      - go test -bench=. -benchmem -json -cpu=4 | vizb -t s -m kb -a k -o charts/bench-4cpu
+
+  vizb-all:
+    desc: Generate benchmark charts for all CPU configurations
+    deps: [deps]
+    cmds:
+      - task: vizb
+      - task: vizb-8cpu
+      - task: vizb-4cpu
+
+  clean:
+    desc: Clean build artifacts and profiles
+    cmds:
+      - rm -rf {{.BUILD_DIR}}
+      - rm -f *.prof
+      - rm -f *.test
+      - rm -rf charts
+
+  format:
+    desc: Format code
+    cmds:
+      - go fmt ./...
+
+  lint:
+    desc: Run linter (requires golangci-lint)
+    cmds:
+      - golangci-lint run
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  check:
+    desc: Run all checks (format, vet, test)
+    deps: [format, vet, test]
+
+  setup:
+    desc: Setup development environment
+    cmds:
+      - go version
+      - task deps
+      - echo "Development environment ready!"
+
+  help:
+    desc: Show help information
+    cmds:
+      - echo "VarMQ Benchmarks - Worker Pool Performance Testing"
+      - echo ""
+      - echo "Common tasks:"
+      - echo "  task bench        - Run all benchmarks"
+      - echo "  task bench-quick  - Run quick benchmarks"
+      - echo "  task test         - Run tests"
+      - echo "  task build        - Build binary"
+      - echo "  task setup        - Setup development environment"
+      - echo ""
+      - echo "Visualization tasks:"
+      - echo "  task vizb         - Generate charts with default CPU count"
+      - echo "  task vizb-8cpu    - Generate charts with 8 CPU cores"
+      - echo "  task vizb-4cpu    - Generate charts with 4 CPU cores"
+      - echo "  task vizb-all     - Generate charts for all CPU configurations"
+      - echo ""
+      - echo "For more tasks, run task --list"

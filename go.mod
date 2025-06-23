@@ -1,11 +1,10 @@
 module github.com/alitto/pond-benchmarks
 
-go 1.17
+go 1.24.0
+
+toolchain go1.24.3
 
 require (
-	github.com/alitto/pond v1.7.1
-	github.com/gammazero/workerpool v1.1.2
-	github.com/panjf2000/ants/v2 v2.4.8
+	github.com/alitto/pond/v2 v2.4.0
+	github.com/goptics/varmq v1.3.0
 )
-
-require github.com/gammazero/deque v0.1.1 // indirect
