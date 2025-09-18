@@ -83,21 +83,21 @@ tasks:
     deps: [deps]
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchmem -json | vizb -t s -m kb -a k -o charts/bench
+      - go test -bench=. -benchmem | vizb -p /n/w/s -t s -m kb -o charts/bench
 
   vizb-8cpu:
     desc: Generate benchmark charts with 8 CPU cores
     deps: [deps]
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchmem -json -cpu=8 | vizb -t s -m kb -a k -o charts/bench-8cpu
+      - go test -bench=. -benchmem -cpu=8 | vizb -p /n/w/s -t s -m kb -o charts/bench-8cpu
 
   vizb-4cpu:
     desc: Generate benchmark charts with 4 CPU cores
     deps: [deps]
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchmem -json -cpu=4 | vizb -t s -m kb -a k -o charts/bench-4cpu
+      - go test -bench=. -benchmem -cpu=4 | vizb -p /n/w/s -t s -m kb -o charts/bench-4cpu
 
   vizb-all:
     desc: Generate benchmark charts for all CPU configurations

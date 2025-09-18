@@ -158,12 +158,12 @@
         // Initialize sidebar functionality when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('bench-sidebar');
-            const indicators = document.querySelectorAll('.bench-indicator');
+            const groups = document.querySelectorAll('.bench-indicator');
             const chartSections = document.querySelectorAll('.chart-section');
             const minimizeBtn = document.getElementById('minimize-btn');
             
-            // Only show sidebar if there are multiple indicators
-            if (sidebar && indicators.length <= 1) {
+            // Only show sidebar if there are multiple groups
+            if (sidebar && groups.length <= 1) {
                 sidebar.style.display = 'none';
             }
             
@@ -219,7 +219,7 @@
             });
             
             // Add click event to each indicator
-            indicators.forEach(function(indicator) {
+            groups.forEach(function(indicator) {
                 indicator.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const targetElement = document.getElementById(targetId);
@@ -229,7 +229,7 @@
                         targetElement.scrollIntoView({ behavior: 'smooth' });
                         
                         // Update active state
-                        indicators.forEach(ind => ind.classList.remove('active'));
+                        groups.forEach(ind => ind.classList.remove('active'));
                         this.classList.add('active');
                     }
                 });
@@ -248,7 +248,7 @@
                     }
                 });
                 
-                indicators.forEach(function(indicator) {
+                groups.forEach(function(indicator) {
                     indicator.classList.remove('active');
                     if (indicator.getAttribute('data-target') === currentSection) {
                         indicator.classList.add('active');
@@ -268,79 +268,79 @@
     <!-- Sidebar for benchmark navigation -->
     <div id="bench-sidebar" class="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-title">Bench Indicators</div>
+            <div class="sidebar-title">Bench Groups</div>
             <button id="minimize-btn" class="minimize-btn">▶</button>
         </div>
         
         
         <div class="bench-indicator active" data-target="bench-section-0">
-            Sleep5msLoop5Workers500k
-        </div>
-        
-        
-        
-        <div class="bench-indicator" data-target="bench-section-1">
-            Sleep10msWorkers100k
-        </div>
-        
-        
-        
-        <div class="bench-indicator" data-target="bench-section-2">
-            Sleep5msLoop5Workers100k
-        </div>
-        
-        
-        
-        <div class="bench-indicator" data-target="bench-section-3">
-            Sleep5msLoop5Workers300k
-        </div>
-        
-        
-        
-        <div class="bench-indicator" data-target="bench-section-4">
-            Sleep10msWorkers500k
-        </div>
-        
-        
-        
-        <div class="bench-indicator" data-target="bench-section-5">
-            Loop10Workers500k
-        </div>
-        
-        
-        
-        <div class="bench-indicator" data-target="bench-section-6">
             Sleep10msWorkers50k
         </div>
         
         
         
-        <div class="bench-indicator" data-target="bench-section-7">
+        <div class="bench-indicator" data-target="bench-section-1">
             Loop10Workers50k
         </div>
         
         
         
-        <div class="bench-indicator" data-target="bench-section-8">
+        <div class="bench-indicator" data-target="bench-section-2">
             Sleep5msLoop5Workers50k
         </div>
         
         
         
-        <div class="bench-indicator" data-target="bench-section-9">
+        <div class="bench-indicator" data-target="bench-section-3">
+            Sleep10msWorkers100k
+        </div>
+        
+        
+        
+        <div class="bench-indicator" data-target="bench-section-4">
             Loop10Workers100k
         </div>
         
         
         
-        <div class="bench-indicator" data-target="bench-section-10">
+        <div class="bench-indicator" data-target="bench-section-5">
+            Sleep5msLoop5Workers100k
+        </div>
+        
+        
+        
+        <div class="bench-indicator" data-target="bench-section-6">
             Sleep10msWorkers300k
         </div>
         
         
         
-        <div class="bench-indicator" data-target="bench-section-11">
+        <div class="bench-indicator" data-target="bench-section-7">
             Loop10Workers300k
+        </div>
+        
+        
+        
+        <div class="bench-indicator" data-target="bench-section-8">
+            Sleep5msLoop5Workers300k
+        </div>
+        
+        
+        
+        <div class="bench-indicator" data-target="bench-section-9">
+            Sleep10msWorkers500k
+        </div>
+        
+        
+        
+        <div class="bench-indicator" data-target="bench-section-10">
+            Loop10Workers500k
+        </div>
+        
+        
+        
+        <div class="bench-indicator" data-target="bench-section-11">
+            Sleep5msLoop5Workers500k
         </div>
         
         
@@ -354,13 +354,13 @@
             
     
     <div class="container">
-    <div class="item" id="cXAJTxMBfvhM" style="width:100%;height:500px;"></div>
+    <div class="item" id="fRURDbVpYbDA" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_cXAJTxMBfvhM = echarts.init(document.getElementById('cXAJTxMBfvhM'), "white", { renderer: "canvas" });
-    let option_cXAJTxMBfvhM = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.95"},{"value":"1.14"},{"value":"1.02"},{"value":"3.98"},{"value":"0.89"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.02"},{"value":"1.00"},{"value":"0.92"},{"value":"0.98"},{"value":"0.79"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers500k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_fRURDbVpYbDA = echarts.init(document.getElementById('fRURDbVpYbDA'), "white", { renderer: "canvas" });
+    let option_fRURDbVpYbDA = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.14"},{"value":"1.25"},{"value":"1.15"},{"value":"2.68"},{"value":"1.09"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.95"},{"value":"0.96"},{"value":"0.98"},{"value":"1.06"},{"value":"0.82"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers50k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_cXAJTxMBfvhM.setOption(option_cXAJTxMBfvhM);
+    goecharts_fRURDbVpYbDA.setOption(option_fRURDbVpYbDA);
 </script>
 
         </div>
@@ -369,13 +369,13 @@
             
     
     <div class="container">
-    <div class="item" id="sNhpGtorjPgW" style="width:100%;height:500px;"></div>
+    <div class="item" id="tZKbAxsBilfL" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_sNhpGtorjPgW = echarts.init(document.getElementById('sNhpGtorjPgW'), "white", { renderer: "canvas" });
-    let option_sNhpGtorjPgW = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314485.02"},{"value":"321392.95"},{"value":"314986.39"},{"value":"489031.52"},{"value":"314470.53"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"202676.89"},{"value":"202318.93"},{"value":"202089.23"},{"value":"238833.17"},{"value":"207421.59"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers500k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_tZKbAxsBilfL = echarts.init(document.getElementById('tZKbAxsBilfL'), "white", { renderer: "canvas" });
+    let option_tZKbAxsBilfL = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"326209.64"},{"value":"256867.73"},{"value":"324408.98"},{"value":"802475.89"},{"value":"324563.47"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"149072.25"},{"value":"149649.83"},{"value":"147067.32"},{"value":"180405.42"},{"value":"161154.93"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers50k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_sNhpGtorjPgW.setOption(option_sNhpGtorjPgW);
+    goecharts_tZKbAxsBilfL.setOption(option_tZKbAxsBilfL);
 </script>
 
         </div>
@@ -384,13 +384,13 @@
             
     
     <div class="container">
-    <div class="item" id="EtDJcbFHIzYh" style="width:100%;height:500px;"></div>
+    <div class="item" id="OOmLVEHIAEYh" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_EtDJcbFHIzYh = echarts.init(document.getElementById('EtDJcbFHIzYh'), "white", { renderer: "canvas" });
-    let option_EtDJcbFHIzYh = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8003"},{"value":"8065"},{"value":"8008"},{"value":"9969"},{"value":"8002"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"4416"},{"value":"4415"},{"value":"4402"},{"value":"5507"},{"value":"4501"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers500k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_OOmLVEHIAEYh = echarts.init(document.getElementById('OOmLVEHIAEYh'), "white", { renderer: "canvas" });
+    let option_OOmLVEHIAEYh = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8109993"},{"value":"6231535"},{"value":"8091386"},{"value":"8813865"},{"value":"8092367"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3358669"},{"value":"3364246"},{"value":"3325288"},{"value":"4341343"},{"value":"3406912"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers50k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_EtDJcbFHIzYh.setOption(option_EtDJcbFHIzYh);
+    goecharts_OOmLVEHIAEYh.setOption(option_OOmLVEHIAEYh);
 </script>
 
         </div>
@@ -403,13 +403,13 @@
             
     
     <div class="container">
-    <div class="item" id="OeNvPLmKVIkT" style="width:100%;height:500px;"></div>
+    <div class="item" id="SONmYCrUjxTM" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_OeNvPLmKVIkT = echarts.init(document.getElementById('OeNvPLmKVIkT'), "white", { renderer: "canvas" });
-    let option_OeNvPLmKVIkT = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.04"},{"value":"1.01"},{"value":"0.97"},{"value":"2.54"},{"value":"0.85"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.87"},{"value":"0.96"},{"value":"0.92"},{"value":"0.91"},{"value":"0.80"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers100k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_SONmYCrUjxTM = echarts.init(document.getElementById('SONmYCrUjxTM'), "white", { renderer: "canvas" });
+    let option_SONmYCrUjxTM = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.83"},{"value":"0.95"},{"value":"0.94"},{"value":"2.56"},{"value":"0.81"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.37"},{"value":"1.23"},{"value":"1.49"},{"value":"1.07"},{"value":"1.41"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers50k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_OeNvPLmKVIkT.setOption(option_OeNvPLmKVIkT);
+    goecharts_SONmYCrUjxTM.setOption(option_SONmYCrUjxTM);
 </script>
 
         </div>
@@ -418,13 +418,13 @@
             
     
     <div class="container">
-    <div class="item" id="DRWIJoWPxQaV" style="width:100%;height:500px;"></div>
+    <div class="item" id="BRXuTWVFRMYH" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_DRWIJoWPxQaV = echarts.init(document.getElementById('DRWIJoWPxQaV'), "white", { renderer: "canvas" });
-    let option_DRWIJoWPxQaV = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"316903.08"},{"value":"321501.52"},{"value":"316770.28"},{"value":"422358.86"},{"value":"316153.97"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"154510.04"},{"value":"153246.56"},{"value":"153316.96"},{"value":"187029.80"},{"value":"154198.65"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers100k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_BRXuTWVFRMYH = echarts.init(document.getElementById('BRXuTWVFRMYH'), "white", { renderer: "canvas" });
+    let option_BRXuTWVFRMYH = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"218965.86"},{"value":"222932.23"},{"value":"219604.88"},{"value":"404313.39"},{"value":"218939.50"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"128546.63"},{"value":"128582.97"},{"value":"128000.77"},{"value":"159208.02"},{"value":"127726.14"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers50k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_DRWIJoWPxQaV.setOption(option_DRWIJoWPxQaV);
+    goecharts_BRXuTWVFRMYH.setOption(option_BRXuTWVFRMYH);
 </script>
 
         </div>
@@ -433,13 +433,13 @@
             
     
     <div class="container">
-    <div class="item" id="foUNIWTNOjPU" style="width:100%;height:500px;"></div>
+    <div class="item" id="ZNoDkqHOseXq" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_foUNIWTNOjPU = echarts.init(document.getElementById('foUNIWTNOjPU'), "white", { renderer: "canvas" });
-    let option_foUNIWTNOjPU = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8010"},{"value":"8066"},{"value":"8009"},{"value":"8215"},{"value":"8002"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3479"},{"value":"3461"},{"value":"3457"},{"value":"4494"},{"value":"3464"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers100k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_ZNoDkqHOseXq = echarts.init(document.getElementById('ZNoDkqHOseXq'), "white", { renderer: "canvas" });
+    let option_ZNoDkqHOseXq = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7001074"},{"value":"7033041"},{"value":"7005385"},{"value":"8942709"},{"value":"7000162"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3053835"},{"value":"3054989"},{"value":"3047050"},{"value":"4042296"},{"value":"3040957"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers50k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_foUNIWTNOjPU.setOption(option_foUNIWTNOjPU);
+    goecharts_ZNoDkqHOseXq.setOption(option_ZNoDkqHOseXq);
 </script>
 
         </div>
@@ -452,13 +452,13 @@
             
     
     <div class="container">
-    <div class="item" id="xxXKyHRkXCVN" style="width:100%;height:500px;"></div>
+    <div class="item" id="pjHJuTDchXJU" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_xxXKyHRkXCVN = echarts.init(document.getElementById('xxXKyHRkXCVN'), "white", { renderer: "canvas" });
-    let option_xxXKyHRkXCVN = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.07"},{"value":"1.17"},{"value":"1.08"},{"value":"2.76"},{"value":"0.85"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.89"},{"value":"0.93"},{"value":"0.89"},{"value":"0.92"},{"value":"0.71"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers100k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_pjHJuTDchXJU = echarts.init(document.getElementById('pjHJuTDchXJU'), "white", { renderer: "canvas" });
+    let option_pjHJuTDchXJU = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.96"},{"value":"1.25"},{"value":"1.00"},{"value":"2.51"},{"value":"0.91"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.85"},{"value":"0.88"},{"value":"0.92"},{"value":"0.93"},{"value":"0.78"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers50k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_xxXKyHRkXCVN.setOption(option_xxXKyHRkXCVN);
+    goecharts_pjHJuTDchXJU.setOption(option_pjHJuTDchXJU);
 </script>
 
         </div>
@@ -467,13 +467,13 @@
             
     
     <div class="container">
-    <div class="item" id="bTccOXIoFqQo" style="width:100%;height:500px;"></div>
+    <div class="item" id="isXSaOPPkSJV" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_bTccOXIoFqQo = echarts.init(document.getElementById('bTccOXIoFqQo'), "white", { renderer: "canvas" });
-    let option_bTccOXIoFqQo = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314860.48"},{"value":"321586.83"},{"value":"315052.39"},{"value":"404459.02"},{"value":"315107.23"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"147324.22"},{"value":"147774.06"},{"value":"147818.15"},{"value":"179719.36"},{"value":"148808.34"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers100k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_isXSaOPPkSJV = echarts.init(document.getElementById('isXSaOPPkSJV'), "white", { renderer: "canvas" });
+    let option_isXSaOPPkSJV = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314819.56"},{"value":"259576.58"},{"value":"315177.69"},{"value":"411013.42"},{"value":"314677.58"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"141397.61"},{"value":"140471.26"},{"value":"139756.46"},{"value":"171518.26"},{"value":"141039.09"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers50k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_bTccOXIoFqQo.setOption(option_bTccOXIoFqQo);
+    goecharts_isXSaOPPkSJV.setOption(option_isXSaOPPkSJV);
 </script>
 
         </div>
@@ -482,13 +482,13 @@
             
     
     <div class="container">
-    <div class="item" id="oqEUBEJmYIRW" style="width:100%;height:500px;"></div>
+    <div class="item" id="EQmaInFspVFH" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_oqEUBEJmYIRW = echarts.init(document.getElementById('oqEUBEJmYIRW'), "white", { renderer: "canvas" });
-    let option_oqEUBEJmYIRW = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8007"},{"value":"8067"},{"value":"8009"},{"value":"8209"},{"value":"8009"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3360"},{"value":"3376"},{"value":"3374"},{"value":"4385"},{"value":"3390"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers100k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_EQmaInFspVFH = echarts.init(document.getElementById('EQmaInFspVFH'), "white", { renderer: "canvas" });
+    let option_EQmaInFspVFH = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8006572"},{"value":"6475150"},{"value":"8010992"},{"value":"7979921"},{"value":"8004992"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3251359"},{"value":"3236917"},{"value":"3222041"},{"value":"4228921"},{"value":"3242607"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers50k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_oqEUBEJmYIRW.setOption(option_oqEUBEJmYIRW);
+    goecharts_EQmaInFspVFH.setOption(option_EQmaInFspVFH);
 </script>
 
         </div>
@@ -501,13 +501,13 @@
             
     
     <div class="container">
-    <div class="item" id="dTMGscEnsZae" style="width:100%;height:500px;"></div>
+    <div class="item" id="VSLGNAWABmwT" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_dTMGscEnsZae = echarts.init(document.getElementById('dTMGscEnsZae'), "white", { renderer: "canvas" });
-    let option_dTMGscEnsZae = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.88"},{"value":"1.23"},{"value":"0.99"},{"value":"2.89"},{"value":"0.85"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.93"},{"value":"0.93"},{"value":"0.87"},{"value":"0.99"},{"value":"0.73"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers300k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_VSLGNAWABmwT = echarts.init(document.getElementById('VSLGNAWABmwT'), "white", { renderer: "canvas" });
+    let option_VSLGNAWABmwT = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.12"},{"value":"1.25"},{"value":"1.09"},{"value":"2.81"},{"value":"0.91"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.93"},{"value":"0.96"},{"value":"0.94"},{"value":"1.00"},{"value":"0.84"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers100k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_dTMGscEnsZae.setOption(option_dTMGscEnsZae);
+    goecharts_VSLGNAWABmwT.setOption(option_VSLGNAWABmwT);
 </script>
 
         </div>
@@ -516,13 +516,13 @@
             
     
     <div class="container">
-    <div class="item" id="EQAUHAhqoCFR" style="width:100%;height:500px;"></div>
+    <div class="item" id="VpxEOUMPNBYL" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_EQAUHAhqoCFR = echarts.init(document.getElementById('EQAUHAhqoCFR'), "white", { renderer: "canvas" });
-    let option_EQAUHAhqoCFR = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314722.44"},{"value":"321457.95"},{"value":"314878.67"},{"value":"503470.83"},{"value":"314299.58"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"174895.61"},{"value":"174880.95"},{"value":"175532.77"},{"value":"207689.46"},{"value":"181889.30"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers300k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_VpxEOUMPNBYL = echarts.init(document.getElementById('VpxEOUMPNBYL'), "white", { renderer: "canvas" });
+    let option_VpxEOUMPNBYL = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"317187.42"},{"value":"321900.89"},{"value":"317236.45"},{"value":"430507.20"},{"value":"316951.27"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"151786.37"},{"value":"151877.32"},{"value":"153980.96"},{"value":"185390.56"},{"value":"152482.87"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers100k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_EQAUHAhqoCFR.setOption(option_EQAUHAhqoCFR);
+    goecharts_VpxEOUMPNBYL.setOption(option_VpxEOUMPNBYL);
 </script>
 
         </div>
@@ -531,13 +531,13 @@
             
     
     <div class="container">
-    <div class="item" id="XkOUZXnPergE" style="width:100%;height:500px;"></div>
+    <div class="item" id="WSoFKLIVdtJZ" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_XkOUZXnPergE = echarts.init(document.getElementById('XkOUZXnPergE'), "white", { renderer: "canvas" });
-    let option_XkOUZXnPergE = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8005"},{"value":"8066"},{"value":"8007"},{"value":"9999"},{"value":"8000"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3888"},{"value":"3895"},{"value":"3901"},{"value":"4915"},{"value":"4022"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers300k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_WSoFKLIVdtJZ = echarts.init(document.getElementById('WSoFKLIVdtJZ'), "white", { renderer: "canvas" });
+    let option_WSoFKLIVdtJZ = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8013756"},{"value":"8070633"},{"value":"8014879"},{"value":"8245699"},{"value":"8011171"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3432609"},{"value":"3434065"},{"value":"3470054"},{"value":"4466757"},{"value":"3441279"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers100k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_XkOUZXnPergE.setOption(option_XkOUZXnPergE);
+    goecharts_WSoFKLIVdtJZ.setOption(option_WSoFKLIVdtJZ);
 </script>
 
         </div>
@@ -550,13 +550,13 @@
             
     
     <div class="container">
-    <div class="item" id="RDIQthpfAQoC" style="width:100%;height:500px;"></div>
+    <div class="item" id="TlOMYxDvyWwb" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_RDIQthpfAQoC = echarts.init(document.getElementById('RDIQthpfAQoC'), "white", { renderer: "canvas" });
-    let option_RDIQthpfAQoC = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.03"},{"value":"1.02"},{"value":"1.11"},{"value":"4.26"},{"value":"1.10"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.97"},{"value":"0.97"},{"value":"1.00"},{"value":"1.04"},{"value":"0.84"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers500k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_TlOMYxDvyWwb = echarts.init(document.getElementById('TlOMYxDvyWwb'), "white", { renderer: "canvas" });
+    let option_TlOMYxDvyWwb = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.91"},{"value":"0.97"},{"value":"0.90"},{"value":"2.12"},{"value":"0.80"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.49"},{"value":"1.21"},{"value":"1.38"},{"value":"1.18"},{"value":"1.17"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers100k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_RDIQthpfAQoC.setOption(option_RDIQthpfAQoC);
+    goecharts_TlOMYxDvyWwb.setOption(option_TlOMYxDvyWwb);
 </script>
 
         </div>
@@ -565,13 +565,13 @@
             
     
     <div class="container">
-    <div class="item" id="zXeQqGzpCeZM" style="width:100%;height:500px;"></div>
+    <div class="item" id="DKasWrsaXWSE" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_zXeQqGzpCeZM = echarts.init(document.getElementById('zXeQqGzpCeZM'), "white", { renderer: "canvas" });
-    let option_zXeQqGzpCeZM = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"316470.42"},{"value":"321163.08"},{"value":"317379.70"},{"value":"490400.23"},{"value":"316821.14"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"208223.24"},{"value":"209060.86"},{"value":"208310.47"},{"value":"244092.78"},{"value":"213407.38"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers500k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_DKasWrsaXWSE = echarts.init(document.getElementById('DKasWrsaXWSE'), "white", { renderer: "canvas" });
+    let option_DKasWrsaXWSE = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"219036.11"},{"value":"222900.12"},{"value":"219595.67"},{"value":"382994.89"},{"value":"218991.33"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"129117.41"},{"value":"130506.19"},{"value":"128952.89"},{"value":"160711.59"},{"value":"128862.05"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers100k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_zXeQqGzpCeZM.setOption(option_zXeQqGzpCeZM);
+    goecharts_DKasWrsaXWSE.setOption(option_DKasWrsaXWSE);
 </script>
 
         </div>
@@ -580,13 +580,13 @@
             
     
     <div class="container">
-    <div class="item" id="wlBMTSWJTDXC" style="width:100%;height:500px;"></div>
+    <div class="item" id="LDXKVXJdDFXU" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_wlBMTSWJTDXC = echarts.init(document.getElementById('wlBMTSWJTDXC'), "white", { renderer: "canvas" });
-    let option_wlBMTSWJTDXC = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8006"},{"value":"8062"},{"value":"8016"},{"value":"9982"},{"value":"8009"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"4497"},{"value":"4511"},{"value":"4489"},{"value":"5577"},{"value":"4595"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers500k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_LDXKVXJdDFXU = echarts.init(document.getElementById('LDXKVXJdDFXU'), "white", { renderer: "canvas" });
+    let option_LDXKVXJdDFXU = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7001259"},{"value":"7032698"},{"value":"7005005"},{"value":"8840041"},{"value":"7000151"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3081457"},{"value":"3106593"},{"value":"3078928"},{"value":"4089980"},{"value":"3077548"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers100k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_wlBMTSWJTDXC.setOption(option_wlBMTSWJTDXC);
+    goecharts_LDXKVXJdDFXU.setOption(option_LDXKVXJdDFXU);
 </script>
 
         </div>
@@ -599,13 +599,13 @@
             
     
     <div class="container">
-    <div class="item" id="WLHNOACeErlY" style="width:100%;height:500px;"></div>
+    <div class="item" id="fHheTPKaSKbT" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_WLHNOACeErlY = echarts.init(document.getElementById('WLHNOACeErlY'), "white", { renderer: "canvas" });
-    let option_WLHNOACeErlY = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.85"},{"value":"0.92"},{"value":"0.90"},{"value":"2.46"},{"value":"0.77"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.64"},{"value":"1.90"},{"value":"1.58"},{"value":"1.77"},{"value":"1.07"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers500k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_fHheTPKaSKbT = echarts.init(document.getElementById('fHheTPKaSKbT'), "white", { renderer: "canvas" });
+    let option_fHheTPKaSKbT = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.05"},{"value":"1.20"},{"value":"1.01"},{"value":"2.63"},{"value":"0.84"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.89"},{"value":"0.88"},{"value":"0.91"},{"value":"0.93"},{"value":"0.78"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers100k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_WLHNOACeErlY.setOption(option_WLHNOACeErlY);
+    goecharts_fHheTPKaSKbT.setOption(option_fHheTPKaSKbT);
 </script>
 
         </div>
@@ -614,13 +614,13 @@
             
     
     <div class="container">
-    <div class="item" id="WjeSiNYaeGNG" style="width:100%;height:500px;"></div>
+    <div class="item" id="JyUQJBCXtPMi" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_WjeSiNYaeGNG = echarts.init(document.getElementById('WjeSiNYaeGNG'), "white", { renderer: "canvas" });
-    let option_WjeSiNYaeGNG = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"218958.59"},{"value":"222894.55"},{"value":"219520.20"},{"value":"381163.30"},{"value":"218858.15"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"142911.09"},{"value":"143561.31"},{"value":"142429.73"},{"value":"176136.77"},{"value":"144998.95"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers500k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_JyUQJBCXtPMi = echarts.init(document.getElementById('JyUQJBCXtPMi'), "white", { renderer: "canvas" });
+    let option_JyUQJBCXtPMi = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314787.64"},{"value":"321830.11"},{"value":"315296.42"},{"value":"396277.39"},{"value":"314628.12"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"148349.77"},{"value":"147193.62"},{"value":"146360.48"},{"value":"180640.75"},{"value":"148554.87"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers100k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_WjeSiNYaeGNG.setOption(option_WjeSiNYaeGNG);
+    goecharts_JyUQJBCXtPMi.setOption(option_JyUQJBCXtPMi);
 </script>
 
         </div>
@@ -629,13 +629,13 @@
             
     
     <div class="container">
-    <div class="item" id="mATfiaKBCXWd" style="width:100%;height:500px;"></div>
+    <div class="item" id="hFSLjFUHFQiG" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_mATfiaKBCXWd = echarts.init(document.getElementById('mATfiaKBCXWd'), "white", { renderer: "canvas" });
-    let option_mATfiaKBCXWd = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7000"},{"value":"7032"},{"value":"7005"},{"value":"8820"},{"value":"7000"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3525"},{"value":"3531"},{"value":"3507"},{"value":"4578"},{"value":"3588"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers500k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_hFSLjFUHFQiG = echarts.init(document.getElementById('hFSLjFUHFQiG'), "white", { renderer: "canvas" });
+    let option_hFSLjFUHFQiG = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8006232"},{"value":"8069878"},{"value":"8012259"},{"value":"8175698"},{"value":"8004464"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3383053"},{"value":"3361811"},{"value":"3348724"},{"value":"4397357"},{"value":"3386555"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers100k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_mATfiaKBCXWd.setOption(option_mATfiaKBCXWd);
+    goecharts_hFSLjFUHFQiG.setOption(option_hFSLjFUHFQiG);
 </script>
 
         </div>
@@ -648,13 +648,13 @@
             
     
     <div class="container">
-    <div class="item" id="RuAkVhKnHOSr" style="width:100%;height:500px;"></div>
+    <div class="item" id="VKzRUtLdEBSF" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_RuAkVhKnHOSr = echarts.init(document.getElementById('RuAkVhKnHOSr'), "white", { renderer: "canvas" });
-    let option_RuAkVhKnHOSr = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.11"},{"value":"1.37"},{"value":"1.14"},{"value":"2.30"},{"value":"1.05"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.99"},{"value":"0.94"},{"value":"0.97"},{"value":"0.96"},{"value":"0.91"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers50k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_VKzRUtLdEBSF = echarts.init(document.getElementById('VKzRUtLdEBSF'), "white", { renderer: "canvas" });
+    let option_VKzRUtLdEBSF = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.12"},{"value":"1.26"},{"value":"1.08"},{"value":"2.97"},{"value":"0.94"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.03"},{"value":"1.05"},{"value":"0.99"},{"value":"1.05"},{"value":"0.85"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers300k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_RuAkVhKnHOSr.setOption(option_RuAkVhKnHOSr);
+    goecharts_VKzRUtLdEBSF.setOption(option_VKzRUtLdEBSF);
 </script>
 
         </div>
@@ -663,13 +663,13 @@
             
     
     <div class="container">
-    <div class="item" id="EOFWPfpYhRAq" style="width:100%;height:500px;"></div>
+    <div class="item" id="NCNPZvZNMUar" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_EOFWPfpYhRAq = echarts.init(document.getElementById('EOFWPfpYhRAq'), "white", { renderer: "canvas" });
-    let option_EOFWPfpYhRAq = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"324729.23"},{"value":"261380.86"},{"value":"324500.67"},{"value":"822077.33"},{"value":"323632.34"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"148557.02"},{"value":"149702.53"},{"value":"148047.88"},{"value":"180393.83"},{"value":"156055.66"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers50k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_NCNPZvZNMUar = echarts.init(document.getElementById('NCNPZvZNMUar'), "white", { renderer: "canvas" });
+    let option_NCNPZvZNMUar = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"317125.36"},{"value":"321710.30"},{"value":"317079.70"},{"value":"498964.11"},{"value":"316578.98"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"180264.96"},{"value":"179362.98"},{"value":"179750.04"},{"value":"211756.73"},{"value":"184918.23"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers300k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_EOFWPfpYhRAq.setOption(option_EOFWPfpYhRAq);
+    goecharts_NCNPZvZNMUar.setOption(option_NCNPZvZNMUar);
 </script>
 
         </div>
@@ -678,13 +678,13 @@
             
     
     <div class="container">
-    <div class="item" id="NxRBRCOGpXNN" style="width:100%;height:500px;"></div>
+    <div class="item" id="bQRnNmFdHtIk" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_NxRBRCOGpXNN = echarts.init(document.getElementById('NxRBRCOGpXNN'), "white", { renderer: "canvas" });
-    let option_NxRBRCOGpXNN = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8094"},{"value":"6315"},{"value":"8094"},{"value":"8872"},{"value":"8082"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3335"},{"value":"3361"},{"value":"3335"},{"value":"4353"},{"value":"3343"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers50k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_bQRnNmFdHtIk = echarts.init(document.getElementById('bQRnNmFdHtIk'), "white", { renderer: "canvas" });
+    let option_bQRnNmFdHtIk = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8013094"},{"value":"8068600"},{"value":"8013207"},{"value":"9946287"},{"value":"8007200"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3970178"},{"value":"3952193"},{"value":"3956963"},{"value":"4969466"},{"value":"4054500"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers300k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_NxRBRCOGpXNN.setOption(option_NxRBRCOGpXNN);
+    goecharts_bQRnNmFdHtIk.setOption(option_bQRnNmFdHtIk);
 </script>
 
         </div>
@@ -697,13 +697,13 @@
             
     
     <div class="container">
-    <div class="item" id="luMxEHxIMctS" style="width:100%;height:500px;"></div>
+    <div class="item" id="FRhFXUWzfdRS" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_luMxEHxIMctS = echarts.init(document.getElementById('luMxEHxIMctS'), "white", { renderer: "canvas" });
-    let option_luMxEHxIMctS = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.82"},{"value":"0.92"},{"value":"0.85"},{"value":"2.30"},{"value":"0.78"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.27"},{"value":"1.76"},{"value":"1.17"},{"value":"1.52"},{"value":"0.66"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers50k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_FRhFXUWzfdRS = echarts.init(document.getElementById('FRhFXUWzfdRS'), "white", { renderer: "canvas" });
+    let option_FRhFXUWzfdRS = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.90"},{"value":"0.95"},{"value":"0.89"},{"value":"2.55"},{"value":"0.77"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.35"},{"value":"1.21"},{"value":"1.36"},{"value":"1.54"},{"value":"1.29"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers300k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_luMxEHxIMctS.setOption(option_luMxEHxIMctS);
+    goecharts_FRhFXUWzfdRS.setOption(option_FRhFXUWzfdRS);
 </script>
 
         </div>
@@ -712,13 +712,13 @@
             
     
     <div class="container">
-    <div class="item" id="OzUyRJQtOLRT" style="width:100%;height:500px;"></div>
+    <div class="item" id="HkQVRdPQLzqV" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_OzUyRJQtOLRT = echarts.init(document.getElementById('OzUyRJQtOLRT'), "white", { renderer: "canvas" });
-    let option_OzUyRJQtOLRT = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"218954"},{"value":"222821.09"},{"value":"219599.62"},{"value":"385097.80"},{"value":"218853.70"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"127886.33"},{"value":"129376.68"},{"value":"128291.62"},{"value":"159403.80"},{"value":"128588.92"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers50k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_HkQVRdPQLzqV = echarts.init(document.getElementById('HkQVRdPQLzqV'), "white", { renderer: "canvas" });
+    let option_HkQVRdPQLzqV = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"219080.62"},{"value":"222939.03"},{"value":"219581.73"},{"value":"384675.27"},{"value":"218855.95"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"135188.59"},{"value":"134946.46"},{"value":"134312.15"},{"value":"166922.37"},{"value":"133399.39"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers300k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_OzUyRJQtOLRT.setOption(option_OzUyRJQtOLRT);
+    goecharts_HkQVRdPQLzqV.setOption(option_HkQVRdPQLzqV);
 </script>
 
         </div>
@@ -727,13 +727,13 @@
             
     
     <div class="container">
-    <div class="item" id="xGYyELWdRYCJ" style="width:100%;height:500px;"></div>
+    <div class="item" id="GChOCNLkHTNH" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_xGYyELWdRYCJ = echarts.init(document.getElementById('xGYyELWdRYCJ'), "white", { renderer: "canvas" });
-    let option_xGYyELWdRYCJ = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7000"},{"value":"7031"},{"value":"7005"},{"value":"8862"},{"value":"7000"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3046"},{"value":"3078"},{"value":"3056"},{"value":"4050"},{"value":"3062"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers50k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_GChOCNLkHTNH = echarts.init(document.getElementById('GChOCNLkHTNH'), "white", { renderer: "canvas" });
+    let option_GChOCNLkHTNH = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7001169"},{"value":"7033113"},{"value":"7005421"},{"value":"8857965"},{"value":"7000117"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3267744"},{"value":"3257109"},{"value":"3243604"},{"value":"4274669"},{"value":"3220124"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers300k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_xGYyELWdRYCJ.setOption(option_xGYyELWdRYCJ);
+    goecharts_GChOCNLkHTNH.setOption(option_GChOCNLkHTNH);
 </script>
 
         </div>
@@ -746,13 +746,13 @@
             
     
     <div class="container">
-    <div class="item" id="OIGcfPqCMxxk" style="width:100%;height:500px;"></div>
+    <div class="item" id="OzrUFElwxUjT" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_OIGcfPqCMxxk = echarts.init(document.getElementById('OIGcfPqCMxxk'), "white", { renderer: "canvas" });
-    let option_OIGcfPqCMxxk = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.04"},{"value":"1.20"},{"value":"1.03"},{"value":"2.71"},{"value":"0.86"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.83"},{"value":"0.98"},{"value":"0.90"},{"value":"0.95"},{"value":"0.72"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers50k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_OzrUFElwxUjT = echarts.init(document.getElementById('OzrUFElwxUjT'), "white", { renderer: "canvas" });
+    let option_OzrUFElwxUjT = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.01"},{"value":"1.10"},{"value":"1.12"},{"value":"3.03"},{"value":"0.88"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.97"},{"value":"0.94"},{"value":"0.97"},{"value":"1.00"},{"value":"0.80"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers300k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_OIGcfPqCMxxk.setOption(option_OIGcfPqCMxxk);
+    goecharts_OzrUFElwxUjT.setOption(option_OzrUFElwxUjT);
 </script>
 
         </div>
@@ -761,13 +761,13 @@
             
     
     <div class="container">
-    <div class="item" id="CLRWMEGYyKNb" style="width:100%;height:500px;"></div>
+    <div class="item" id="tCXBTRtuDUNG" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_CLRWMEGYyKNb = echarts.init(document.getElementById('CLRWMEGYyKNb'), "white", { renderer: "canvas" });
-    let option_CLRWMEGYyKNb = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314921.14"},{"value":"260395.86"},{"value":"315409.77"},{"value":"406912.89"},{"value":"314875.62"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"140158.27"},{"value":"140060.50"},{"value":"140123.41"},{"value":"173059.71"},{"value":"141714.15"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers50k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_tCXBTRtuDUNG = echarts.init(document.getElementById('tCXBTRtuDUNG'), "white", { renderer: "canvas" });
+    let option_tCXBTRtuDUNG = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314625.73"},{"value":"321688.92"},{"value":"315241.86"},{"value":"489635.11"},{"value":"314364.03"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"175428.40"},{"value":"175417.35"},{"value":"175237.95"},{"value":"208694.17"},{"value":"180271.59"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers300k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_CLRWMEGYyKNb.setOption(option_CLRWMEGYyKNb);
+    goecharts_tCXBTRtuDUNG.setOption(option_tCXBTRtuDUNG);
 </script>
 
         </div>
@@ -776,13 +776,13 @@
             
     
     <div class="container">
-    <div class="item" id="XqPwpEZuvVQM" style="width:100%;height:500px;"></div>
+    <div class="item" id="ortLAezViTHt" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_XqPwpEZuvVQM = echarts.init(document.getElementById('XqPwpEZuvVQM'), "white", { renderer: "canvas" });
-    let option_XqPwpEZuvVQM = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8007"},{"value":"6757"},{"value":"8013"},{"value":"7980"},{"value":"8007"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3228"},{"value":"3235"},{"value":"3230"},{"value":"4249"},{"value":"3256"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers50k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_ortLAezViTHt = echarts.init(document.getElementById('ortLAezViTHt'), "white", { renderer: "canvas" });
+    let option_ortLAezViTHt = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8004505"},{"value":"8068372"},{"value":"8011677"},{"value":"9976781"},{"value":"8001647"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3898630"},{"value":"3900970"},{"value":"3894054"},{"value":"4932520"},{"value":"3988352"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers300k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_XqPwpEZuvVQM.setOption(option_XqPwpEZuvVQM);
+    goecharts_ortLAezViTHt.setOption(option_ortLAezViTHt);
 </script>
 
         </div>
@@ -795,13 +795,13 @@
             
     
     <div class="container">
-    <div class="item" id="rAsFQadBZeXw" style="width:100%;height:500px;"></div>
+    <div class="item" id="XzRgUDnlIpvH" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_rAsFQadBZeXw = echarts.init(document.getElementById('rAsFQadBZeXw'), "white", { renderer: "canvas" });
-    let option_rAsFQadBZeXw = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.83"},{"value":"0.93"},{"value":"0.90"},{"value":"2.24"},{"value":"0.81"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"0.83"},{"value":"1.02"},{"value":"1.32"},{"value":"1.55"},{"value":"1.40"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers100k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_XzRgUDnlIpvH = echarts.init(document.getElementById('XzRgUDnlIpvH'), "white", { renderer: "canvas" });
+    let option_XzRgUDnlIpvH = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.02"},{"value":"1.10"},{"value":"1.20"},{"value":"3.28"},{"value":"1.03"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.00"},{"value":"1.06"},{"value":"1.02"},{"value":"1.04"},{"value":"0.89"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers500k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_rAsFQadBZeXw.setOption(option_rAsFQadBZeXw);
+    goecharts_XzRgUDnlIpvH.setOption(option_XzRgUDnlIpvH);
 </script>
 
         </div>
@@ -810,13 +810,13 @@
             
     
     <div class="container">
-    <div class="item" id="FKUIHtlUlUuY" style="width:100%;height:500px;"></div>
+    <div class="item" id="vXhIkzleQwtk" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_FKUIHtlUlUuY = echarts.init(document.getElementById('FKUIHtlUlUuY'), "white", { renderer: "canvas" });
-    let option_FKUIHtlUlUuY = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"219029.83"},{"value":"223065.31"},{"value":"219535.75"},{"value":"387216.73"},{"value":"218860.16"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"130202.01"},{"value":"131231.33"},{"value":"130974.74"},{"value":"161092.45"},{"value":"130174.25"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers100k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_vXhIkzleQwtk = echarts.init(document.getElementById('vXhIkzleQwtk'), "white", { renderer: "canvas" });
+    let option_vXhIkzleQwtk = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"316558.83"},{"value":"322080.89"},{"value":"317097.92"},{"value":"491679.33"},{"value":"316533.61"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"208190.02"},{"value":"207984.36"},{"value":"206920.45"},{"value":"244437.86"},{"value":"216374.54"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers500k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_FKUIHtlUlUuY.setOption(option_FKUIHtlUlUuY);
+    goecharts_vXhIkzleQwtk.setOption(option_vXhIkzleQwtk);
 </script>
 
         </div>
@@ -825,13 +825,13 @@
             
     
     <div class="container">
-    <div class="item" id="rifRktPxKwWx" style="width:100%;height:500px;"></div>
+    <div class="item" id="yNoJNwZHwDCr" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_rifRktPxKwWx = echarts.init(document.getElementById('rifRktPxKwWx'), "white", { renderer: "canvas" });
-    let option_rifRktPxKwWx = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7001"},{"value":"7034"},{"value":"7004"},{"value":"8885"},{"value":"7000"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3119"},{"value":"3136"},{"value":"3132"},{"value":"4104"},{"value":"3119"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers100k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_yNoJNwZHwDCr = echarts.init(document.getElementById('yNoJNwZHwDCr'), "white", { renderer: "canvas" });
+    let option_yNoJNwZHwDCr = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8007051"},{"value":"8072553"},{"value":"8013966"},{"value":"9983340"},{"value":"8006716"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"4494731"},{"value":"4493358"},{"value":"4473128"},{"value":"5582250"},{"value":"4644238"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers500k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_rifRktPxKwWx.setOption(option_rifRktPxKwWx);
+    goecharts_yNoJNwZHwDCr.setOption(option_yNoJNwZHwDCr);
 </script>
 
         </div>
@@ -844,13 +844,13 @@
             
     
     <div class="container">
-    <div class="item" id="OHCjPkjAtrua" style="width:100%;height:500px;"></div>
+    <div class="item" id="tINIUwAHheHR" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_OHCjPkjAtrua = echarts.init(document.getElementById('OHCjPkjAtrua'), "white", { renderer: "canvas" });
-    let option_OHCjPkjAtrua = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"1.13"},{"value":"1.10"},{"value":"1.02"},{"value":"2.81"},{"value":"1.02"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.00"},{"value":"0.99"},{"value":"0.97"},{"value":"0.98"},{"value":"0.79"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers300k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_tINIUwAHheHR = echarts.init(document.getElementById('tINIUwAHheHR'), "white", { renderer: "canvas" });
+    let option_tINIUwAHheHR = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.87"},{"value":"0.93"},{"value":"0.92"},{"value":"2.08"},{"value":"0.86"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.47"},{"value":"1.61"},{"value":"1.34"},{"value":"1.23"},{"value":"1.62"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers500k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_OHCjPkjAtrua.setOption(option_OHCjPkjAtrua);
+    goecharts_tINIUwAHheHR.setOption(option_tINIUwAHheHR);
 </script>
 
         </div>
@@ -859,13 +859,13 @@
             
     
     <div class="container">
-    <div class="item" id="KERoPIWVGKIc" style="width:100%;height:500px;"></div>
+    <div class="item" id="pCKvPRCRLksh" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_KERoPIWVGKIc = echarts.init(document.getElementById('KERoPIWVGKIc'), "white", { renderer: "canvas" });
-    let option_KERoPIWVGKIc = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"317264.20"},{"value":"321213.23"},{"value":"316981.64"},{"value":"498493.52"},{"value":"317044.36"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"179565.01"},{"value":"178349.57"},{"value":"180607.82"},{"value":"214327.66"},{"value":"184920.98"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers300k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_pCKvPRCRLksh = echarts.init(document.getElementById('pCKvPRCRLksh'), "white", { renderer: "canvas" });
+    let option_pCKvPRCRLksh = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"218953.81"},{"value":"222931.91"},{"value":"219587.09"},{"value":"381093.92"},{"value":"218954.08"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"139465.92"},{"value":"140761.52"},{"value":"140040.97"},{"value":"172693.62"},{"value":"137891.33"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers500k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_KERoPIWVGKIc.setOption(option_KERoPIWVGKIc);
+    goecharts_pCKvPRCRLksh.setOption(option_pCKvPRCRLksh);
 </script>
 
         </div>
@@ -874,13 +874,13 @@
             
     
     <div class="container">
-    <div class="item" id="EHPOLjXpSHJj" style="width:100%;height:500px;"></div>
+    <div class="item" id="BcEJSQZIONOI" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_EHPOLjXpSHJj = echarts.init(document.getElementById('EHPOLjXpSHJj'), "white", { renderer: "canvas" });
-    let option_EHPOLjXpSHJj = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8014"},{"value":"8063"},{"value":"8012"},{"value":"9996"},{"value":"8012"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3954"},{"value":"3938"},{"value":"3973"},{"value":"5012"},{"value":"4056"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep10msWorkers300k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_BcEJSQZIONOI = echarts.init(document.getElementById('BcEJSQZIONOI'), "white", { renderer: "canvas" });
+    let option_BcEJSQZIONOI = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7000945"},{"value":"7033037"},{"value":"7004913"},{"value":"8819764"},{"value":"7000318"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3412419"},{"value":"3415443"},{"value":"3425675"},{"value":"4469789"},{"value":"3366014"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers500k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_EHPOLjXpSHJj.setOption(option_EHPOLjXpSHJj);
+    goecharts_BcEJSQZIONOI.setOption(option_BcEJSQZIONOI);
 </script>
 
         </div>
@@ -893,13 +893,13 @@
             
     
     <div class="container">
-    <div class="item" id="stUppDZbWFbM" style="width:100%;height:500px;"></div>
+    <div class="item" id="CNLcYahXrVIk" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_stUppDZbWFbM = echarts.init(document.getElementById('stUppDZbWFbM'), "white", { renderer: "canvas" });
-    let option_stUppDZbWFbM = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.84"},{"value":"0.88"},{"value":"0.88"},{"value":"2.03"},{"value":"0.72"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.50"},{"value":"1.20"},{"value":"1.65"},{"value":"1.94"},{"value":"1.69"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers300k - Execution Time (s/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_CNLcYahXrVIk = echarts.init(document.getElementById('CNLcYahXrVIk'), "white", { renderer: "canvas" });
+    let option_CNLcYahXrVIk = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"0.95"},{"value":"1.25"},{"value":"1.06"},{"value":"2.81"},{"value":"0.98"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"1.02"},{"value":"1.00"},{"value":"1.01"},{"value":"1.00"},{"value":"0.83"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers500k - Execution Time (s/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_stUppDZbWFbM.setOption(option_stUppDZbWFbM);
+    goecharts_CNLcYahXrVIk.setOption(option_CNLcYahXrVIk);
 </script>
 
         </div>
@@ -908,13 +908,13 @@
             
     
     <div class="container">
-    <div class="item" id="bIYdBvqyWnTp" style="width:100%;height:500px;"></div>
+    <div class="item" id="UjNPvOKFrLbo" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_bIYdBvqyWnTp = echarts.init(document.getElementById('bIYdBvqyWnTp'), "white", { renderer: "canvas" });
-    let option_bIYdBvqyWnTp = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"218939.84"},{"value":"222979.67"},{"value":"219443.94"},{"value":"386058.83"},{"value":"218830.55"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"137133.49"},{"value":"137957.58"},{"value":"136101.55"},{"value":"167356.96"},{"value":"136303.78"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers300k - Memory Usage (kb/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_UjNPvOKFrLbo = echarts.init(document.getElementById('UjNPvOKFrLbo'), "white", { renderer: "canvas" });
+    let option_UjNPvOKFrLbo = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"314494.48"},{"value":"321923.11"},{"value":"315104.89"},{"value":"489296.33"},{"value":"314534.70"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"202780.96"},{"value":"203635.10"},{"value":"202600.51"},{"value":"239228.93"},{"value":"210389.29"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers500k - Memory Usage (kb/op)","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_bIYdBvqyWnTp.setOption(option_bIYdBvqyWnTp);
+    goecharts_UjNPvOKFrLbo.setOption(option_UjNPvOKFrLbo);
 </script>
 
         </div>
@@ -923,13 +923,13 @@
             
     
     <div class="container">
-    <div class="item" id="BDbHGRjWTHMR" style="width:100%;height:500px;"></div>
+    <div class="item" id="qCDiGADCEZkA" style="width:100%;height:500px;"></div>
 </div><script type="text/javascript">
     "use strict";
-    let goecharts_BDbHGRjWTHMR = echarts.init(document.getElementById('BDbHGRjWTHMR'), "white", { renderer: "canvas" });
-    let option_BDbHGRjWTHMR = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"right":"3%","padding":[30,0,0,0]},"series":[{"name":"PondV2","type":"bar","data":[{"value":"7000"},{"value":"7033"},{"value":"7004"},{"value":"8872"},{"value":"7000"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"3337"},{"value":"3352"},{"value":"3304"},{"value":"4302"},{"value":"3314"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Loop10Workers300k - Allocations (K/op)"},"toolbox":{"show":true,"feature":{"saveAsImage":{"show":true,"type":"png","title":"Save as PNG"}}},"tooltip":{"show":true,"trigger":"axis"},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
+    let goecharts_qCDiGADCEZkA = echarts.init(document.getElementById('qCDiGADCEZkA'), "white", { renderer: "canvas" });
+    let option_qCDiGADCEZkA = {"color":["#5470C6","#3BA272","#FC8452","#73C0DE","#EE6666","#FAC858","#9A60B4","#EA7CCC","#91CC75","#FF9F7F","#3E5A9E","#2E7D32","#EF6C00","#7E57C2","#F9A825","#6A8ACF","#4CAF50","#FF8F00","#AB47BC","#FFEB3B","#2B4E72","#1B5E20","#D84315","#512DA8","#F57F17","#4A90E2","#66BB6A","#FF5722","#BA68C8","#FFF176","#1E3A5F","#00695C","#BF360C","#673AB7","#C0CA33","#7FB3D5","#81C784","#FFAB91","#E040FB","#DCE775","#335C8A","#388E3C","#E64A19","#9575CD","#78909C","#5C9EAD","#AED581","#FF7043","#F06292","#A1887F"],"grid":[{"left":"3%","top":"15%","right":"3%","bottom":"3%","containLabel":true}],"legend":{"show":true,"left":"center","top":"7%","itemWidth":10,"itemHeight":10,"textStyle":{"fontSize":12}},"series":[{"name":"PondV2","type":"bar","data":[{"value":"8003105"},{"value":"8070870"},{"value":"8010216"},{"value":"9973923"},{"value":"8003468"}],"itemStyle":{"color":"#5470C6"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}},{"name":"VarMQ","type":"bar","data":[{"value":"4414411"},{"value":"4436943"},{"value":"4413318"},{"value":"5514920"},{"value":"4562130"}],"itemStyle":{"color":"#3BA272"},"label":{"show":true,"fontSize":10,"position":"top","formatter":"{c}"}}],"title":{"text":"Sleep5msLoop5Workers500k - Allocations/op","left":"2%","top":"1%"},"toolbox":{"show":true,"right":"2%","feature":{"saveAsImage":{"show":true,"type":"png","title":"Save"}}},"tooltip":{},"xAxis":[{"data":["100u-10Kt","10Ku-100t","1Ku-1Kt","1Mu-1t","1u-1Mt"]}],"yAxis":[{"splitLine":{"show":true},"axisLabel":{"show":true,"showMinLabel":null,"showMaxLabel":null}}]}
 
-    goecharts_BDbHGRjWTHMR.setOption(option_BDbHGRjWTHMR);
+    goecharts_qCDiGADCEZkA.setOption(option_qCDiGADCEZkA);
 </script>
 
         </div>
