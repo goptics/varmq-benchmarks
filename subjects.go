@@ -48,9 +48,7 @@ var subjects = []subject{
 	{
 		name: "VarMQ",
 		factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
-			w := varmq.NewWorker(func(j varmq.Job[func()]) {
-				j.Data()()
-			}, maxWorkers)
+			w := varmq.NewWorker(varmq.Func(), maxWorkers)
 			q := w.BindQueue()
 
 			return func(task func()) {
