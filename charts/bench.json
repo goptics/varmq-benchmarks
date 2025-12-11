@@ -1,10 +1,12 @@
 {
   "name": "VarMQ vs PondV2 24 cpus",
-  "description": "",
   "cpu": {
     "name": "13th Gen Intel(R) Core(TM) i7-13700",
     "cores": 24
   },
+  "os": "linux",
+  "arch": "amd64",
+  "pkg": "github.com/goptics/varmq-benchmarks",
   "settings": {
     "charts": [
       "bar",
@@ -24,15 +26,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.163115189
+          "value": 1.189830382
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 167020.7578125
+          "type": "Memory Usage (KB/op)",
+          "value": 175209.5625
         },
         {
           "type": "Allocations/op",
-          "value": 3352501
+          "value": 3459252
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -43,16 +49,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.911229778,
-          "per": "op"
+          "value": 1.915964752
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 333617.40625
+          "type": "Memory Usage (KB/op)",
+          "value": 327688.34375
         },
         {
-          "type": "Allocations",
-          "value": 8188090
+          "type": "Allocations/op",
+          "value": 8125699
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -63,16 +72,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.31907318,
-          "per": "op"
+          "value": 1.455330196
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 146431.484375
+          "type": "Memory Usage (KB/op)",
+          "value": 144162.2578125
         },
         {
-          "type": "Allocations",
-          "value": 3307533
+          "type": "Allocations/op",
+          "value": 3272902
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -83,16 +95,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.152988243,
-          "per": "op"
+          "value": 1.970609341
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 328329.046875
+          "type": "Memory Usage (KB/op)",
+          "value": 327871.546875
         },
         {
-          "type": "Allocations",
-          "value": 8150624
+          "type": "Allocations/op",
+          "value": 8142966
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -103,16 +118,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.337974756,
-          "per": "op"
+          "value": 1.14972873
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 146896.8203125
+          "type": "Memory Usage (KB/op)",
+          "value": 147002.30859375
         },
         {
-          "type": "Allocations",
-          "value": 3323245
+          "type": "Allocations/op",
+          "value": 3304911
+        },
+        {
+          "type": "Iterations",
+          "value": 2
         }
       ]
     },
@@ -123,16 +141,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.881564957,
-          "per": "op"
+          "value": 2.26076443
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 323040.265625
+          "type": "Memory Usage (KB/op)",
+          "value": 322727.515625
         },
         {
-          "type": "Allocations",
-          "value": 8094860
+          "type": "Allocations/op",
+          "value": 8091524
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -143,16 +164,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.496430672,
-          "per": "op"
+          "value": 1.420988402
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 149999.109375
+          "type": "Memory Usage (KB/op)",
+          "value": 147741.9140625
         },
         {
-          "type": "Allocations",
-          "value": 3374769
+          "type": "Allocations/op",
+          "value": 3335290
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -163,16 +187,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.027083805,
-          "per": "op"
+          "value": 2.273222849
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 266785.578125
+          "type": "Memory Usage (KB/op)",
+          "value": 293344.734375
         },
         {
-          "type": "Allocations",
-          "value": 6337044
+          "type": "Allocations/op",
+          "value": 6357642
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -183,16 +210,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.445668325,
-          "per": "op"
+          "value": 1.483262708
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 179716.21875
+          "type": "Memory Usage (KB/op)",
+          "value": 176989.3828125
         },
         {
-          "type": "Allocations",
-          "value": 4343796
+          "type": "Allocations/op",
+          "value": 4292260
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -203,16 +233,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.84323325,
-          "per": "op"
+          "value": 3.996254608
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 886671.296875
+          "type": "Memory Usage (KB/op)",
+          "value": 875394.859375
         },
         {
-          "type": "Allocations",
-          "value": 9050276
+          "type": "Allocations/op",
+          "value": 9009553
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -223,16 +256,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.18865392,
-          "per": "op"
+          "value": 2.805786249
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 127550.6484375
+          "type": "Memory Usage (KB/op)",
+          "value": 127437.4375
         },
         {
-          "type": "Allocations",
-          "value": 3035709
+          "type": "Allocations/op",
+          "value": 3032289
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -243,16 +279,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.010374973,
-          "per": "op"
+          "value": 1.524175141
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 219032.390625
+          "type": "Memory Usage (KB/op)",
+          "value": 218853.65625
         },
         {
-          "type": "Allocations",
-          "value": 7000589
+          "type": "Allocations/op",
+          "value": 7000375
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -263,16 +302,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.536134405,
-          "per": "op"
+          "value": 1.109222502
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 127508.265625
+          "type": "Memory Usage (KB/op)",
+          "value": 127563.7578125
         },
         {
-          "type": "Allocations",
-          "value": 3034632
+          "type": "Allocations/op",
+          "value": 3035977
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -283,16 +325,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.543582487,
-          "per": "op"
+          "value": 1.515090343
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218926.3125
+          "type": "Memory Usage (KB/op)",
+          "value": 218903.0625
         },
         {
-          "type": "Allocations",
-          "value": 7001216
+          "type": "Allocations/op",
+          "value": 7000968
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -303,16 +348,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.581065695,
-          "per": "op"
+          "value": 2.435839214
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 127519.484375
+          "type": "Memory Usage (KB/op)",
+          "value": 127609.9765625
         },
         {
-          "type": "Allocations",
-          "value": 3034168
+          "type": "Allocations/op",
+          "value": 3035036
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -323,16 +371,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.786113971,
-          "per": "op"
+          "value": 2.24554716
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 219565.828125
+          "type": "Memory Usage (KB/op)",
+          "value": 219715.453125
         },
         {
-          "type": "Allocations",
-          "value": 7006945
+          "type": "Allocations/op",
+          "value": 7007412
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -343,16 +394,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.100858932,
-          "per": "op"
+          "value": 2.754002483
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 128416.453125
+          "type": "Memory Usage (KB/op)",
+          "value": 128203.6171875
         },
         {
-          "type": "Allocations",
-          "value": 3048848
+          "type": "Allocations/op",
+          "value": 3042775
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -363,16 +417,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.678138302,
-          "per": "op"
+          "value": 1.884021047
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 225066.453125
+          "type": "Memory Usage (KB/op)",
+          "value": 224916.640625
         },
         {
-          "type": "Allocations",
-          "value": 7055806
+          "type": "Allocations/op",
+          "value": 7054208
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -383,16 +440,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.710529185,
-          "per": "op"
+          "value": 2.811831627
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 158707.0546875
+          "type": "Memory Usage (KB/op)",
+          "value": 158842.2734375
         },
         {
-          "type": "Allocations",
-          "value": 4030832
+          "type": "Allocations/op",
+          "value": 4033778
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -403,16 +463,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.260042471,
-          "per": "op"
+          "value": 3.171478659
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 450883.484375
+          "type": "Memory Usage (KB/op)",
+          "value": 450237.265625
         },
         {
-          "type": "Allocations",
-          "value": 8996505
+          "type": "Allocations/op",
+          "value": 8996322
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -423,16 +486,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.279000519,
-          "per": "op"
+          "value": 1.361636565
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 140059.4609375
+          "type": "Memory Usage (KB/op)",
+          "value": 139941.625
         },
         {
-          "type": "Allocations",
-          "value": 3220907
+          "type": "Allocations/op",
+          "value": 3218606
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -443,16 +509,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.500979223,
-          "per": "op"
+          "value": 2.666808547
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314919.546875
+          "type": "Memory Usage (KB/op)",
+          "value": 315055.296875
         },
         {
-          "type": "Allocations",
-          "value": 8007573
+          "type": "Allocations/op",
+          "value": 8009021
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -463,16 +532,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.775241609,
-          "per": "op"
+          "value": 1.647962352
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 139816.0390625
+          "type": "Memory Usage (KB/op)",
+          "value": 140445.1015625
         },
         {
-          "type": "Allocations",
-          "value": 3223450
+          "type": "Allocations/op",
+          "value": 3229663
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -483,16 +555,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.978907282,
-          "per": "op"
+          "value": 1.842443548
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 313740.796875
+          "type": "Memory Usage (KB/op)",
+          "value": 313709.578125
         },
         {
-          "type": "Allocations",
-          "value": 8004102
+          "type": "Allocations/op",
+          "value": 8003769
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -503,16 +578,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.437886151,
-          "per": "op"
+          "value": 1.793597115
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 140239.015625
+          "type": "Memory Usage (KB/op)",
+          "value": 140079.015625
         },
         {
-          "type": "Allocations",
-          "value": 3226493
+          "type": "Allocations/op",
+          "value": 3227461
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -523,16 +601,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.790786457,
-          "per": "op"
+          "value": 2.072672086
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314419.359375
+          "type": "Memory Usage (KB/op)",
+          "value": 314405.484375
         },
         {
-          "type": "Allocations",
-          "value": 8009115
+          "type": "Allocations/op",
+          "value": 8008967
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -543,16 +624,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.488807254,
-          "per": "op"
+          "value": 1.59506058
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 140225.6328125
+          "type": "Memory Usage (KB/op)",
+          "value": 139465.8515625
         },
         {
-          "type": "Allocations",
-          "value": 3231653
+          "type": "Allocations/op",
+          "value": 3219813
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -563,16 +647,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.793846284,
-          "per": "op"
+          "value": 1.496791961
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 320699.453125
+          "type": "Memory Usage (KB/op)",
+          "value": 320609.296875
         },
         {
-          "type": "Allocations",
-          "value": 8060641
+          "type": "Allocations/op",
+          "value": 8056856
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -583,16 +670,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.278549664,
-          "per": "op"
+          "value": 1.703988852
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 172158.265625
+          "type": "Memory Usage (KB/op)",
+          "value": 171776.2265625
         },
         {
-          "type": "Allocations",
-          "value": 4235752
+          "type": "Allocations/op",
+          "value": 4232927
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -603,16 +693,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.423516145,
-          "per": "op"
+          "value": 3.56654851
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 447871.984375
+          "type": "Memory Usage (KB/op)",
+          "value": 434524.796875
         },
         {
-          "type": "Allocations",
-          "value": 8189951
+          "type": "Allocations/op",
+          "value": 8097063
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -623,16 +716,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.182146774,
-          "per": "op"
+          "value": 1.248247173
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 153183.6484375
+          "type": "Memory Usage (KB/op)",
+          "value": 153152.984375
         },
         {
-          "type": "Allocations",
-          "value": 3439967
+          "type": "Allocations/op",
+          "value": 3442394
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -643,16 +739,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.913069545,
-          "per": "op"
+          "value": 1.690072324
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 317196.515625
+          "type": "Memory Usage (KB/op)",
+          "value": 317469.609375
         },
         {
-          "type": "Allocations",
-          "value": 8013787
+          "type": "Allocations/op",
+          "value": 8016700
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -663,16 +762,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.340710942,
-          "per": "op"
+          "value": 1.259267727
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 155374.5546875
+          "type": "Memory Usage (KB/op)",
+          "value": 154297.8203125
         },
         {
-          "type": "Allocations",
-          "value": 3476938
+          "type": "Allocations/op",
+          "value": 3462909
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -683,16 +785,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.473740448,
-          "per": "op"
+          "value": 2.261818573
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 315219.265625
+          "type": "Memory Usage (KB/op)",
+          "value": 315566.234375
         },
         {
-          "type": "Allocations",
-          "value": 8010836
+          "type": "Allocations/op",
+          "value": 8014537
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -703,16 +808,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.165673851,
-          "per": "op"
+          "value": 1.301912369
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 154558.6484375
+          "type": "Memory Usage (KB/op)",
+          "value": 154824.421875
         },
         {
-          "type": "Allocations",
-          "value": 3463723
+          "type": "Allocations/op",
+          "value": 3468848
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -723,16 +831,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.171527254,
-          "per": "op"
+          "value": 2.036893126
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 315486.453125
+          "type": "Memory Usage (KB/op)",
+          "value": 315289.578125
         },
         {
-          "type": "Allocations",
-          "value": 8014286
+          "type": "Allocations/op",
+          "value": 8012186
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -743,16 +854,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.414236141,
-          "per": "op"
+          "value": 1.417986247
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 152438.0625
+          "type": "Memory Usage (KB/op)",
+          "value": 154596.640625
         },
         {
-          "type": "Allocations",
-          "value": 3429357
+          "type": "Allocations/op",
+          "value": 3467200
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -763,16 +877,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.488143371,
-          "per": "op"
+          "value": 2.707207435
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 321686.203125
+          "type": "Memory Usage (KB/op)",
+          "value": 321493.359375
         },
         {
-          "type": "Allocations",
-          "value": 8068343
+          "type": "Allocations/op",
+          "value": 8066286
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -783,16 +900,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.39202263,
-          "per": "op"
+          "value": 1.542454349
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 183972.4140625
+          "type": "Memory Usage (KB/op)",
+          "value": 185330.8203125
         },
         {
-          "type": "Allocations",
-          "value": 4432984
+          "type": "Allocations/op",
+          "value": 4454971
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -803,16 +923,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.937847487,
-          "per": "op"
+          "value": 4.207874336
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 470612.703125
+          "type": "Memory Usage (KB/op)",
+          "value": 491711.515625
         },
         {
-          "type": "Allocations",
-          "value": 8586832
+          "type": "Allocations/op",
+          "value": 8905224
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -823,16 +946,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.464318652,
-          "per": "op"
+          "value": 1.340786863
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 128287.9609375
+          "type": "Memory Usage (KB/op)",
+          "value": 128869.8125
         },
         {
-          "type": "Allocations",
-          "value": 3059373
+          "type": "Allocations/op",
+          "value": 3077048
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -843,16 +969,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.746069329,
-          "per": "op"
+          "value": 1.354498563
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218876.515625
+          "type": "Memory Usage (KB/op)",
+          "value": 218827.875
         },
         {
-          "type": "Allocations",
-          "value": 7000055
+          "type": "Allocations/op",
+          "value": 7000100
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -863,16 +992,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.704233516,
-          "per": "op"
+          "value": 3.068285511
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 128334.125
+          "type": "Memory Usage (KB/op)",
+          "value": 128161.4765625
         },
         {
-          "type": "Allocations",
-          "value": 3060969
+          "type": "Allocations/op",
+          "value": 3055050
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -883,16 +1015,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.572522021,
-          "per": "op"
+          "value": 1.713627614
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218893.3125
+          "type": "Memory Usage (KB/op)",
+          "value": 218895.1875
         },
         {
-          "type": "Allocations",
-          "value": 7000864
+          "type": "Allocations/op",
+          "value": 7000884
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -903,16 +1038,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.463970817,
-          "per": "op"
+          "value": 2.94896211
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 128330.765625
+          "type": "Memory Usage (KB/op)",
+          "value": 128520.84375
         },
         {
-          "type": "Allocations",
-          "value": 3060058
+          "type": "Allocations/op",
+          "value": 3063180
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -923,16 +1061,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.996427209,
-          "per": "op"
+          "value": 1.728421432
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 219622.484375
+          "type": "Memory Usage (KB/op)",
+          "value": 219564.046875
         },
         {
-          "type": "Allocations",
-          "value": 7006985
+          "type": "Allocations/op",
+          "value": 7006926
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -943,16 +1084,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.617226126,
-          "per": "op"
+          "value": 2.572240342
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 129457.796875
+          "type": "Memory Usage (KB/op)",
+          "value": 129062.1796875
         },
         {
-          "type": "Allocations",
-          "value": 3080708
+          "type": "Allocations/op",
+          "value": 3069866
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -963,16 +1107,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.994151653,
-          "per": "op"
+          "value": 1.936093451
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 224732.515625
+          "type": "Memory Usage (KB/op)",
+          "value": 224226.078125
         },
         {
-          "type": "Allocations",
-          "value": 7052244
+          "type": "Allocations/op",
+          "value": 7046842
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -983,16 +1130,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.540015164,
-          "per": "op"
+          "value": 2.25407827
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 159913.4765625
+          "type": "Memory Usage (KB/op)",
+          "value": 159660.625
         },
         {
-          "type": "Allocations",
-          "value": 4066805
+          "type": "Allocations/op",
+          "value": 4058689
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1003,16 +1153,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.035838222,
-          "per": "op"
+          "value": 3.185711347
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 438676.703125
+          "type": "Memory Usage (KB/op)",
+          "value": 447901.796875
         },
         {
-          "type": "Allocations",
-          "value": 8975280
+          "type": "Allocations/op",
+          "value": 8985593
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1023,16 +1176,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.414452754,
-          "per": "op"
+          "value": 1.323912098
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 147284.2109375
+          "type": "Memory Usage (KB/op)",
+          "value": 148868.1953125
         },
         {
-          "type": "Allocations",
-          "value": 3355831
+          "type": "Allocations/op",
+          "value": 3383153
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1043,16 +1199,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.792518154,
-          "per": "op"
+          "value": 3.101952032
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314757.078125
+          "type": "Memory Usage (KB/op)",
+          "value": 313790.296875
         },
         {
-          "type": "Allocations",
-          "value": 8005840
+          "type": "Allocations/op",
+          "value": 8004564
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1063,16 +1222,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.483917357,
-          "per": "op"
+          "value": 1.471380803
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 147905.125
+          "type": "Memory Usage (KB/op)",
+          "value": 147548.8359375
         },
         {
-          "type": "Allocations",
-          "value": 3366932
+          "type": "Allocations/op",
+          "value": 3360433
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1083,16 +1245,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.072358542,
-          "per": "op"
+          "value": 1.782220208
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314370.421875
+          "type": "Memory Usage (KB/op)",
+          "value": 313944.546875
         },
         {
-          "type": "Allocations",
-          "value": 8006299
+          "type": "Allocations/op",
+          "value": 8005709
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1103,16 +1268,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.567909405,
-          "per": "op"
+          "value": 1.808320393
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 147933.109375
+          "type": "Memory Usage (KB/op)",
+          "value": 147550.0390625
         },
         {
-          "type": "Allocations",
-          "value": 3367721
+          "type": "Allocations/op",
+          "value": 3365009
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1123,16 +1291,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.112252072,
-          "per": "op"
+          "value": 2.188801793
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314983.734375
+          "type": "Memory Usage (KB/op)",
+          "value": 314148.421875
         },
         {
-          "type": "Allocations",
-          "value": 8011747
+          "type": "Allocations/op",
+          "value": 8009050
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1143,16 +1314,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.757658609,
-          "per": "op"
+          "value": 1.998790024
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 146575.125
+          "type": "Memory Usage (KB/op)",
+          "value": 146045.3828125
         },
         {
-          "type": "Allocations",
-          "value": 3348882
+          "type": "Allocations/op",
+          "value": 3340933
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1163,16 +1337,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.887409802,
-          "per": "op"
+          "value": 1.860230923
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 320488.109375
+          "type": "Memory Usage (KB/op)",
+          "value": 319127.078125
         },
         {
-          "type": "Allocations",
-          "value": 8064598
+          "type": "Allocations/op",
+          "value": 8052339
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1183,16 +1360,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.520751079,
-          "per": "op"
+          "value": 2.00650685
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 178718.5390625
+          "type": "Memory Usage (KB/op)",
+          "value": 177582.578125
         },
         {
-          "type": "Allocations",
-          "value": 4360756
+          "type": "Allocations/op",
+          "value": 4343362
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1203,16 +1383,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.953792727,
-          "per": "op"
+          "value": 4.036872653
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 471505.953125
+          "type": "Memory Usage (KB/op)",
+          "value": 483088.640625
         },
         {
-          "type": "Allocations",
-          "value": 8718114
+          "type": "Allocations/op",
+          "value": 8839367
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1223,16 +1406,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.295926855,
-          "per": "op"
+          "value": 1.418580442
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 181593.609375
+          "type": "Memory Usage (KB/op)",
+          "value": 182100.2734375
         },
         {
-          "type": "Allocations",
-          "value": 3970103
+          "type": "Allocations/op",
+          "value": 3981234
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1243,16 +1429,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.880889784,
-          "per": "op"
+          "value": 2.176256743
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 317259.796875
+          "type": "Memory Usage (KB/op)",
+          "value": 317539.453125
         },
         {
-          "type": "Allocations",
-          "value": 8014462
+          "type": "Allocations/op",
+          "value": 8017445
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1263,16 +1452,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.393691881,
-          "per": "op"
+          "value": 1.644519934
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 180909.8046875
+          "type": "Memory Usage (KB/op)",
+          "value": 179023.703125
         },
         {
-          "type": "Allocations",
-          "value": 3957212
+          "type": "Allocations/op",
+          "value": 3924443
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1283,16 +1475,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.690330316,
-          "per": "op"
+          "value": 2.459503392
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 315737.703125
+          "type": "Memory Usage (KB/op)",
+          "value": 315155.609375
         },
         {
-          "type": "Allocations",
-          "value": 8016366
+          "type": "Allocations/op",
+          "value": 8010157
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1303,16 +1498,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.357276642,
-          "per": "op"
+          "value": 1.641326319
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 183704.953125
+          "type": "Memory Usage (KB/op)",
+          "value": 180836.796875
         },
         {
-          "type": "Allocations",
-          "value": 4009549
+          "type": "Allocations/op",
+          "value": 3953352
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1323,16 +1521,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.473972351,
-          "per": "op"
+          "value": 2.223610186
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 315393.734375
+          "type": "Memory Usage (KB/op)",
+          "value": 315209.046875
         },
         {
-          "type": "Allocations",
-          "value": 8013297
+          "type": "Allocations/op",
+          "value": 8011327
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1343,16 +1544,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.447583183,
-          "per": "op"
+          "value": 1.531229069
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 182131.9296875
+          "type": "Memory Usage (KB/op)",
+          "value": 181055.4609375
         },
         {
-          "type": "Allocations",
-          "value": 3982221
+          "type": "Allocations/op",
+          "value": 3970261
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1363,16 +1567,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.27186752,
-          "per": "op"
+          "value": 2.600563569
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 321500.296875
+          "type": "Memory Usage (KB/op)",
+          "value": 321248.578125
         },
         {
-          "type": "Allocations",
-          "value": 8066360
+          "type": "Allocations/op",
+          "value": 8063675
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1383,16 +1590,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.459805005,
-          "per": "op"
+          "value": 1.640158363
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 216053.734375
+          "type": "Memory Usage (KB/op)",
+          "value": 212763.1640625
         },
         {
-          "type": "Allocations",
-          "value": 5023312
+          "type": "Allocations/op",
+          "value": 4974121
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1403,16 +1613,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.981447512,
-          "per": "op"
+          "value": 5.00111469
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 545570.203125
+          "type": "Memory Usage (KB/op)",
+          "value": 544843.703125
         },
         {
-          "type": "Allocations",
-          "value": 10005932
+          "type": "Allocations/op",
+          "value": 10006088
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1423,16 +1636,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.614113857,
-          "per": "op"
+          "value": 2.581432457
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 132532.1796875
+          "type": "Memory Usage (KB/op)",
+          "value": 132228.0234375
         },
         {
-          "type": "Allocations",
-          "value": 3193397
+          "type": "Allocations/op",
+          "value": 3183888
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1443,16 +1659,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.945074865,
-          "per": "op"
+          "value": 1.799368896
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218816.5
+          "type": "Memory Usage (KB/op)",
+          "value": 218816.3125
         },
         {
-          "type": "Allocations",
-          "value": 7000261
+          "type": "Allocations/op",
+          "value": 7000259
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1463,16 +1682,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.626768111,
-          "per": "op"
+          "value": 2.966860077
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 132637.671875
+          "type": "Memory Usage (KB/op)",
+          "value": 131943.296875
         },
         {
-          "type": "Allocations",
-          "value": 3197915
+          "type": "Allocations/op",
+          "value": 3175689
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1483,16 +1705,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.589407181,
-          "per": "op"
+          "value": 1.717508689
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218893.78125
+          "type": "Memory Usage (KB/op)",
+          "value": 218912.625
         },
         {
-          "type": "Allocations",
-          "value": 7000869
+          "type": "Allocations/op",
+          "value": 7001070
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1503,16 +1728,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.633241479,
-          "per": "op"
+          "value": 3.116250667
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 132765.7421875
+          "type": "Memory Usage (KB/op)",
+          "value": 131787.0234375
         },
         {
-          "type": "Allocations",
-          "value": 3199479
+          "type": "Allocations/op",
+          "value": 3168613
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1523,16 +1751,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.954795792,
-          "per": "op"
+          "value": 2.127570144
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 219663.328125
+          "type": "Memory Usage (KB/op)",
+          "value": 219640.296875
         },
         {
-          "type": "Allocations",
-          "value": 7006856
+          "type": "Allocations/op",
+          "value": 7007175
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1543,16 +1774,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.664391892,
-          "per": "op"
+          "value": 3.176109416
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 133507.625
+          "type": "Memory Usage (KB/op)",
+          "value": 132459.71875
         },
         {
-          "type": "Allocations",
-          "value": 3212414
+          "type": "Allocations/op",
+          "value": 3178604
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1563,16 +1797,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.979182897,
-          "per": "op"
+          "value": 2.030539105
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 224479.203125
+          "type": "Memory Usage (KB/op)",
+          "value": 224324.890625
         },
         {
-          "type": "Allocations",
-          "value": 7049542
+          "type": "Allocations/op",
+          "value": 7047896
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1583,16 +1820,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.519906111,
-          "per": "op"
+          "value": 2.698873479
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 164085.8828125
+          "type": "Memory Usage (KB/op)",
+          "value": 164076.03125
         },
         {
-          "type": "Allocations",
-          "value": 4198282
+          "type": "Allocations/op",
+          "value": 4199251
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1603,16 +1843,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 3.029194925,
-          "per": "op"
+          "value": 3.235693188
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 442917.484375
+          "type": "Memory Usage (KB/op)",
+          "value": 449244.734375
         },
         {
-          "type": "Allocations",
-          "value": 8974777
+          "type": "Allocations/op",
+          "value": 8989189
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1623,16 +1866,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.67183192,
-          "per": "op"
+          "value": 1.55593399
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 176031.2734375
+          "type": "Memory Usage (KB/op)",
+          "value": 177569.171875
         },
         {
-          "type": "Allocations",
-          "value": 3894838
+          "type": "Allocations/op",
+          "value": 3927556
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1643,16 +1889,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.464312932,
-          "per": "op"
+          "value": 2.96613263
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314727.640625
+          "type": "Memory Usage (KB/op)",
+          "value": 314906.328125
         },
         {
-          "type": "Allocations",
-          "value": 8005526
+          "type": "Allocations/op",
+          "value": 8007432
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1663,16 +1912,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.490456847,
-          "per": "op"
+          "value": 2.386344345
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 174713.2578125
+          "type": "Memory Usage (KB/op)",
+          "value": 172508.7109375
         },
         {
-          "type": "Allocations",
-          "value": 3873999
+          "type": "Allocations/op",
+          "value": 3839474
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1683,16 +1935,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.821423401,
-          "per": "op"
+          "value": 1.657249939
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314613.328125
+          "type": "Memory Usage (KB/op)",
+          "value": 314620.765625
         },
         {
-          "type": "Allocations",
-          "value": 8005502
+          "type": "Allocations/op",
+          "value": 8006146
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1703,16 +1958,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.611467182,
-          "per": "op"
+          "value": 2.043272474
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 175517.359375
+          "type": "Memory Usage (KB/op)",
+          "value": 173709.453125
         },
         {
-          "type": "Allocations",
-          "value": 3885396
+          "type": "Allocations/op",
+          "value": 3854428
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1723,16 +1981,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.793425284,
-          "per": "op"
+          "value": 1.787985256
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314838.140625
+          "type": "Memory Usage (KB/op)",
+          "value": 314713.203125
         },
         {
-          "type": "Allocations",
-          "value": 8008500
+          "type": "Allocations/op",
+          "value": 8011120
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1743,16 +2004,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.748472188,
-          "per": "op"
+          "value": 2.293462953
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 173180.65625
+          "type": "Memory Usage (KB/op)",
+          "value": 172037.4296875
         },
         {
-          "type": "Allocations",
-          "value": 3853365
+          "type": "Allocations/op",
+          "value": 3835623
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1763,16 +2027,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.830443537,
-          "per": "op"
+          "value": 1.918013574
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 319419.984375
+          "type": "Memory Usage (KB/op)",
+          "value": 319111.421875
         },
         {
-          "type": "Allocations",
-          "value": 8054334
+          "type": "Allocations/op",
+          "value": 8050478
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1783,16 +2050,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.600978191,
-          "per": "op"
+          "value": 1.863485871
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 206310.890625
+          "type": "Memory Usage (KB/op)",
+          "value": 204651.7109375
         },
         {
-          "type": "Allocations",
-          "value": 4881175
+          "type": "Allocations/op",
+          "value": 4849560
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1803,16 +2073,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 4.342780482,
-          "per": "op"
+          "value": 4.491987633
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 544433.296875
+          "type": "Memory Usage (KB/op)",
+          "value": 525720.703125
         },
         {
-          "type": "Allocations",
-          "value": 10005663
+          "type": "Allocations/op",
+          "value": 10002566
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1823,16 +2096,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.312771165,
-          "per": "op"
+          "value": 1.284211505
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 212503.9375
+          "type": "Memory Usage (KB/op)",
+          "value": 211831.34375
         },
         {
-          "type": "Allocations",
-          "value": 4552743
+          "type": "Allocations/op",
+          "value": 4546972
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1843,16 +2119,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.023229348,
-          "per": "op"
+          "value": 2.043185396
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 317498.390625
+          "type": "Memory Usage (KB/op)",
+          "value": 317063.015625
         },
         {
-          "type": "Allocations",
-          "value": 8017007
+          "type": "Allocations/op",
+          "value": 8012363
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1863,16 +2142,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.540873027,
-          "per": "op"
+          "value": 1.426894624
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 209647.515625
+          "type": "Memory Usage (KB/op)",
+          "value": 209050.34375
         },
         {
-          "type": "Allocations",
-          "value": 4499361
+          "type": "Allocations/op",
+          "value": 4494246
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1883,16 +2165,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.268521947,
-          "per": "op"
+          "value": 2.178987974
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 315407.609375
+          "type": "Memory Usage (KB/op)",
+          "value": 315382.765625
         },
         {
-          "type": "Allocations",
-          "value": 8012845
+          "type": "Allocations/op",
+          "value": 8012580
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1903,16 +2188,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.489779637,
-          "per": "op"
+          "value": 1.560371818
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 211439.109375
+          "type": "Memory Usage (KB/op)",
+          "value": 209967.6875
         },
         {
-          "type": "Allocations",
-          "value": 4530060
+          "type": "Allocations/op",
+          "value": 4512825
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1923,16 +2211,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.123025013,
-          "per": "op"
+          "value": 2.081109149
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 315328.390625
+          "type": "Memory Usage (KB/op)",
+          "value": 315429.078125
         },
         {
-          "type": "Allocations",
-          "value": 8012600
+          "type": "Allocations/op",
+          "value": 8013674
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1943,16 +2234,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.414000051,
-          "per": "op"
+          "value": 2.02951864
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 208605.703125
+          "type": "Memory Usage (KB/op)",
+          "value": 206350.421875
         },
         {
-          "type": "Allocations",
-          "value": 4488976
+          "type": "Allocations/op",
+          "value": 4450872
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1963,16 +2257,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.905650435,
-          "per": "op"
+          "value": 2.145700023
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 322272.703125
+          "type": "Memory Usage (KB/op)",
+          "value": 320936.390625
         },
         {
-          "type": "Allocations",
-          "value": 8074599
+          "type": "Allocations/op",
+          "value": 8060345
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -1983,16 +2280,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.548480884,
-          "per": "op"
+          "value": 1.805000957
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 243538.203125
+          "type": "Memory Usage (KB/op)",
+          "value": 239389.6953125
         },
         {
-          "type": "Allocations",
-          "value": 5547254
+          "type": "Allocations/op",
+          "value": 5472294
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2003,16 +2303,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 4.343627877,
-          "per": "op"
+          "value": 4.652427344
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 541477.203125
+          "type": "Memory Usage (KB/op)",
+          "value": 539367.390625
         },
         {
-          "type": "Allocations",
-          "value": 10005188
+          "type": "Allocations/op",
+          "value": 10005270
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2023,16 +2326,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.624786864,
-          "per": "op"
+          "value": 1.736269147
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 136170.25
+          "type": "Memory Usage (KB/op)",
+          "value": 137620.09375
         },
         {
-          "type": "Allocations",
-          "value": 3311112
+          "type": "Allocations/op",
+          "value": 3349364
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2043,16 +2349,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.001175498,
-          "per": "op"
+          "value": 1.432302919
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218824.5
+          "type": "Memory Usage (KB/op)",
+          "value": 218991.515625
         },
         {
-          "type": "Allocations",
-          "value": 7000064
+          "type": "Allocations/op",
+          "value": 7000153
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2063,16 +2372,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.03109552,
-          "per": "op"
+          "value": 2.005115241
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 136188.3203125
+          "type": "Memory Usage (KB/op)",
+          "value": 136582.09375
         },
         {
-          "type": "Allocations",
-          "value": 3304938
+          "type": "Allocations/op",
+          "value": 3321553
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2083,16 +2395,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.811973727,
-          "per": "op"
+          "value": 1.548780024
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 218919.28125
+          "type": "Memory Usage (KB/op)",
+          "value": 219081.515625
         },
         {
-          "type": "Allocations",
-          "value": 7001141
+          "type": "Allocations/op",
+          "value": 7001179
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2103,16 +2418,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.026728312,
-          "per": "op"
+          "value": 1.975519777
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 136274.328125
+          "type": "Memory Usage (KB/op)",
+          "value": 136148.3671875
         },
         {
-          "type": "Allocations",
-          "value": 3313240
+          "type": "Allocations/op",
+          "value": 3305162
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2123,16 +2441,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.84532159,
-          "per": "op"
+          "value": 1.55060392
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 219503.765625
+          "type": "Memory Usage (KB/op)",
+          "value": 219744.484375
         },
         {
-          "type": "Allocations",
-          "value": 7006283
+          "type": "Allocations/op",
+          "value": 7007157
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2143,16 +2464,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.732497558,
-          "per": "op"
+          "value": 1.746992672
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 137069.21875
+          "type": "Memory Usage (KB/op)",
+          "value": 138197.390625
         },
         {
-          "type": "Allocations",
-          "value": 3324495
+          "type": "Allocations/op",
+          "value": 3350208
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2163,16 +2487,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.429102005,
-          "per": "op"
+          "value": 1.758230885
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 225110.984375
+          "type": "Memory Usage (KB/op)",
+          "value": 224783.421875
         },
         {
-          "type": "Allocations",
-          "value": 7056281
+          "type": "Allocations/op",
+          "value": 7052787
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2183,16 +2510,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 0.997857688,
-          "per": "op"
+          "value": 1.913814385
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 170856.69921875
+          "type": "Memory Usage (KB/op)",
+          "value": 168631.0390625
         },
         {
-          "type": "Allocations",
-          "value": 4403356
+          "type": "Allocations/op",
+          "value": 4332705
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2203,16 +2533,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.459536933,
-          "per": "op"
+          "value": 2.581042327
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 448227.421875
+          "type": "Memory Usage (KB/op)",
+          "value": 433191.328125
         },
         {
-          "type": "Allocations",
-          "value": 8987937
+          "type": "Allocations/op",
+          "value": 8961378
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2223,16 +2556,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 0.927879166,
-          "per": "op"
+          "value": 1.457837717
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 207662.37109375
+          "type": "Memory Usage (KB/op)",
+          "value": 203887.1484375
         },
         {
-          "type": "Allocations",
-          "value": 4503082
+          "type": "Allocations/op",
+          "value": 4431371
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2243,16 +2579,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.213181886,
-          "per": "op"
+          "value": 1.674873771
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314698.015625
+          "type": "Memory Usage (KB/op)",
+          "value": 315086.890625
         },
         {
-          "type": "Allocations",
-          "value": 8005210
+          "type": "Allocations/op",
+          "value": 8009358
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2263,16 +2602,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.176301166,
-          "per": "op"
+          "value": 1.360870425
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 201707.53125
+          "type": "Memory Usage (KB/op)",
+          "value": 202886.234375
         },
         {
-          "type": "Allocations",
-          "value": 4385927
+          "type": "Allocations/op",
+          "value": 4410540
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2283,16 +2625,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.734150889,
-          "per": "op"
+          "value": 1.801363188
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314148.609375
+          "type": "Memory Usage (KB/op)",
+          "value": 314811.171875
         },
         {
-          "type": "Allocations",
-          "value": 8005627
+          "type": "Allocations/op",
+          "value": 8006483
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2303,16 +2648,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.951955984,
-          "per": "op"
+          "value": 1.511410402
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 200926.5703125
+          "type": "Memory Usage (KB/op)",
+          "value": 201385.2734375
         },
         {
-          "type": "Allocations",
-          "value": 4372052
+          "type": "Allocations/op",
+          "value": 4379919
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2323,16 +2671,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.763844919,
-          "per": "op"
+          "value": 1.855556535
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 314369.421875
+          "type": "Memory Usage (KB/op)",
+          "value": 315123.171875
         },
         {
-          "type": "Allocations",
-          "value": 8009147
+          "type": "Allocations/op",
+          "value": 8010411
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2343,16 +2694,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.163627293,
-          "per": "op"
+          "value": 1.532022601
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 201144.5859375
+          "type": "Memory Usage (KB/op)",
+          "value": 202284.1015625
         },
         {
-          "type": "Allocations",
-          "value": 4378951
+          "type": "Allocations/op",
+          "value": 4394061
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2363,16 +2717,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 1.948302646,
-          "per": "op"
+          "value": 1.697590523
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 319257.359375
+          "type": "Memory Usage (KB/op)",
+          "value": 320435.109375
         },
         {
-          "type": "Allocations",
-          "value": 8056552
+          "type": "Allocations/op",
+          "value": 8054998
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2383,16 +2740,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 2.038701655,
-          "per": "op"
+          "value": 1.511445344
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 233678.5703125
+          "type": "Memory Usage (KB/op)",
+          "value": 234360.1953125
         },
         {
-          "type": "Allocations",
-          "value": 5398063
+          "type": "Allocations/op",
+          "value": 5410309
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     },
@@ -2403,16 +2763,19 @@
       "stats": [
         {
           "type": "Execution Time (s/op)",
-          "value": 4.624737522,
-          "per": "op"
+          "value": 3.627145855
         },
         {
-          "type": "Memory Usage (kb/op)",
-          "value": 542745.078125
+          "type": "Memory Usage (KB/op)",
+          "value": 517343.109375
         },
         {
-          "type": "Allocations",
-          "value": 10005160
+          "type": "Allocations/op",
+          "value": 9999599
+        },
+        {
+          "type": "Iterations",
+          "value": 1
         }
       ]
     }
