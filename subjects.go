@@ -6,7 +6,7 @@ import (
 )
 
 // Configuration
-var maxWorkers = []int{50_000, 1_00_000, 3_00_000, 5_00_000}
+var maxWorkers = []int{50_000, 1_00_000, 3_00_000}
 
 var workloads = []workload{
 	{

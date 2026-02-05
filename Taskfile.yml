@@ -33,7 +33,7 @@ tasks:
     desc: Run all benchmarks with default settings
     deps: [deps]
     cmds:
-      - go test -bench=. -benchtime=3x -benchmem
+      - go test -bench=. -benchtime=2x -benchmem
 
   bench-quick:
     desc: Run quick benchmarks (1x iteration)
@@ -83,21 +83,21 @@ tasks:
     deps: [deps]
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchmem | vizb -p /n/y/x -t s -m kb -o charts/bench -f json -l -s asc -c bar,pie -n "VarMQ vs PondV2 24 cpus"
+      - go test -bench=. -benchtime=2x -benchmem | vizb -p /n/y/x -t s -m kb -o charts/bench.json -l -s asc -c bar,pie -n "VarMQ vs PondV2 24 cpus"
 
   vizb-8cpu:
     desc: Generate benchmark charts with 8 CPU cores
     deps: [deps]
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchmem -cpu=8 | vizb -p /n/y/x -t s -m kb -o charts/bench-8cpu -f json -l -s asc -c bar,pie -n "VarMQ vs PondV2 8 cpus"
+      - go test -bench=. -benchtime=2x -benchmem -cpu=8 | vizb -p /n/y/x -t s -m kb -o charts/bench-8cpu.json -l -s asc -c bar,pie -n "VarMQ vs PondV2 8 cpus"
 
   vizb-4cpu:
     desc: Generate benchmark charts with 4 CPU cores
     deps: [deps]
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchmem -cpu=4 | vizb -p /n/y/x -t s -m kb -o charts/bench-4cpu -f json -l -s asc -c bar,pie -n "VarMQ vs PondV2 4 cpus"
+      - go test -bench=. -benchtime=2x -benchmem -cpu=4 | vizb -p /n/y/x -t s -m kb -o charts/bench-4cpu.json -l -s asc -c bar,pie -n "VarMQ vs PondV2 4 cpus"
 
   vizb-all:
     desc: Generate benchmark charts for all CPU configurations

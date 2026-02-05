@@ -101,6 +101,9 @@ task vizb-8cpu      # Generate benchmark charts with 8 CPU cores
 task vizb-4cpu      # Generate benchmark charts with 4 CPU cores
 task vizb-all       # Generate benchmark charts for all CPU configurations
 
+# And then merge them to a single html file
+task merge
+
 # Cleanup
 task clean          # Clean build artifacts, profiles, and charts
 ```
