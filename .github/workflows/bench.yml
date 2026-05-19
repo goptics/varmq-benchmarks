@@ -1,0 +1,69 @@
+name: bench
+on:
+  push:
+    branches: [main]
+    paths:
+      - bench/**
+      - .github/workflows/bench.yml
+  workflow_dispatch:
+
+jobs:
+  convert:
+    strategy:
+      matrix:
+        include:
+          - output: bench
+            bench-file: bench/bench-default.txt
+            name: "VarMQ vs PondV2 (default CPUs)"
+
+          - output: bench-8cpu
+            bench-file: bench/bench-8cpu.txt
+            name: "VarMQ vs PondV2 (8 CPUs)"
+
+          - output: bench-4cpu
+            bench-file: bench/bench-4cpu.txt
+            name: "VarMQ vs PondV2 (4 CPUs)"
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: goptics/vizb@v0.10.1
+        with:
+          bench-file: ${{ matrix.bench-file }}
+          name: ${{ matrix.name }}
+          group-pattern: /n/y/x
+          time-unit: s
+          mem-unit: kb
+          sort: asc
+          charts: bar,pie
+          show-labels: true
+          output-json: ${{ matrix.output }}.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: json-${{ matrix.output }}
+          path: ${{ matrix.output }}.json
+
+  merge-deploy:
+    needs: convert
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: json-*
+          path: /tmp/jsons
+          merge-multiple: true
+
+      - uses: goptics/vizb@v0.10.1
+        with:
+          merge-dir: /tmp/jsons
+          output-html: index.html
+
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          force_orphan: true
