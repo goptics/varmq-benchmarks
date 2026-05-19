@@ -1,9 +1,9 @@
-github.com/alitto/pond/v2 v2.6.0 h1:R4haldpYpIVnU7ZgHu4VexC8I/yDE2G4KF9GzRV+aIQ=
-github.com/alitto/pond/v2 v2.6.0/go.mod h1:xkjYEgQ05RSpWdfSd1nM3OVv7TBhLdy7rMp3+2Nq+yE=
+github.com/alitto/pond/v2 v2.7.1 h1:QxMbcfjcVTa0pyxX5Ib1226mM8u8D7gKUVkCUU4DYIw=
+github.com/alitto/pond/v2 v2.7.1/go.mod h1:xkjYEgQ05RSpWdfSd1nM3OVv7TBhLdy7rMp3+2Nq+yE=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/goptics/varmq v1.6.0 h1:922wlMYP5CGQ7VHNqxAUtSzjLp0GB4KyxCHN/W4fUIY=
-github.com/goptics/varmq v1.6.0/go.mod h1:Cmv0TgGyfj08VKsjOGHnqScQpMotQ3ufXhtqJqLpd6M=
+github.com/goptics/varmq v1.7.0 h1:TyIkkz8ZAWeyD2A2wJLVtploiBuLjyiZHmXfHHpVzLU=
+github.com/goptics/varmq v1.7.0/go.mod h1:Cmv0TgGyfj08VKsjOGHnqScQpMotQ3ufXhtqJqLpd6M=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
