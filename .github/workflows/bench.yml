@@ -57,7 +57,7 @@ jobs:
           path: /tmp/jsons
           merge-multiple: true
 
-      - uses: goptics/vizb@v0.10.1
+      - uses: goptics/vizb@v0
         with:
           merge-dir: /tmp/jsons
           output-html: public/index.html
