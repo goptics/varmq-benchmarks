@@ -77,31 +77,36 @@ tasks:
     cmds:
       - go test -bench=. -benchtime=1x -cpuprofile=cpu.prof -memprofile=mem.prof
 
+  bench-gen:
+    desc: Run benchmarks and save output to bench/ directory
+    deps: [deps]
+    cmds:
+      - mkdir -p bench
+      - go test -bench=. -benchtime=2x -benchmem > bench/bench-default.txt
+      - go test -bench=. -benchtime=2x -benchmem -cpu=8 > bench/bench-8cpu.txt
+      - go test -bench=. -benchtime=2x -benchmem -cpu=4 > bench/bench-4cpu.txt
+
   # Vizb Visualization Tasks
   vizb:
-    desc: Generate benchmark charts with default CPU count
-    deps: [deps]
+    desc: Generate benchmark charts from bench-default.txt
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchtime=2x -benchmem | vizb -p /n/y/x -t s -m kb -o charts/bench.json -l -s asc -c bar,pie -n "VarMQ vs PondV2 24 cpus"
+      - vizb bench/bench-default.txt -p /n/y/x -t s -m kb -o charts/bench.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (default CPUs)"
 
   vizb-8cpu:
-    desc: Generate benchmark charts with 8 CPU cores
-    deps: [deps]
+    desc: Generate benchmark charts from bench-8cpu.txt
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchtime=2x -benchmem -cpu=8 | vizb -p /n/y/x -t s -m kb -o charts/bench-8cpu.json -l -s asc -c bar,pie -n "VarMQ vs PondV2 8 cpus"
+      - vizb bench/bench-8cpu.txt -p /n/y/x -t s -m kb -o charts/bench-8cpu.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (8 CPUs)"
 
   vizb-4cpu:
-    desc: Generate benchmark charts with 4 CPU cores
-    deps: [deps]
+    desc: Generate benchmark charts from bench-4cpu.txt
     cmds:
       - mkdir -p charts
-      - go test -bench=. -benchtime=2x -benchmem -cpu=4 | vizb -p /n/y/x -t s -m kb -o charts/bench-4cpu.json -l -s asc -c bar,pie -n "VarMQ vs PondV2 4 cpus"
+      - vizb bench/bench-4cpu.txt -p /n/y/x -t s -m kb -o charts/bench-4cpu.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (4 CPUs)"
 
   vizb-all:
     desc: Generate benchmark charts for all CPU configurations
-    deps: [deps]
     cmds:
       - task: vizb
       - task: vizb-8cpu
@@ -110,7 +115,7 @@ tasks:
   merge:
     desc: Merge all benchmark charts
     cmds:
-      - vizb merge charts/ -o charts/index.html
+      - vizb merge charts/ -o index.html
 
   clean:
     desc: Clean build artifacts and profiles
@@ -119,6 +124,7 @@ tasks:
       - rm -f *.prof
       - rm -f *.test
       - rm -rf charts
+      - rm -rf ./bench/*.txt
 
   format:
     desc: Format code
@@ -145,23 +151,3 @@ tasks:
       - go version
       - task deps
       - echo "Development environment ready!"
-
-  help:
-    desc: Show help information
-    cmds:
-      - echo "VarMQ Benchmarks - Worker Pool Performance Testing"
-      - echo ""
-      - echo "Common tasks:"
-      - echo "  task bench        - Run all benchmarks"
-      - echo "  task bench-quick  - Run quick benchmarks"
-      - echo "  task test         - Run tests"
-      - echo "  task build        - Build binary"
-      - echo "  task setup        - Setup development environment"
-      - echo ""
-      - echo "Visualization tasks:"
-      - echo "  task vizb         - Generate charts with default CPU count"
-      - echo "  task vizb-8cpu    - Generate charts with 8 CPU cores"
-      - echo "  task vizb-4cpu    - Generate charts with 4 CPU cores"
-      - echo "  task vizb-all     - Generate charts for all CPU configurations"
-      - echo ""
-      - echo "For more tasks, run task --list"
