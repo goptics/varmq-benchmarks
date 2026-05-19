@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: goptics/vizb@v0.10.1
+      - uses: goptics/vizb@v0
         with:
           bench-file: bench/bench-${{ matrix.variant }}.txt
           name: ${{ matrix.name }}
