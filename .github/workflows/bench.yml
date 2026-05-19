@@ -38,12 +38,12 @@ jobs:
           sort: asc
           charts: bar,pie
           show-labels: true
-          output-json: ${{ matrix.output }}.json
+          output-json: out/${{ matrix.output }}.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: json-${{ matrix.output }}
-          path: ${{ matrix.output }}.json
+          path: out/${{ matrix.output }}.json
 
   merge-deploy:
     needs: convert
