@@ -12,16 +12,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - output: bench
-            bench-file: bench/bench-default.txt
+          - variant: default
+            output: bench
             name: "VarMQ vs PondV2 (default CPUs)"
 
-          - output: bench-8cpu
-            bench-file: bench/bench-8cpu.txt
+          - variant: 8cpu
+            output: bench-8cpu
             name: "VarMQ vs PondV2 (8 CPUs)"
 
-          - output: bench-4cpu
-            bench-file: bench/bench-4cpu.txt
+          - variant: 4cpu
+            output: bench-4cpu
             name: "VarMQ vs PondV2 (4 CPUs)"
 
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
 
       - uses: goptics/vizb@v0.10.1
         with:
-          bench-file: ${{ matrix.bench-file }}
+          bench-file: bench/bench-${{ matrix.variant }}.txt
           name: ${{ matrix.name }}
           group-pattern: /n/y/x
           time-unit: s
