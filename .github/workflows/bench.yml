@@ -35,7 +35,6 @@ jobs:
           group-pattern: /n/y/x
           time-unit: s
           mem-unit: kb
-          sort: asc
           charts: bar,pie
           show-labels: true
           output-json: out/${{ matrix.output }}.json
