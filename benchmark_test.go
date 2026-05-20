@@ -47,6 +47,12 @@ func runBenchmarks(b *testing.B, workloads []workload, task func(), maxWorkers i
 					// Tear down
 					poolTeardown()
 				}
+
+				totalOps := int64(workload.userCount) * int64(workload.taskCount) * int64(b.N)
+				elapsedSec := b.Elapsed().Seconds()
+				if elapsedSec > 0 {
+					b.ReportMetric(float64(totalOps)/elapsedSec, "ops/s")
+				}
 			})
 		}
 	}

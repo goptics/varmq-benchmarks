@@ -2,95 +2,95 @@ goos: linux
 goarch: amd64
 pkg: github.com/goptics/varmq-benchmarks
 cpu: 13th Gen Intel(R) Core(TM) i7-13700
-BenchmarkTasks/Sleep10msWorkers50k/1u-1Mt/VarMQ-24         	       2	1098953968 ns/op	150765516 B/op	 2379128 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/1u-1Mt/PondV2-24        	       2	2537693627 ns/op	365241328 B/op	 8227447 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/100u-10Kt/VarMQ-24      	       2	1651608447 ns/op	136411056 B/op	 2330529 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/100u-10Kt/PondV2-24     	       2	2893213094 ns/op	350760232 B/op	 8108517 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/1Ku-1Kt/VarMQ-24        	       2	1409830168 ns/op	139178244 B/op	 2350984 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/1Ku-1Kt/PondV2-24       	       2	3677199428 ns/op	344432080 B/op	 8052658 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/10Ku-100t/VarMQ-24      	       2	1209575683 ns/op	137397628 B/op	 2357018 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/10Ku-100t/PondV2-24     	       2	2166597467 ns/op	343096752 B/op	 7792835 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/1Mu-1t/VarMQ-24         	       2	1380687116 ns/op	168487456 B/op	 3334314 allocs/op
-BenchmarkTasks/Sleep10msWorkers50k/1Mu-1t/PondV2-24        	       2	2820255890 ns/op	469796040 B/op	 7618650 allocs/op
-BenchmarkTasks/Loop10Workers50k/1u-1Mt/VarMQ-24            	       2	 783334692 ns/op	116708544 B/op	 2088193 allocs/op
-BenchmarkTasks/Loop10Workers50k/1u-1Mt/PondV2-24           	       2	2690582207 ns/op	240341640 B/op	 7000982 allocs/op
-BenchmarkTasks/Loop10Workers50k/100u-10Kt/VarMQ-24         	       2	1092473330 ns/op	116267204 B/op	 2081233 allocs/op
-BenchmarkTasks/Loop10Workers50k/100u-10Kt/PondV2-24        	       2	2238530730 ns/op	241427104 B/op	 7004944 allocs/op
-BenchmarkTasks/Loop10Workers50k/1Ku-1Kt/VarMQ-24           	       2	1367264989 ns/op	116181884 B/op	 2077604 allocs/op
-BenchmarkTasks/Loop10Workers50k/1Ku-1Kt/PondV2-24          	       2	2803362696 ns/op	245927048 B/op	 7022555 allocs/op
-BenchmarkTasks/Loop10Workers50k/10Ku-100t/VarMQ-24         	       2	1010438920 ns/op	116756256 B/op	 2092084 allocs/op
-BenchmarkTasks/Loop10Workers50k/10Ku-100t/PondV2-24        	       2	1772874758 ns/op	248811256 B/op	 6944573 allocs/op
-BenchmarkTasks/Loop10Workers50k/1Mu-1t/VarMQ-24            	       2	1165730214 ns/op	148692864 B/op	 3082833 allocs/op
-BenchmarkTasks/Loop10Workers50k/1Mu-1t/PondV2-24           	       2	3688826664 ns/op	321717720 B/op	 7630490 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/1u-1Mt/VarMQ-24     	       2	1032906834 ns/op	128422496 B/op	 2231305 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/1u-1Mt/PondV2-24    	       2	2463322268 ns/op	339338256 B/op	 8014201 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/100u-10Kt/VarMQ-24  	       2	 966562212 ns/op	127528440 B/op	 2219827 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/100u-10Kt/PondV2-24 	       2	1395000336 ns/op	338763224 B/op	 8009137 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/1Ku-1Kt/VarMQ-24    	       2	 991650151 ns/op	128156000 B/op	 2227844 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/1Ku-1Kt/PondV2-24   	       2	1446970586 ns/op	338815656 B/op	 8010248 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/10Ku-100t/VarMQ-24  	       2	 965713788 ns/op	127948436 B/op	 2233679 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/10Ku-100t/PondV2-24 	       2	1434204850 ns/op	335231112 B/op	 7812639 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/1Mu-1t/VarMQ-24     	       2	1064882811 ns/op	160968964 B/op	 3244042 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers50k/1Mu-1t/PondV2-24    	       2	1564508263 ns/op	354037016 B/op	 7417582 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/1u-1Mt/VarMQ-24        	       2	 891790732 ns/op	140325384 B/op	 2428486 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/1u-1Mt/PondV2-24       	       2	1806885263 ns/op	342167680 B/op	 8023515 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/100u-10Kt/VarMQ-24     	       2	1029399248 ns/op	140324120 B/op	 2425813 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/100u-10Kt/PondV2-24    	       2	1707991110 ns/op	342524496 B/op	 8027247 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/1Ku-1Kt/VarMQ-24       	       2	1029281854 ns/op	141743724 B/op	 2448359 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/1Ku-1Kt/PondV2-24      	       2	1520328098 ns/op	341390512 B/op	 8017765 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/10Ku-100t/VarMQ-24     	       2	1043220886 ns/op	140222888 B/op	 2428440 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/10Ku-100t/PondV2-24    	       2	1576793952 ns/op	349448480 B/op	 8065191 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/1Mu-1t/VarMQ-24        	       2	1166819155 ns/op	172843820 B/op	 3437045 allocs/op
-BenchmarkTasks/Sleep10msWorkers100k/1Mu-1t/PondV2-24       	       2	1613201030 ns/op	369606112 B/op	 7589432 allocs/op
-BenchmarkTasks/Loop10Workers100k/1u-1Mt/VarMQ-24           	       2	 759567856 ns/op	119153228 B/op	 2167886 allocs/op
-BenchmarkTasks/Loop10Workers100k/1u-1Mt/PondV2-24          	       2	1371106822 ns/op	240370088 B/op	 7001236 allocs/op
-BenchmarkTasks/Loop10Workers100k/100u-10Kt/VarMQ-24        	       2	 843136904 ns/op	119058968 B/op	 2162952 allocs/op
-BenchmarkTasks/Loop10Workers100k/100u-10Kt/PondV2-24       	       2	1412754102 ns/op	241616272 B/op	 7006633 allocs/op
-BenchmarkTasks/Loop10Workers100k/1Ku-1Kt/VarMQ-24          	       2	 860883826 ns/op	119374520 B/op	 2167735 allocs/op
-BenchmarkTasks/Loop10Workers100k/1Ku-1Kt/PondV2-24         	       2	1270815003 ns/op	244520592 B/op	 7017734 allocs/op
-BenchmarkTasks/Loop10Workers100k/10Ku-100t/VarMQ-24        	       2	 869351712 ns/op	119655500 B/op	 2176037 allocs/op
-BenchmarkTasks/Loop10Workers100k/10Ku-100t/PondV2-24       	       2	1769944338 ns/op	265946608 B/op	 7084379 allocs/op
-BenchmarkTasks/Loop10Workers100k/1Mu-1t/VarMQ-24           	       2	 959605058 ns/op	151945380 B/op	 3175766 allocs/op
-BenchmarkTasks/Loop10Workers100k/1Mu-1t/PondV2-24          	       2	2369177259 ns/op	354487824 B/op	 8162449 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/1u-1Mt/VarMQ-24    	       2	 830446774 ns/op	133862224 B/op	 2343442 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/1u-1Mt/PondV2-24   	       2	1580674855 ns/op	339343072 B/op	 8014244 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/100u-10Kt/VarMQ-24 	       2	 917215694 ns/op	135794916 B/op	 2375212 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/100u-10Kt/PondV2-24         	       2	1546701199 ns/op	338627648 B/op	 8007927 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/1Ku-1Kt/VarMQ-24            	       2	 957697344 ns/op	135127652 B/op	 2363585 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/1Ku-1Kt/PondV2-24           	       2	1540647890 ns/op	338678288 B/op	 8009022 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/10Ku-100t/VarMQ-24          	       2	 993281110 ns/op	135387456 B/op	 2371622 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/10Ku-100t/PondV2-24         	       2	1438183794 ns/op	346788048 B/op	 8056911 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/1Mu-1t/VarMQ-24             	       2	1063591000 ns/op	167847976 B/op	 3372683 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers100k/1Mu-1t/PondV2-24            	       2	1567912667 ns/op	363575088 B/op	 7615227 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/1u-1Mt/VarMQ-24                 	       2	 929010727 ns/op	168996108 B/op	 2964639 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/1u-1Mt/PondV2-24                	       2	1374357012 ns/op	341465560 B/op	 8017721 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/100u-10Kt/VarMQ-24              	       2	1037147908 ns/op	168838864 B/op	 2954744 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/100u-10Kt/PondV2-24             	       2	1408092791 ns/op	341562472 B/op	 8018657 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/1Ku-1Kt/VarMQ-24                	       2	1060586000 ns/op	167801720 B/op	 2936122 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/1Ku-1Kt/PondV2-24               	       2	1380129174 ns/op	340864504 B/op	 8013068 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/10Ku-100t/VarMQ-24              	       2	1044223272 ns/op	168492656 B/op	 2947297 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/10Ku-100t/PondV2-24             	       2	1704039934 ns/op	348722776 B/op	 8058711 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/1Mu-1t/VarMQ-24                 	       2	1176742542 ns/op	202272680 B/op	 3969182 allocs/op
-BenchmarkTasks/Sleep10msWorkers300k/1Mu-1t/PondV2-24                	       2	2389839106 ns/op	487826072 B/op	 9079967 allocs/op
-BenchmarkTasks/Loop10Workers300k/1u-1Mt/VarMQ-24                    	       2	 759452265 ns/op	129529208 B/op	 2490974 allocs/op
-BenchmarkTasks/Loop10Workers300k/1u-1Mt/PondV2-24                   	       2	1323506532 ns/op	241117304 B/op	 7004041 allocs/op
-BenchmarkTasks/Loop10Workers300k/100u-10Kt/VarMQ-24                 	       2	 873298584 ns/op	129116500 B/op	 2480134 allocs/op
-BenchmarkTasks/Loop10Workers300k/100u-10Kt/PondV2-24                	       2	1326242460 ns/op	241424640 B/op	 7004922 allocs/op
-BenchmarkTasks/Loop10Workers300k/1Ku-1Kt/VarMQ-24                   	       2	 884675665 ns/op	130074992 B/op	 2486109 allocs/op
-BenchmarkTasks/Loop10Workers300k/1Ku-1Kt/PondV2-24                  	       2	1287982240 ns/op	246512872 B/op	 7017146 allocs/op
-BenchmarkTasks/Loop10Workers300k/10Ku-100t/VarMQ-24                 	       2	 920255585 ns/op	129254468 B/op	 2482315 allocs/op
-BenchmarkTasks/Loop10Workers300k/10Ku-100t/PondV2-24                	       2	1418942502 ns/op	257285064 B/op	 7068497 allocs/op
-BenchmarkTasks/Loop10Workers300k/1Mu-1t/VarMQ-24                    	       2	 984137836 ns/op	162149720 B/op	 3496520 allocs/op
-BenchmarkTasks/Loop10Workers300k/1Mu-1t/PondV2-24                   	       2	2590950664 ns/op	347806192 B/op	 8552915 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/1u-1Mt/VarMQ-24             	       2	 862829381 ns/op	163799688 B/op	 2893094 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/1u-1Mt/PondV2-24            	       2	1557251559 ns/op	338867632 B/op	 8009999 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/100u-10Kt/VarMQ-24          	       2	 985250302 ns/op	163289296 B/op	 2882955 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/100u-10Kt/PondV2-24         	       2	1541954516 ns/op	338867944 B/op	 8010072 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/1Ku-1Kt/VarMQ-24            	       2	1038470232 ns/op	163018700 B/op	 2877519 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/1Ku-1Kt/PondV2-24           	       2	1572701180 ns/op	338644240 B/op	 8008718 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/10Ku-100t/VarMQ-24          	       2	1015013465 ns/op	164495428 B/op	 2906731 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/10Ku-100t/PondV2-24         	       2	1476908376 ns/op	347506048 B/op	 8048573 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/1Mu-1t/VarMQ-24             	       2	1126293036 ns/op	196300452 B/op	 3901924 allocs/op
-BenchmarkTasks/Sleep5msLoop5Workers300k/1Mu-1t/PondV2-24            	       2	2354542016 ns/op	441401464 B/op	 9163175 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/1u-1Mt/VarMQ-24         	       2	1146916334 ns/op	    871903 ops/s	150449484 B/op	 2384204 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/1u-1Mt/PondV2-24        	       2	2799910429 ns/op	    357154 ops/s	361160272 B/op	 8193567 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/100u-10Kt/VarMQ-24      	       2	1663404734 ns/op	    601177 ops/s	138163412 B/op	 2342914 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/100u-10Kt/PondV2-24     	       2	3899831169 ns/op	    256421 ops/s	351391496 B/op	 8121163 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/1Ku-1Kt/VarMQ-24        	       2	1986055484 ns/op	    503511 ops/s	138522072 B/op	 2352765 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/1Ku-1Kt/PondV2-24       	       2	3907007986 ns/op	    255950 ops/s	344291940 B/op	 8059122 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/10Ku-100t/VarMQ-24      	       2	1433260549 ns/op	    697710 ops/s	137854760 B/op	 2358622 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/10Ku-100t/PondV2-24     	       2	3257445090 ns/op	    306989 ops/s	359651592 B/op	 8102153 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/1Mu-1t/VarMQ-24         	       2	1398267120 ns/op	    715171 ops/s	168046320 B/op	 3314780 allocs/op
+BenchmarkTasks/Sleep10msWorkers50k/1Mu-1t/PondV2-24        	       2	2812479390 ns/op	    355558 ops/s	471760000 B/op	 7631903 allocs/op
+BenchmarkTasks/Loop10Workers50k/1u-1Mt/VarMQ-24            	       2	1068197786 ns/op	    936156 ops/s	116101864 B/op	 2076999 allocs/op
+BenchmarkTasks/Loop10Workers50k/1u-1Mt/PondV2-24           	       2	4417086045 ns/op	    226394 ops/s	240489664 B/op	 7001337 allocs/op
+BenchmarkTasks/Loop10Workers50k/100u-10Kt/VarMQ-24         	       2	1533048267 ns/op	    652295 ops/s	115826160 B/op	 2072704 allocs/op
+BenchmarkTasks/Loop10Workers50k/100u-10Kt/PondV2-24        	       2	3915457469 ns/op	    255398 ops/s	241148448 B/op	 7004631 allocs/op
+BenchmarkTasks/Loop10Workers50k/1Ku-1Kt/VarMQ-24           	       2	1591656302 ns/op	    628276 ops/s	115987680 B/op	 2073374 allocs/op
+BenchmarkTasks/Loop10Workers50k/1Ku-1Kt/PondV2-24          	       2	3639176670 ns/op	    274787 ops/s	244344024 B/op	 7016158 allocs/op
+BenchmarkTasks/Loop10Workers50k/10Ku-100t/VarMQ-24         	       2	1979650570 ns/op	    505140 ops/s	116560812 B/op	 2086082 allocs/op
+BenchmarkTasks/Loop10Workers50k/10Ku-100t/PondV2-24        	       2	2691558914 ns/op	    371532 ops/s	247909400 B/op	 6958018 allocs/op
+BenchmarkTasks/Loop10Workers50k/1Mu-1t/VarMQ-24            	       2	1098906063 ns/op	    909996 ops/s	149133984 B/op	 3092047 allocs/op
+BenchmarkTasks/Loop10Workers50k/1Mu-1t/PondV2-24           	       2	2516243521 ns/op	    397418 ops/s	319915616 B/op	 7661752 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/1u-1Mt/VarMQ-24     	       2	 890205081 ns/op	   1123337 ops/s	127102796 B/op	 2214276 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/1u-1Mt/PondV2-24    	       2	2111824814 ns/op	    473524 ops/s	338829216 B/op	 8009656 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/100u-10Kt/VarMQ-24  	       2	1179426770 ns/op	    847870 ops/s	128388780 B/op	 2233006 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/100u-10Kt/PondV2-24 	       2	1822672654 ns/op	    548645 ops/s	338756224 B/op	 8009075 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/1Ku-1Kt/VarMQ-24    	       2	2037227233 ns/op	    490863 ops/s	127664672 B/op	 2220943 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/1Ku-1Kt/PondV2-24   	       2	4100577959 ns/op	    243868 ops/s	339388200 B/op	 8015360 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/10Ku-100t/VarMQ-24  	       2	1996274062 ns/op	    500933 ops/s	127707136 B/op	 2227668 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/10Ku-100t/PondV2-24 	       2	2999308600 ns/op	    333410 ops/s	345928024 B/op	 8009111 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/1Mu-1t/VarMQ-24     	       2	1731547277 ns/op	    577518 ops/s	159570288 B/op	 3218935 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers50k/1Mu-1t/PondV2-24    	       2	1685198064 ns/op	    593402 ops/s	349351208 B/op	 7400286 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/1u-1Mt/VarMQ-24        	       2	 941583372 ns/op	   1062041 ops/s	142123088 B/op	 2455996 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/1u-1Mt/PondV2-24       	       2	2504505782 ns/op	    399280 ops/s	342750704 B/op	 8029196 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/100u-10Kt/VarMQ-24     	       2	1461756873 ns/op	    684108 ops/s	142703364 B/op	 2458009 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/100u-10Kt/PondV2-24    	       2	2895481618 ns/op	    345366 ops/s	342069048 B/op	 8023180 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/1Ku-1Kt/VarMQ-24       	       2	1517992436 ns/op	    658765 ops/s	144423900 B/op	 2483075 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/1Ku-1Kt/PondV2-24      	       2	4076488723 ns/op	    245309 ops/s	339751304 B/op	 8018602 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/10Ku-100t/VarMQ-24     	       2	1510051896 ns/op	    662229 ops/s	142075892 B/op	 2452549 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/10Ku-100t/PondV2-24    	       2	3139898530 ns/op	    318482 ops/s	349403512 B/op	 8064789 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/1Mu-1t/VarMQ-24        	       2	1401329906 ns/op	    713608 ops/s	174522868 B/op	 3456689 allocs/op
+BenchmarkTasks/Sleep10msWorkers100k/1Mu-1t/PondV2-24       	       2	3436698057 ns/op	    290977 ops/s	363904288 B/op	 7629215 allocs/op
+BenchmarkTasks/Loop10Workers100k/1u-1Mt/VarMQ-24           	       2	1014962730 ns/op	    985258 ops/s	119071840 B/op	 2157072 allocs/op
+BenchmarkTasks/Loop10Workers100k/1u-1Mt/PondV2-24          	       2	3992002096 ns/op	    250501 ops/s	240520912 B/op	 7001616 allocs/op
+BenchmarkTasks/Loop10Workers100k/100u-10Kt/VarMQ-24        	       2	1397196104 ns/op	    715719 ops/s	119137064 B/op	 2157184 allocs/op
+BenchmarkTasks/Loop10Workers100k/100u-10Kt/PondV2-24       	       2	3323202772 ns/op	    300915 ops/s	241119856 B/op	 7004134 allocs/op
+BenchmarkTasks/Loop10Workers100k/1Ku-1Kt/VarMQ-24          	       2	1453213003 ns/op	    688130 ops/s	118024352 B/op	 2137090 allocs/op
+BenchmarkTasks/Loop10Workers100k/1Ku-1Kt/PondV2-24         	       2	2605202312 ns/op	    383847 ops/s	243578224 B/op	 7009320 allocs/op
+BenchmarkTasks/Loop10Workers100k/10Ku-100t/VarMQ-24        	       2	1470126934 ns/op	    680213 ops/s	118925196 B/op	 2153741 allocs/op
+BenchmarkTasks/Loop10Workers100k/10Ku-100t/PondV2-24       	       2	3597284310 ns/op	    277987 ops/s	261653040 B/op	 7099027 allocs/op
+BenchmarkTasks/Loop10Workers100k/1Mu-1t/VarMQ-24           	       2	1303642076 ns/op	    767082 ops/s	150703620 B/op	 3150287 allocs/op
+BenchmarkTasks/Loop10Workers100k/1Mu-1t/PondV2-24          	       2	6139501009 ns/op	    162880 ops/s	350966272 B/op	 8153622 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/1u-1Mt/VarMQ-24    	       2	1366583270 ns/op	    731752 ops/s	136658996 B/op	 2383097 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/1u-1Mt/PondV2-24   	       2	3271127052 ns/op	    305705 ops/s	339299056 B/op	 8013851 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/100u-10Kt/VarMQ-24 	       2	1894542658 ns/op	    527832 ops/s	135794240 B/op	 2364586 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/100u-10Kt/PondV2-24         	       2	4134615124 ns/op	    241860 ops/s	338319808 B/op	 8009046 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/1Ku-1Kt/VarMQ-24            	       2	1782756526 ns/op	    560929 ops/s	133649348 B/op	 2339635 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/1Ku-1Kt/PondV2-24           	       2	4017574120 ns/op	    248906 ops/s	339097896 B/op	 8012768 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/10Ku-100t/VarMQ-24          	       2	1920796846 ns/op	    520617 ops/s	135246856 B/op	 2367478 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/10Ku-100t/PondV2-24         	       2	2713229550 ns/op	    368564 ops/s	346925920 B/op	 8058142 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/1Mu-1t/VarMQ-24             	       2	1606791085 ns/op	    622358 ops/s	167528692 B/op	 3363061 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers100k/1Mu-1t/PondV2-24            	       2	3437729413 ns/op	    290890 ops/s	345381192 B/op	 7642332 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/1u-1Mt/VarMQ-24                 	       2	1360830998 ns/op	    734845 ops/s	171545924 B/op	 2994530 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/1u-1Mt/PondV2-24                	       2	2279851535 ns/op	    438625 ops/s	342455304 B/op	 8026558 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/100u-10Kt/VarMQ-24              	       2	1460915435 ns/op	    684502 ops/s	174692040 B/op	 3034700 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/100u-10Kt/PondV2-24             	       2	3549395532 ns/op	    281738 ops/s	341444576 B/op	 8025341 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/1Ku-1Kt/VarMQ-24                	       2	1559821408 ns/op	    641099 ops/s	172316608 B/op	 2999175 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/1Ku-1Kt/PondV2-24               	       2	3749952890 ns/op	    266670 ops/s	340039696 B/op	 8017066 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/10Ku-100t/VarMQ-24              	       2	1529671570 ns/op	    653735 ops/s	171775988 B/op	 2992813 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/10Ku-100t/PondV2-24             	       2	3285286564 ns/op	    304387 ops/s	347657744 B/op	 8056212 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/1Mu-1t/VarMQ-24                 	       2	1568882194 ns/op	    637396 ops/s	206106480 B/op	 4032729 allocs/op
+BenchmarkTasks/Sleep10msWorkers300k/1Mu-1t/PondV2-24                	       2	5138891502 ns/op	    194594 ops/s	495361976 B/op	 9209035 allocs/op
+BenchmarkTasks/Loop10Workers300k/1u-1Mt/VarMQ-24                    	       2	1195571981 ns/op	    836420 ops/s	128670376 B/op	 2455983 allocs/op
+BenchmarkTasks/Loop10Workers300k/1u-1Mt/PondV2-24                   	       2	3306350582 ns/op	    302448 ops/s	240524384 B/op	 7001647 allocs/op
+BenchmarkTasks/Loop10Workers300k/100u-10Kt/VarMQ-24                 	       2	 913623002 ns/op	   1094543 ops/s	129508644 B/op	 2479755 allocs/op
+BenchmarkTasks/Loop10Workers300k/100u-10Kt/PondV2-24                	       2	1524426292 ns/op	    655984 ops/s	241410640 B/op	 7004797 allocs/op
+BenchmarkTasks/Loop10Workers300k/1Ku-1Kt/VarMQ-24                   	       2	 936218831 ns/op	   1068126 ops/s	128938500 B/op	 2472514 allocs/op
+BenchmarkTasks/Loop10Workers300k/1Ku-1Kt/PondV2-24                  	       2	1669125592 ns/op	    599116 ops/s	245285008 B/op	 7016823 allocs/op
+BenchmarkTasks/Loop10Workers300k/10Ku-100t/VarMQ-24                 	       2	1517938702 ns/op	    658788 ops/s	128170344 B/op	 2434707 allocs/op
+BenchmarkTasks/Loop10Workers300k/10Ku-100t/PondV2-24                	       2	2904066020 ns/op	    344345 ops/s	256220816 B/op	 7059236 allocs/op
+BenchmarkTasks/Loop10Workers300k/1Mu-1t/VarMQ-24                    	       2	1490152306 ns/op	    671072 ops/s	159773708 B/op	 3435295 allocs/op
+BenchmarkTasks/Loop10Workers300k/1Mu-1t/PondV2-24                   	       2	6307586098 ns/op	    158539 ops/s	366611608 B/op	 8720820 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/1u-1Mt/VarMQ-24             	       2	1546926628 ns/op	    646443 ops/s	165111588 B/op	 2910138 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/1u-1Mt/PondV2-24            	       2	4271810529 ns/op	    234093 ops/s	338848592 B/op	 8009829 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/100u-10Kt/VarMQ-24          	       2	2261021546 ns/op	    442278 ops/s	163146208 B/op	 2880834 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/100u-10Kt/PondV2-24         	       2	3411411850 ns/op	    293134 ops/s	338734440 B/op	 8008880 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/1Ku-1Kt/VarMQ-24            	       2	1767112082 ns/op	    565895 ops/s	164121364 B/op	 2894168 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/1Ku-1Kt/PondV2-24           	       2	4113190454 ns/op	    243120 ops/s	338910296 B/op	 8011093 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/10Ku-100t/VarMQ-24          	       2	1822993798 ns/op	    548548 ops/s	164194084 B/op	 2897149 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/10Ku-100t/PondV2-24         	       2	3257599814 ns/op	    306974 ops/s	345054200 B/op	 8040217 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/1Mu-1t/VarMQ-24             	       2	2172882284 ns/op	    460218 ops/s	195225148 B/op	 3878182 allocs/op
+BenchmarkTasks/Sleep5msLoop5Workers300k/1Mu-1t/PondV2-24            	       2	6025893964 ns/op	    165950 ops/s	447005784 B/op	 9282661 allocs/op
 PASS
-ok  	github.com/goptics/varmq-benchmarks	267.016s
+ok  	github.com/goptics/varmq-benchmarks	452.025s
