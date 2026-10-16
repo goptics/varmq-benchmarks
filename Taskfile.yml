@@ -91,19 +91,19 @@ tasks:
     desc: Generate benchmark charts from bench-default.txt
     cmds:
       - mkdir -p charts
-      - vizb bench/bench-default.txt -p /n/y/x -t s -m kb -o charts/bench.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (default CPUs)"
+      - vizb bar bench/bench-default.txt -p /n/y/x -t s -o charts/bench.json -l -s asc --scale log -n "VarMQ vs PondV2 (default CPUs)"
 
   vizb-8cpu:
     desc: Generate benchmark charts from bench-8cpu.txt
     cmds:
       - mkdir -p charts
-      - vizb bench/bench-8cpu.txt -p /n/y/x -t s -m kb -o charts/bench-8cpu.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (8 CPUs)"
+      - vizb bar bench/bench-8cpu.txt -p /n/y/x -t s -o charts/bench-8cpu.json -l -s asc --scale log -n "VarMQ vs PondV2 (8 CPUs)"
 
   vizb-4cpu:
     desc: Generate benchmark charts from bench-4cpu.txt
     cmds:
       - mkdir -p charts
-      - vizb bench/bench-4cpu.txt -p /n/y/x -t s -m kb -o charts/bench-4cpu.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (4 CPUs)"
+      - vizb bar bench/bench-4cpu.txt -p /n/y/x -t s -o charts/bench-4cpu.json -l -s asc --scale log -n "VarMQ vs PondV2 (4 CPUs)"
 
   vizb-all:
     desc: Generate benchmark charts for all CPU configurations
