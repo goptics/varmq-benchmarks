@@ -1,275 +1,198 @@
-# VarMQ Benchmarks - Worker Pool Performance Testing
+# VarMQ Benchmarks
 
-[![Benchmark Charts](https://img.shields.io/badge/%F0%9F%93%8A-Benchmark_Charts-blue?style=for-the-badge)](https://goptics.github.io/varmq-benchmarks/)
+[![Benchmark Charts](https://img.shields.io/badge/%F0%9F%93%8A-Live_Charts-blue?style=for-the-badge)](https://goptics.github.io/varmq-benchmarks/)
 
-A comprehensive benchmark suite comparing Go worker pool implementations, focusing on VarMQ and PondV2 performance across different workload patterns.
+How fast is [VarMQ](https://github.com/goptics/varmq) compared to other Go worker pools, and under which conditions?
 
-## Why I chose PondV2 for comparison
+This repo answers that with one benchmark harness, a fixed set of workloads, and a live chart site that updates itself on every push.
 
-I selected PondV2 as the comparison benchmark because it provides similar worker pool features to VarMQ, making it an ideal candidate for performance analysis. Interestingly, VarMQ was inspired by some design patterns from PondV2, creating a meaningful comparison between these two Go worker pool implementations.
+## Vision
 
-## 🌐 Live Interactive Charts
+Benchmark numbers in library READMEs are easy to cherry-pick. We wanted the opposite:
 
-**👉 [View Benchmark Results](https://goptics.github.io/varmq-benchmarks/)** — Auto-deployed from `bench/` data via GitHub Actions on every push to main.
+- **One harness, many pools.** Every pool is driven by the exact same code path. A pool is just a `submit` function and a `teardown` function.
+- **Realistic shapes, not a single number.** A pool that shines with one producer and a million tasks can fall apart with a million producers submitting one task each. We test both ends and the middle.
+- **Overhead in isolation.** With tens or hundreds of thousands of workers a slow pool can hide behind parallelism. A pool of one worker takes that cover away and shows what each pool costs per task.
+- **Reproducible and public.** Raw `go test -bench` output is committed to `bench/`. Charts are built from those files in CI and published to GitHub Pages, so anyone can see the data behind every bar.
+- **Honest baselines.** Alongside real libraries we include two hand-rolled channel pools. If a library cannot beat a `for task := range ch` loop, that is worth knowing.
 
-The live site includes:
+## What gets benchmarked
 
-- 📊 **Interactive Performance Charts** — Compare VarMQ vs PondV2 across all workload patterns
-- 🖥️ **Multiple CPU Configurations** — Results for default, 8, and 4 CPU cores
-- 📈 **Detailed Metrics** — Execution time and memory usage analysis
+### Subjects
 
-## CI/CD Pipeline
+| Name | What it is |
+|------|------------|
+| **VarMQ** | [goptics/varmq](https://github.com/goptics/varmq), worker bound to a queue |
+| **Pond** | [alitto/pond](https://github.com/alitto/pond) v2 |
+| **Ants** | [panjf2000/ants](https://github.com/panjf2000/ants) v2 |
+| **WorkerPool** | [gammazero/workerpool](https://github.com/gammazero/workerpool) |
+| **Conc** | [sourcegraph/conc](https://github.com/sourcegraph/conc) `pool` with a goroutine cap |
+| **GoroutinePool** | N goroutines reading from an **unbuffered** channel. Baseline. |
+| **BufferedPool** | Same, but the channel holds 1M tasks. Baseline. |
 
-Benchmark charts are automatically generated and deployed via the [bench workflow](.github/workflows/bench.yml):
+All subjects live in [subjects.go](subjects.go).
 
-1. Reads pre-generated bench txt files from `bench/`
-2. Converts each to JSON using the [Vizb Action](https://github.com/goptics/vizb)
-3. Merges all charts and deploys to GitHub Pages (`gh-pages` branch)
+### Dimensions
 
-To update the live charts, commit updated bench txt files to the `bench/` directory.
+Every subject is run across the full product of these axes, except that a pool of one worker runs only the CPU tasks (see **Pool size**):
 
-## Overview
+**Workload shape** (producers x tasks per producer, always 1M tasks total)
 
-This project benchmarks worker pool libraries to understand their performance characteristics under various workload scenarios:
+| Name | Producers | Tasks each |
+|------|-----------|------------|
+| `1u-1Mt` | 1 | 1,000,000 |
+| `100u-10Kt` | 100 | 10,000 |
+| `1Ku-1Kt` | 1,000 | 1,000 |
+| `10Ku-100t` | 10,000 | 100 |
+| `1Mu-1t` | 1,000,000 | 1 |
 
-- Different user/task ratios (1 user with 1M tasks vs 1M users with 1 task each)
-- Various task types (CPU-intensive loops, I/O simulation with sleep, mixed workloads)
-- Multiple worker pool sizes (50k, 100k, 300k, 500k workers)
+**Task type**
 
-## Benchmarked Libraries
+| Name | Behaviour |
+|------|-----------|
+| `Sleep10ms` | I/O-like: sleep 10 ms |
+| `Loop10` | CPU-like: 10 iterations of trivial math |
+| `Sleep5msLoop5` | Mixed: 5 iterations then sleep 5 ms |
+| `Loop10K` | CPU-like: 10,000 iterations, about 1 µs. Pool of 1 only. |
 
-- **[VarMQ](https://github.com/goptics/varmq)** — High-performance message queue and worker pool with job queuing
-- **[PondV2](https://github.com/alitto/pond)** — Minimalistic and high-performance goroutine worker pool written in Go
+**Pool size**
 
-## Local Setup
+| Size | Tasks | What it shows |
+|------|-------|---------------|
+| 50K workers | `Sleep10ms`, `Loop10`, `Sleep5msLoop5` | How the pool scales when work can run in parallel |
+| 100K workers | `Sleep10ms`, `Loop10`, `Sleep5msLoop5` | The same, with twice the goroutines to spawn and schedule |
+| 300K workers | `Sleep10ms`, `Loop10`, `Sleep5msLoop5` | The same, at six times the 50K size |
+| 1 worker | `Loop10`, `Loop10K` | What each pool costs per task: submit, hand-off and wake-up, with no parallelism to hide it |
 
-### Prerequisites
+A pool of one runs no sleeping tasks: every pool would show the same `time.Sleep`, and one worker sleeping 10 ms per task needs almost three hours for 1M tasks. Sizes and their tasks live in `poolSizes` in [subjects.go](subjects.go).
 
-- **Go 1.24+** — [Install Go](https://golang.org/doc/install)
-- **Task** (optional but recommended) — [Install Task](https://taskfile.dev/installation/)
-- **Vizb** (optional for visualization) — [Install Vizb](https://github.com/goptics/vizb)
+**CPU count**: results are recorded for the machine default (24 cores on the reference machine), 8 cores and 4 cores (`-cpu` flag).
 
-### Quick Start
+### Benchmark names
 
-1. **Clone the repository:**
+Every row is named `BenchmarkTasks/<Task>W<size>/<workload>/<pool>`, where `W` stands for workers and sizes in thousands end in `K` (`W50K`, `W100K`, `W300K`, `W1`), in the same style as the workload names:
 
-   ```bash
-   git clone https://github.com/goptics/varmq-benchmarks.git
-   cd varmq-benchmarks
-   ```
+| Row | Task | Pool size | Workload | Pool |
+|-----|------|-----------|----------|------|
+| `BenchmarkTasks/Loop10W50K/100u-10Kt/VarMQ` | `Loop10` | 50,000 workers | 100 producers x 10K tasks | VarMQ |
+| `BenchmarkTasks/Sleep10msW300K/1Mu-1t/Pond` | `Sleep10ms` | 300,000 workers | 1M producers x 1 task | Pond |
+| `BenchmarkTasks/Loop10KW1/1u-1Mt/Ants` | `Loop10K` | 1 worker | 1 producer x 1M tasks | Ants |
 
-2. **Setup development environment:**
+### Metrics
 
-   ```bash
-   # With Task (recommended)
-   task setup
+Each benchmark reports the standard Go numbers plus throughput:
 
-   # Or manually
-   go mod download
-   go mod tidy
-   ```
+- `ns/op`: wall time to push all 1M tasks through the pool and drain it
+- `ops/s`: tasks completed per second (custom metric, higher is better)
+- `B/op` and `allocs/op`: memory cost
 
-3. **Run benchmarks:**
+On a `W1` row there is no parallelism, so `ns/op` divided by 1,000,000 is the time per task: the task itself plus everything the pool adds to it.
 
-   ```bash
-   # With Task
-   task bench-quick
+## How it works
 
-   # Or manually
-   go test -bench=. -benchtime=1x -benchmem
-   ```
-
-### Available Tasks
-
-Use `task --list` to see all available tasks, or run `task help` for common usage patterns.
-
-#### Common Tasks
-
-```bash
-# Development
-task setup          # Setup development environment
-task deps           # Download and tidy dependencies
-task build          # Build the binary
-task test           # Run tests
-task check          # Run all checks (format, vet, test)
-
-# Benchmarking
-task bench          # Run all benchmarks (3x iterations)
-task bench-quick    # Run quick benchmarks (1x iteration)
-task bench-sleep    # Run only Sleep10ms benchmarks
-task bench-loop     # Run only Loop10 benchmarks
-task bench-mixed    # Run only Sleep5Loop5 benchmarks
-task bench-varmq    # Run VarMQ benchmarks only
-task bench-pond     # Run PondV2 benchmarks only
-task bench-gen      # Save benchmark output to bench/ directory
-
-# Profiling
-task bench-profile  # Run benchmarks with CPU/memory profiling
-
-# Visualization
-task vizb           # Generate charts from bench/bench-default.txt
-task vizb-8cpu      # Generate charts from bench/bench-8cpu.txt
-task vizb-4cpu      # Generate charts from bench/bench-4cpu.txt
-task vizb-all       # Generate charts for all CPU configurations
-task merge          # Merge charts into index.html
-
-# Cleanup
-task clean          # Clean build artifacts, profiles, and charts
+```
+subjects.go          types.go            benchmark_test.go
+┌──────────────┐     ┌──────────────┐    ┌──────────────────────────────┐
+│ VarMQ        │     │ poolSubmit   │    │ for each pool size           │
+│ Pond         │ ──▶ │ poolTeardown │ ──▶│   for each of its task types │
+│ Ants         │     │ workload     │    │     for each workload        │
+│ WorkerPool   │     │ TaskConfig   │    │       for each subject       │
+│ Conc         │     │              │    │                              │
+│ GoroutinePool│     └──────────────┘    │         spawn producers      │
+│ BufferedPool │                         │         submit, wait, teardown│
+└──────────────┘                         └──────────────────────────────┘
 ```
 
-#### Manual Commands (without Task)
+1. **A subject is a factory.** Given `maxWorkers`, it returns `submit(task)` and `teardown()`. Nothing else leaks into the harness.
+2. **Producers are goroutines.** For a `100u-10Kt` run the harness starts 100 goroutines, each calling `submit` 10,000 times. A `WaitGroup` counts task completions.
+3. **One iteration = full lifecycle.** Build the pool, push 1M tasks, wait for all to finish, tear the pool down. Pool construction and shutdown are deliberately inside the timed region.
+4. **Results go to text, text goes to charts.** `go test -bench` output is saved to `bench/*.txt`. [Vizb](https://github.com/goptics/vizb) turns each file into a chart JSON, merges them, and renders one HTML page.
+
+### Publishing pipeline
+
+Defined in [.github/workflows/bench.yml](.github/workflows/bench.yml). It runs whenever anything under `bench/` changes on `main`:
+
+1. Three parallel jobs convert `bench.txt`, `bench-8cpu.txt` and `bench-4cpu.txt` to chart JSON.
+2. A merge job combines them into a single `public/index.html`.
+3. The page is pushed to the `gh-pages` branch and served at <https://goptics.github.io/varmq-benchmarks/>.
+
+Benchmarks themselves do not run in CI. Runner hardware is noisy and shared, so numbers are generated on a known machine and committed.
+
+## Running it yourself
+
+Requires Go 1.26+. [Task](https://taskfile.dev) and [Vizb](https://github.com/goptics/vizb) are optional.
 
 ```bash
-# Run all benchmarks
-go test -bench=. -benchtime=3x -benchmem
-
-# Run specific task type
-go test -bench=BenchmarkTasks/Sleep10ms -benchtime=3x -benchmem
-
-# Run specific implementation
-go test -bench=VarMQ -benchtime=3x -benchmem
-
-# Generate bench txt data
-go test -bench=. -benchtime=2x -benchmem > bench/bench-default.txt
-go test -bench=. -benchtime=2x -benchmem -cpu=8 > bench/bench-8cpu.txt
-go test -bench=. -benchtime=2x -benchmem -cpu=4 > bench/bench-4cpu.txt
-
-# Generate charts from bench files
-vizb bench/bench-default.txt -p /n/y/x -t s -m kb -o charts/bench.json -l -s asc --scale log -c bar,pie -n "VarMQ vs PondV2 (default CPUs)"
-
-# Merge charts into a single HTML page
-vizb merge charts/ -o index.html
-
-# Analyze profiles
-go tool pprof cpu.prof
-go tool pprof mem.prof
+# quick sanity pass, one iteration of everything
+go test -bench=. -benchtime=1x -benchmem
 ```
-
-## Benchmark Visualization
-
-This project includes integration with [Vizb](https://github.com/goptics/vizb) for generating interactive HTML charts from benchmark results.
-
-### Prerequisites for Visualization
-
-Install Vizb:
 
 ```bash
-go install github.com/goptics/vizb@latest
+# one slice: Loop10 task, 50K workers, 100 producers, only the baselines
+go test -run xxx -bench 'Tasks/Loop10W50K/100u-10Kt/(GoroutinePool|BufferedPool)$' -benchtime=1x
 ```
 
-### Generating Charts
+```bash
+# only the pool of one worker, every task, workload and subject (about 40 s)
+go test -run xxx -bench 'Tasks/W1$' -benchtime=1x
+```
 
-1. **Generate bench txt data:**
+```bash
+# only one pool size, here 100K workers (also W50K, W300K)
+go test -run xxx -bench 'Tasks/W100K$' -benchtime=1x
+```
 
-   ```bash
-   task bench-gen
-   ```
+```bash
+# regenerate the committed data (slow, runs the full matrix three times)
+task bench-txt
+```
 
-2. **Convert to charts:**
+```bash
+# build charts locally: bench/*.txt -> jsons/*.json -> dist/index.html
+task vizb-all && task merge
+```
 
-   ```bash
-   task vizb           # From bench/bench-default.txt
-   task vizb-8cpu      # From bench/bench-8cpu.txt
-   task vizb-4cpu      # From bench/bench-4cpu.txt
+`task vizb-all` writes one chart JSON per CPU count to `jsons/`. `task merge` combines them into `dist/output.json` and renders `dist/index.html`. Open that file in a browser to preview the site. Both directories are build output and are gitignored.
 
-   # Or all at once
-   task vizb-all
-   ```
+Run `task --list` for everything else (filtered runs, profiling, clean).
 
-3. **Merge into a single page:**
+### Adding a pool
 
-   ```bash
-   task merge          # Outputs index.html at project root
-   ```
+Append an entry to `subjects` in [subjects.go](subjects.go):
 
-### Chart Output
+```go
+{
+    name: "MyPool",
+    factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
+        p := mypool.New(maxWorkers)
+        return p.Submit, p.StopAndWait
+    },
+},
+```
 
-- `charts/bench.json` — Default CPU configuration
-- `charts/bench-8cpu.json` — 8 CPU cores configuration
-- `charts/bench-4cpu.json` — 4 CPU cores configuration
-- `index.html` — Merged interactive page (at project root)
+That is the whole integration. The harness picks it up on the next run. The factory is called with every pool size in `poolSizes`, including `1`, so it must work with a single worker.
 
-Each chart includes:
+## Reading the charts
 
-- **Interactive visualizations** comparing VarMQ and PondV2 performance
-- **Workload grouping**: Results organized by user/task patterns
+- Chart groups are named after the task and pool size, for example `Loop10W50K` or `Loop10W1`. Inside a group, bars are grouped by workload shape, then by subject.
+- The `W50K`, `W100K` and `W300K` groups show how each pool scales with parallel work; comparing the same group across sizes shows what more workers cost or buy. The `W1` groups show what each pool costs per task, with nothing running in parallel to hide it.
+- Hover a bar for exact `ns/op`, `ops/s` and memory values.
+- Switch between the default, 8-CPU and 4-CPU tabs to see how each pool scales down.
+- Compare each library against **GoroutinePool** first. The gap to that baseline is the real overhead of the library.
 
-### Chart Configuration
+## Layout
 
-The visualization uses these settings:
-
-- **Group pattern**: `/n/y/x` — benchmark name / user count / task count
-- **Time unit**: Seconds (`-t s`)
-- **Memory unit**: Kilobytes (`-m kb`)
-- **Scale**: Logarithmic (`--scale log`)
-- **Chart types**: Bar and Pie (`-c bar,pie`)
-
-## Project Structure
-
-- **`types.go`** — Core type definitions and interfaces
-- **`subjects.go`** — Worker pool implementations and configurations
-- **`benchmark_test.go`** — Benchmark test logic
-- **`bench/`** — Pre-generated benchmark output (txt files)
-- **`charts/`** — Generated JSON chart data
-- **`Taskfile.yml`** — Build automation and development tasks
-- **`.github/workflows/bench.yml`** — CI/CD pipeline for chart deployment
-
-## Benchmark Configuration
-
-### Workload Patterns
-
-- **1u-1Mt**: 1 user submitting 1 million tasks
-- **100u-10Kt**: 100 users submitting 10k tasks each
-- **1Ku-1Kt**: 1k users submitting 1k tasks each
-- **10Ku-100t**: 10k users submitting 100 tasks each
-- **1Mu-1t**: 1 million users submitting 1 task each
-
-### Task Types
-
-- **Sleep10ms**: I/O simulation (10ms sleep)
-- **Loop10**: CPU-intensive (10 iterations of math operations)
-- **Sleep5Loop5**: Mixed workload (5ms sleep + 5 iterations)
-
-### Worker Pool Sizes
-
-- 50,000 workers
-- 100,000 workers
-- 300,000 workers
-- 500,000 workers
-
-## Adding New Worker Pools
-
-1. Add your implementation to `subjects.go`:
-
-   ```go
-   {
-       name: "YourPool",
-       factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
-           // Your implementation
-           return submitFunc, teardownFunc
-       },
-   },
-   ```
-
-2. Add any new dependencies to `go.mod`
-
-3. Run benchmarks to compare performance
-
-## Performance Analysis
-
-### Interpreting Results
-
-- **ns/op**: Nanoseconds per operation (lower is better)
-- **B/op**: Bytes allocated per operation (lower is better)
-- **allocs/op**: Number of allocations per operation (lower is better)
-
-### Key Metrics to Watch
-
-- **Throughput**: How many tasks processed per second
-- **Memory efficiency**: Allocations and memory usage
-- **Scaling behavior**: Performance across different worker counts
-- **Workload sensitivity**: How performance varies with user/task patterns
+| Path | Purpose |
+|------|---------|
+| `subjects.go` | Pools under test, workloads, task types, pool sizes |
+| `types.go` | Harness types and the task generator |
+| `benchmark_test.go` | The benchmark loop |
+| `bench/` | Committed raw benchmark output (`bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt`), source of truth for the charts |
+| `jsons/` | Local chart JSON, one per CPU count. Gitignored. |
+| `dist/` | Local merged chart data and the rendered `index.html`. Gitignored. |
+| `Taskfile.yml` | Shortcuts for running, profiling and charting |
+| `.github/workflows/bench.yml` | Chart build and GitHub Pages deploy |
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) file for details.
+MIT. See [LICENSE](LICENSE).

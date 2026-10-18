@@ -13,6 +13,8 @@
 
 # Build directory
 bin/
+jsons/
+dist/
 
 # Profile files
 *.prof

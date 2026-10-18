@@ -7,10 +7,10 @@ import (
 )
 
 func BenchmarkTasks(b *testing.B) {
-	for _, workers := range maxWorkers {
-		for _, taskConfig := range taskConfigs {
-			b.Run(fmt.Sprintf("%sWorkers%dk", taskConfig.Name, workers/1e3), func(b *testing.B) {
-				runBenchmarks(b, workloads, taskConfig.GenerateTask(), workers)
+	for _, size := range poolSizes {
+		for _, taskConfig := range size.tasks {
+			b.Run(fmt.Sprintf("%sW%s", taskConfig.Name, size.label()), func(b *testing.B) {
+				runBenchmarks(b, workloads, taskConfig.GenerateTask(), size.workers)
 			})
 		}
 	}

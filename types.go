@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Core benchmark types and interfaces
 type poolSubmit func(func())
@@ -10,6 +13,22 @@ type poolFactory func(maxWorkers int) (poolSubmit, poolTeardown)
 type subject struct {
 	name    string
 	factory poolFactory
+}
+
+// poolSize is one pool size of the matrix and the tasks it runs.
+type poolSize struct {
+	workers int
+	tasks   []TaskConfig
+}
+
+// label names the size in benchmark names, after a "W": "50K" for 50,000,
+// "1" for 1, in the style of the workload names (100u-10Kt).
+func (p poolSize) label() string {
+	if p.workers >= 1_000 && p.workers%1_000 == 0 {
+		return fmt.Sprintf("%dK", p.workers/1_000)
+	}
+
+	return fmt.Sprint(p.workers)
 }
 
 type workload struct {
