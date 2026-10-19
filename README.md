@@ -27,6 +27,8 @@ Benchmark numbers in library READMEs are easy to cherry-pick. We wanted the oppo
 | **Ants** | [panjf2000/ants](https://github.com/panjf2000/ants) v2 |
 | **WorkerPool** | [gammazero/workerpool](https://github.com/gammazero/workerpool) |
 | **Conc** | [sourcegraph/conc](https://github.com/sourcegraph/conc) `pool` with a goroutine cap |
+| **ErrGroup** | [x/sync/errgroup](https://pkg.go.dev/golang.org/x/sync/errgroup) with `SetLimit`. Not a pool: a new goroutine per task behind a semaphore, the stdlib-adjacent default many projects reach for |
+| **Gopool** | [bytedance/gopkg](https://github.com/bytedance/gopkg) `util/gopool`. Tasks go to an unbounded list, so `submit` never blocks; idle workers exit on their own. The worker cap is soft and can overshoot slightly under contention |
 | **GoroutinePool** | N goroutines reading from an **unbuffered** channel. Baseline. |
 | **BufferedPool** | Same, but the channel holds 1M tasks. Baseline. |
 
@@ -98,8 +100,10 @@ subjects.go          types.go            benchmark_test.go
 │ Ants         │     │ workload     │    │     for each workload        │
 │ WorkerPool   │     │ TaskConfig   │    │       for each subject       │
 │ Conc         │     │              │    │                              │
-│ GoroutinePool│     └──────────────┘    │         spawn producers      │
-│ BufferedPool │                         │         submit, wait, teardown│
+│ ErrGroup     │     └──────────────┘    │         spawn producers      │
+│ Gopool       │                         │         submit, wait, teardown│
+│ GoroutinePool│                         │                              │
+│ BufferedPool │                         │                              │
 └──────────────┘                         └──────────────────────────────┘
 ```
 
@@ -143,16 +147,9 @@ go test -run xxx -bench 'Tasks/W100K$' -benchtime=1x
 ```
 
 ```bash
-# regenerate the committed data (slow, runs the full matrix three times)
-task bench-txt
+# regenerate bench/*.txt, build charts, merge, open dist/index.html (slow, runs the full matrix three times)
+task report
 ```
-
-```bash
-# build charts locally: bench/*.txt -> jsons/*.json -> dist/index.html
-task vizb-all && task merge
-```
-
-`task vizb-all` writes one chart JSON per CPU count to `jsons/`. `task merge` combines them into `dist/output.json` and renders `dist/index.html`. Open that file in a browser to preview the site. Both directories are build output and are gitignored.
 
 Run `task --list` for everything else (filtered runs, profiling, clean).
 
@@ -179,6 +176,7 @@ That is the whole integration. The harness picks it up on the next run. The fact
 - Hover a bar for exact `ns/op`, `ops/s` and memory values.
 - Switch between the default, 8-CPU and 4-CPU tabs to see how each pool scales down.
 - Compare each library against **GoroutinePool** first. The gap to that baseline is the real overhead of the library.
+- **ErrGroup** shows what skipping a pool costs: no worker reuse, one goroutine spawned per task. A pool that loses to it adds overhead without saving any.
 
 ## Layout
 

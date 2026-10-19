@@ -92,19 +92,19 @@ tasks:
     desc: Generate benchmark charts from bench.txt
     cmds:
       - mkdir -p jsons
-      - vizb bar bench/bench.txt -p /n/y/x -T s -M KB -o jsons/bench.json -l --round 2 --stack --border-radius 10 -n "Benchmarking (24 CPUs)"
+      - vizb bar bench/bench.txt -p /n/y/x -T s -M MB -o jsons/bench.json -l --round 2 --stack --border-radius="8,8,0,0" -n "Benchmarking (24 CPUs)"
 
   vizb-8cpu:
     desc: Generate benchmark charts from bench-8cpu.txt
     cmds:
       - mkdir -p jsons
-      - vizb bar bench/bench-8cpu.txt -p /n/y/x -T s -M KB -o jsons/bench-8cpu.json -l --round 2 --stack --border-radius 10 -n "Benchmarking (8 CPUs)"
+      - vizb bar bench/bench-8cpu.txt -p /n/y/x -T s -M MB -o jsons/bench-8cpu.json -l --round 2 --stack --border-radius="8,8,0,0" -n "Benchmarking (8 CPUs)"
 
   vizb-4cpu:
     desc: Generate benchmark charts from bench-4cpu.txt
     cmds:
       - mkdir -p jsons
-      - vizb bar bench/bench-4cpu.txt -p /n/y/x -T s -M KB -o jsons/bench-4cpu.json -l --round 2 --stack --border-radius 10 -n "Benchmarking (4 CPUs)"
+      - vizb bar bench/bench-4cpu.txt -p /n/y/x -T s -M MB -o jsons/bench-4cpu.json -l --round 2 --stack --border-radius="8,8,0,0" -n "Benchmarking (4 CPUs)"
 
   vizb-all:
     desc: Generate benchmark charts for all CPU configurations
@@ -118,6 +118,17 @@ tasks:
     cmds:
       - vizb merge jsons/bench.json jsons/bench-8cpu.json jsons/bench-4cpu.json -o dist/output.json
       - vizb ui dist/output.json -o dist/index.html
+
+  report:
+    desc: Run benchmarks, build charts, merge, and open the HTML report
+    cmds:
+      - task: bench-txt
+      - task: vizb-all
+      - task: merge
+      - cmd: xdg-open dist/index.html
+        platforms: [linux]
+      - cmd: open dist/index.html
+        platforms: [darwin]
 
   clean:
     desc: Clean build artifacts and profiles

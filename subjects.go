@@ -4,10 +4,12 @@ import (
 	"sync"
 
 	"github.com/alitto/pond/v2"
+	"github.com/bytedance/gopkg/util/gopool"
 	"github.com/gammazero/workerpool"
 	"github.com/goptics/varmq"
 	"github.com/panjf2000/ants/v2"
 	"github.com/sourcegraph/conc/pool"
+	"golang.org/x/sync/errgroup"
 )
 
 // Configuration
@@ -106,6 +108,28 @@ var subjects = []subject{
 		factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
 			p := pool.New().WithMaxGoroutines(maxWorkers)
 			return p.Go, p.Wait
+		},
+	},
+	{
+		name: "ErrGroup",
+		factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
+			// One goroutine per task behind a semaphore, not reused workers.
+			var g errgroup.Group
+			g.SetLimit(maxWorkers)
+			return func(t func()) {
+					g.Go(func() error { t(); return nil })
+				}, func() {
+					_ = g.Wait()
+				}
+		},
+	},
+	{
+		name: "Gopool",
+		factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
+			// Idle workers exit on their own and there is no Close, so teardown has nothing to do.
+			// Submit never blocks (unbounded task list), and the cap is soft: it can overshoot under contention.
+			p := gopool.NewPool("bench", int32(maxWorkers), gopool.NewConfig())
+			return p.Go, func() {}
 		},
 	},
 	{

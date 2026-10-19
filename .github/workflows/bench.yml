@@ -34,10 +34,9 @@ jobs:
           name: ${{ matrix.name }}
           group-pattern: /n/y/x
           time-unit: s
-          mem-unit: KB
+          mem-unit: MB
           charts: bar
-          chart: "bar:border-radius=10,stack=true"
-          show-labels: true
+          chart: "bar:border-radius=8,8,0,0;stack=true"
           round: "true"
           output-json: out/${{ matrix.output }}.json
 
@@ -60,7 +59,8 @@ jobs:
 
       - uses: goptics/vizb@v0.22.0
         with:
-          merge-dir: /tmp/jsons
+          # explicit order: merge-dir globs *.json, which sorts by name (4cpu, 8cpu, then 24)
+          merge-files: /tmp/jsons/bench.json /tmp/jsons/bench-8cpu.json /tmp/jsons/bench-4cpu.json
           output-html: public/index.html
 
       - uses: peaceiris/actions-gh-pages@v4
