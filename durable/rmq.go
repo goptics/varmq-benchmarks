@@ -9,8 +9,9 @@ import (
 
 const (
 	rmqQueue = "bench"
-	// rmqPollDuration is the idle wait between consume batches. rmq makes the
-	// caller choose it; 10ms is the value in rmq's README example.
+	// rmqPollDuration is the sleep after every consume pass (queue.go, consume).
+	// rmq has no default. 10ms is this benchmark's choice; rmq's README example
+	// uses 1s and example/consumer/main.go uses 100ms.
 	rmqPollDuration = 10 * time.Millisecond
 )
 
