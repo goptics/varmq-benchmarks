@@ -171,8 +171,12 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
   reaches every subscribed connection, so every instance is woken by every
   enqueue, and each wake runs the `LLEN` checks below. A worker is also woken
   when a batch of jobs finishes (`varmq/worker_pool.go`) and by `Start`
-  (`varmq/worker_lifecycle.go`). `redisq.Notification` has no timer, so an idle
-  instance has no Redis traffic.
+  (`varmq/worker_lifecycle.go`). There is no job polling: the wake is push. The
+  one idle timer is go-redis's: `Notification.Start` (`redisq/notification.go`)
+  calls `PubSub.Channel()` with default options, and `newChannel` /
+  `initHealthCheck` (`go-redis/v9/pubsub.go`) send a `PING` on the pub/sub
+  connection when no message has arrived for 3 s (`checkInterval`; ping timeout
+  5 s, reconnect timeout 10 s). It has no effect on job pickup.
 - No `Listen` is needed: `Queue.Listen` (`redisq/queue.go`) only waits for
   SIGINT or SIGTERM, and the subscription already runs after
   `NewDistributedQueue`. The adapter does not call it.
@@ -183,8 +187,9 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
   `WithDistributedQueue` binds the queue, so the `Start` wake can run before
   the queue is bound. We did not see a job stranded that way: a test that
   pre-filled 5 jobs and then started a consumer drained them in 150 of 150
-  rounds, and `TestSubjects` at 4 instances passed 30 runs in a row. Another
-  instance's notification or a job finishing wakes an idle worker anyway.
+  rounds, and `TestSubjects` at 4 instances passed 30 runs in a row. A job
+  finishing only wakes a worker that already had jobs; an idle instance is
+  woken only by a later `enqueued` notification.
 - Extra `LLEN`, one mutex, visibility timeout, batch size: as for VarMQ
   (persistent), with one `redisq.Queue` per instance. Four instances have four
   mutexes.
@@ -206,4 +211,4 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
 | RawRedis | none | blocking pop | `BRPOP` 1 s block timeout | 1 | raw JSON bytes | `poolSize(workers)` | none |
 | VarMQ (persistent) | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips) | in-process: `Add` signals the worker's event loop, no polling | none: no Redis polling or blocking wait; wakes come from in-process `Add`, `Start` and job completion, so an idle second instance is not woken by another process's adds | at least 6: `LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM` | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL | none; visibility timeout stays at its 5 min default |
 | Asynq | `EVALSHA` Lua scripts: dequeue (`RPOPLPUSH` pending to active, `HSET`/`HDEL`, `ZADD` lease, `HGET`), then done (`LREM`, `ZREM`, `DEL`, `INCR`/`GET`/`INCR`), 2 round trips | polling: no blocking pop, no push wake | `time.Sleep(TaskCheckInterval/2 + rand.N(TaskCheckInterval))` on an empty queue, `TaskCheckInterval` default 1 s, so 0.5 to 1.5 s; idle `Shutdown` waits out the current sleep | 2 consumer-side, 1 producer-side (plus 1 `SADD` per client) | protobuf `TaskMessage` wrapping the JSON payload, in a task hash | `poolSize(workers)` via `RedisClientOpt.PoolSize` | queue `bench`; defaults kept: retry 25, timeout 30 min, lease 30 s, no retention |
-| VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | none: no timer or blocking read; the subscription is idle until a message arrives | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
+| VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | no job polling or blocking pop; the go-redis pub/sub channel health check pings every 3 s when idle (`pubsub.go`, `initHealthCheck`) | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
