@@ -223,7 +223,7 @@ client.
   channel of size `prefetchLimit`. An empty list ends the pass.
 - Ack: `redisDelivery.Ack` (`delivery.go`) runs one `LREM unacked 1 <payload>`
   per job, one round trip. Nothing else is written per job. An ack that finds
-  nothing to remove returns `ErrorNotFound`; the adapter counts it and moves on.
+  nothing to remove returns `ErrorNotFound`; the adapter ignores it.
 - Round trips per job, consumer side: 2 (`RPOPLPUSH` and `LREM`), plus one
   `LLEN` per fetch pass, plus one `RPOPLPUSH` that returns nil when a pass
   drains the list.
