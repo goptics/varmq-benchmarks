@@ -1,7 +1,6 @@
 package durable
 
 import (
-	"sync/atomic"
 	"time"
 
 	"github.com/adjust/rmq/v5"
@@ -10,15 +9,10 @@ import (
 const (
 	rmqQueue = "bench"
 	// rmqPollDuration is the sleep after every consume pass (queue.go, consume).
-	// rmq has no default. 10ms is this benchmark's choice; rmq's README example
-	// uses 1s and example/consumer/main.go uses 100ms.
-	rmqPollDuration = 10 * time.Millisecond
+	// rmq has no default. 1s is the value in rmq v5.2.0's README example
+	// (example/consumer/main.go uses 100ms).
+	rmqPollDuration = time.Second
 )
-
-// rmqAckErrors counts failed acks. An ack can fail with rmq.ErrorNotFound
-// when the unacked entry is already gone, e.g. FLUSHDB ran under a late
-// consumer. Nothing is logged and nothing panics.
-var rmqAckErrors atomic.Int64
 
 // rmqOpen opens an rmq connection on its own go-redis client. The tag need not
 // be unique: openConnection appends a random suffix (rmq/connection.go). rmq
@@ -97,9 +91,10 @@ func rmqConsumer(url string, workers int, h handler) (enqueueFunc, func()) {
 				h(p)
 			}
 
-			if err := d.Ack(); err != nil {
-				rmqAckErrors.Add(1)
-			}
+			// An ack can only fail with rmq.ErrorNotFound (entry already gone,
+			// e.g. FLUSHDB under a late consumer) or ErrorConsumingStopped. Nothing
+			// useful to do, and nothing may be logged.
+			_ = d.Ack()
 		})
 		if err != nil {
 			panic(err)
