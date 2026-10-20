@@ -117,9 +117,8 @@ subjects.go          types.go            benchmark_test.go
 Defined in [.github/workflows/bench.yml](.github/workflows/bench.yml). It runs whenever anything under `bench/` changes on `main`:
 
 1. Four parallel jobs convert `bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt` and `durable.txt` to chart JSON.
-2. A merge job combines the first three into a single `public/index.html`.
-3. A fourth job converts `durable.txt`; the merge job renders it to its own page, `public/durable/index.html`, not a tab of the pool report.
-4. Both pages are pushed to the `gh-pages` branch together and served at <https://goptics.github.io/varmq-benchmarks/> and <https://goptics.github.io/varmq-benchmarks/durable/>.
+2. A merge job combines the first three into `public/index.html` and renders `durable.json` on its own to `public/durable/index.html`.
+3. Both pages are pushed to the `gh-pages` branch together and served at <https://goptics.github.io/varmq-benchmarks/> and <https://goptics.github.io/varmq-benchmarks/durable/>.
 
 Benchmarks themselves do not run in CI. Runner hardware is noisy and shared, so numbers are generated on a known machine and committed.
 

@@ -36,11 +36,15 @@ set it). Anything else a library forces us to choose is listed under
 
 ## Results
 
-`bench/durable.txt` is one full `BenchmarkDurable` run (`-benchtime=2x`, default
-CPUs, 147 rows). It stopped early at the VarMQDistributed stall described under
-"Known issues", so the last `Sleep1msW1000C4` rows (Rmq's second workload, Taskq
-and GocraftWork) are missing, and `BenchmarkEnqueue` and `BenchmarkLatency` are
-not in it yet. `task durable-txt` regenerates the whole file.
+`bench/durable.txt` is one `BenchmarkDurable` run (`-benchtime=2x`, default
+CPUs). The full matrix is 156 Durable rows (2 tasks x 3 worker counts x 2
+workloads x 13 subject/instance shapes). The file has 147 result rows and one
+`--- FAIL` row, so 148 were attempted. The run stopped at the VarMQDistributed
+stall described under "Known issues", and 8 `Sleep1msW1000C4` rows were never
+run: Taskq and GocraftWork at `1u-100Kt`, and the whole `100u-1Kt` workload for
+all 6 subjects. The failed VarMQDistributed row has no numbers. `BenchmarkEnqueue`
+and `BenchmarkLatency` are not in the file yet. `task durable-txt` regenerates
+the whole file.
 
 ## Work per job
 
@@ -223,9 +227,9 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
   stalled the same way, and isolated reruns of 10 and 40 iterations passed.
   The cause is not diagnosed (Redis was not inspected during a stall). It looks
   like a missed wake-up, since an idle instance is woken only by a later
-  `enqueued` notification, but that is unverified. The `W1000C4` rows after it
-  are missing from the committed run, so read the VarMQDistributed
-  `Sleep1msW1000C4` numbers as unavailable until this is fixed.
+  `enqueued` notification, but that is unverified. The run stopped there, so the committed file has no
+  VarMQDistributed `Sleep1msW1000C4/1u-100Kt` numbers, and no `Sleep1msW1000C4/100u-1Kt` rows for
+  any subject (see "Results"). Treat them as unavailable until this is fixed.
 
 ### Rmq
 
