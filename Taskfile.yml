@@ -165,3 +165,27 @@ tasks:
       - go version
       - task deps
       - echo "Development environment ready!"
+
+  durable-up:
+    desc: Start the Redis used by the durable benchmarks
+    dir: durable
+    cmds:
+      - docker compose -f compose.yml up -d --wait
+
+  durable-down:
+    desc: Stop the durable benchmarks' Redis
+    dir: durable
+    cmds:
+      - docker compose -f compose.yml down
+
+  durable-test:
+    desc: Run the durable module tests (needs durable-up)
+    dir: durable
+    cmds:
+      - go test ./...
+
+  durable-bench-quick:
+    desc: Run the durable benchmarks once each (needs durable-up)
+    dir: durable
+    cmds:
+      - go test -run xxx -bench . -benchtime=1x -benchmem
