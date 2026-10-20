@@ -204,6 +204,74 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
 - Logging: `Notification.Send` and `Queue` use the std `log`, which `TestMain`
   discards.
 
+### Rmq
+
+Library version `rmq/v5 v5.2.0`. Paths are inside the module (`go env GOMODCACHE`).
+The adapter opens one `rmq.OpenConnectionWithRedisClient` connection per
+consumer instance and one for the producer, each on its own go-redis v9
+client.
+
+- Enqueue: `Queue.Publish` (`queue.go`) calls `RedisWrapper.LPush`
+  (`redis_wrapper.go`): one `LPUSH` of the payload onto
+  `rmq::queue::[bench]::ready`. One round trip per job. The producer's
+  `Publish` takes no lock of its own.
+- Fetch: `StartConsuming` (`queue.go`) starts one goroutine, `redisQueue.consume`,
+  per queue. Each pass runs `consumeBatch`: one `LLEN` of this connection's
+  unacked list (`unackedCount`), then, for `prefetchLimit - unacked` deliveries,
+  one `RPOPLPUSH` ready to `rmq::connection::<conn>::queue::[bench]::unacked`
+  per delivery (`RedisWrapper.RPopLPush`, not pipelined), each pushed into a
+  channel of size `prefetchLimit`. An empty list ends the pass.
+- Ack: `redisDelivery.Ack` (`delivery.go`) runs one `LREM unacked 1 <payload>`
+  per job, one round trip. Nothing else is written per job. An ack that finds
+  nothing to remove returns `ErrorNotFound`; the adapter counts it and moves on.
+- Round trips per job, consumer side: 2 (`RPOPLPUSH` and `LREM`), plus one
+  `LLEN` per fetch pass, plus one `RPOPLPUSH` that returns nil when a pass
+  drains the list.
+- Wake and idle wait: polling only, no blocking pop and no push.
+  `consume` calls `time.Sleep(jitteredDuration(pollDuration))` after every pass,
+  including a pass that fetched jobs, not only an empty one. `jitteredDuration`
+  (`queue.go`) is +/-10%, so 9 to 11 ms at our 10 ms. No back-off was found in
+  `consume`: the sleep is the same on an empty queue. Redis errors only add an
+  `errChan` send.
+- Throughput bound: a pass fetches at most `prefetchLimit - unacked`
+  deliveries, and `unacked` includes deliveries a consumer has not acked yet. At
+  prefetch = workers, a consumer that has acked waits for the next pass. This
+  shapes the numbers; we did not model it.
+- Heartbeat: `openConnection` (`connection.go`) starts a goroutine that runs
+  `SET rmq::connection::<name>::heartbeat 1` with a 1 minute TTL every second
+  (`heartbeatInterval`, `heartbeatDuration`). It is per connection, not per
+  job. `openConnection` also runs `SADD rmq::connections`, `OpenQueue` runs
+  `SADD rmq::queues`, `StartConsuming` runs one `SADD` for the connection's
+  queue set, and each `AddConsumerFunc` (`addConsumer`) runs one `SADD`, serially. At 1000 workers that is
+  1000 setup round trips, inside the timed region.
+- Cleaner: `NewCleaner` (`cleaner.go`) has no caller inside rmq, so no cleaner
+  runs unless the application starts one. The adapter does not. Unacked
+  deliveries left by a stopped connection stay in its unacked list.
+- Tag: `openConnection` names the connection `<tag>-<random 6>`, so the tag
+  `bench` need not be unique. Consumers get `<tag>-<random 6>` too.
+- Stop: `StopAllConsuming` (`connection.go`) calls `Queue.StopConsuming` for
+  each opened queue. Its channel closes after `stopWg.Wait`, which waits for
+  every consumer goroutine, but not for the fetch goroutine or the heartbeat
+  goroutine. The fetch goroutine exits at its next check, so it can run up to
+  one sleep longer; the adapter closes the go-redis client right after, so
+  anything it still sends fails. `TestRmqStopEndsPollers` checks that the
+  fetch and consumer goroutines end. rmq has no exported way to stop the
+  heartbeat goroutine (`stopHeartbeat` is unexported). After the client closes,
+  its `SET` fails once a second, and at `HeartbeatErrorLimit` (45) it sends one
+  blocking error to `errChan` and exits. The adapter gives `errChan` a
+  buffer of 1024 so that send completes with no reader. Net effect: each
+  stopped connection leaves one idle goroutine for about 45 s.
+- Serialization: `Publish` takes `...string` (`queue.go`), so the adapter sends
+  `string(payload.marshal())`, the same JSON bytes as the other subjects.
+  `newDelivery` calls `ExtractHeaderAndPayload` (`header.go`), which only
+  strips a header when the payload starts with the signature `\xFF\x00\xBE\xBEJ`.
+  Our JSON starts with `{`, so it passes through.
+- Pool size: with `OpenConnectionWithRedisClient` rmq does not create the
+  client, so the adapter sets `PoolSize` on its own go-redis client:
+  `poolSize(workers)` per consumer instance, `poolSize(0)` for the producer.
+- Logging: rmq does not log. Errors go to `errChan`, which a goroutine drains
+  until stop.
+
 ### Work table
 
 | Subject | Ack on hot path | Wake mechanism | Idle wait | Round trips per job | Serialization | Pool size | Forced settings |
@@ -212,3 +280,4 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
 | VarMQ (persistent) | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips) | in-process: `Add` signals the worker's event loop, no polling | none: no Redis polling or blocking wait; wakes come from in-process `Add`, `Start` and job completion, so an idle second instance is not woken by another process's adds | at least 6: `LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM` | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL | none; visibility timeout stays at its 5 min default |
 | Asynq | `EVALSHA` Lua scripts: dequeue (`RPOPLPUSH` pending to active, `HSET`/`HDEL`, `ZADD` lease, `HGET`), then done (`LREM`, `ZREM`, `DEL`, `INCR`/`GET`/`INCR`), 2 round trips | polling: no blocking pop, no push wake | `time.Sleep(TaskCheckInterval/2 + rand.N(TaskCheckInterval))` on an empty queue, `TaskCheckInterval` default 1 s, so 0.5 to 1.5 s; idle `Shutdown` waits out the current sleep | 2 consumer-side, 1 producer-side (plus 1 `SADD` per client) | protobuf `TaskMessage` wrapping the JSON payload, in a task hash | `poolSize(workers)` via `RedisClientOpt.PoolSize` | queue `bench`; defaults kept: retry 25, timeout 30 min, lease 30 s, no retention |
 | VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | no job polling or blocking pop; the go-redis pub/sub channel health check pings every 3 s when idle (`pubsub.go`, `initHealthCheck`) | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
+| Rmq | `LREM unacked 1 <payload>` per job (`redisDelivery.Ack`, `delivery.go`), 1 round trip; fetch is one `RPOPLPUSH` ready to unacked per job (`consumeBatch`, `queue.go`) | polling only: no blocking pop, no push | `time.Sleep(jitteredDuration(pollDuration))` after every fetch pass, +/-10% (9 to 11 ms at our setting), not only when empty; no back-off found in `consume` | 2 consumer-side (`RPOPLPUSH`, `LREM`) plus 1 `LLEN` per pass, 1 producer-side (`LPUSH`) | plain string payload (the JSON) | `poolSize(workers)` on our go-redis client (rmq does not create it) | poll duration 10 ms: our choice, rmq has no default (its `README.md` example uses 1 s, `example/consumer/main.go` uses 100 ms); prefetch limit = workers, our choice (rmq's `README.md` advises more than the consumer count, and a single `-benchtime=1x` try at 2 x workers gave 4,450 vs 3,428 jobs/s at W100C1, 17,304 vs 10,679 at W100C4); queue `bench`, tag `bench`; no cleaner |
