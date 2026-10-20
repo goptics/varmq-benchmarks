@@ -8,10 +8,12 @@ import (
 
 const (
 	rmqQueue = "bench"
-	// rmqPollDuration is the sleep after every consume pass (queue.go, consume).
-	// rmq has no default. 1s is the value in rmq v5.2.0's README example
-	// (example/consumer/main.go uses 100ms).
-	rmqPollDuration = time.Second
+	// rmq has no default for either setting. Both come from rmq v5.2.0's
+	// example/consumer/main.go (prefetchLimit 1000, pollDuration 100ms). The
+	// prefetch is raised to 2*workers when that is larger, because rmq's README
+	// says the prefetch limit should always exceed the consumer count.
+	rmqPollDuration = 100 * time.Millisecond
+	rmqMinPrefetch  = 1000
 )
 
 // rmqOpen opens an rmq connection on its own go-redis client. The tag need not
@@ -71,8 +73,7 @@ func rmqProducer(url string) (enqueueFunc, func()) {
 		}
 }
 
-// rmqConsumer starts one rmq queue consumer with workers prefetch and workers
-// consumer goroutines. The ack comes after the handler.
+// rmqConsumer starts one rmq queue consumer with workers consumer goroutines. The ack comes after the handler.
 func rmqConsumer(url string, workers int, h handler) (enqueueFunc, func()) {
 	conn, stopDrain, closeClient := rmqOpen(url, poolSize(workers))
 
@@ -81,7 +82,7 @@ func rmqConsumer(url string, workers int, h handler) (enqueueFunc, func()) {
 		panic(err)
 	}
 
-	if err := q.StartConsuming(int64(workers), rmqPollDuration); err != nil {
+	if err := q.StartConsuming(int64(max(rmqMinPrefetch, 2*workers)), rmqPollDuration); err != nil {
 		panic(err)
 	}
 
