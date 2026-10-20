@@ -145,6 +145,60 @@ Library version `asynq v0.26.0`. Paths are inside the module (`go env GOMODCACHE
   and the only std `log.Printf` is a bad-call path in `internal/errors`, which
   `TestMain` discards.
 
+### VarMQDistributed
+
+Library versions `varmq v1.9.0` and `redisq v1.4.0`.
+
+- Dequeue and ack: the same path as VarMQ (persistent). `redisq.DistributedQueue`
+  embeds `*Queue` (`redisq/distributed.go`), so `ackSource.Next`
+  (`varmq/source.go`) reaches `Queue.DequeueWithAckId` (`redisq/queue.go`):
+  `LPOP`, then one `HSET`+`ZADD` pipeline. The ack is one `HDEL`+`ZREM`
+  pipeline (`job.acknowledge` in `varmq/job.go`, `Queue.Acknowledge`). The
+  `Queue.Dequeue` that `DequeueWithAckId` calls is the embedded one, not
+  `DistributedQueue.Dequeue`, so the `dequeued` notification is never sent on
+  this path.
+- Enqueue: `distributedQueue.Add` (`varmq/distributed.go`) calls
+  `DistributedQueue.Enqueue` (`redisq/distributed.go`): the `RPUSH` pipeline
+  from `Queue.Enqueue`, then `Notification.Send` (`redisq/notification.go`),
+  one `PUBLISH` of `enqueued` on the channel `bench:notifications`. Two round
+  trips per job, and the `Queue` mutex covers only the `RPUSH`.
+- Wake: push, not polling. `newDistributedQueue` (`redisq/distributed.go`)
+  creates the subscription (`newNotification` runs `Client.Subscribe`) and
+  starts the goroutine that forwards messages. `WithDistributedQueue`
+  (`varmq/worker_binder.go`) registers `handleQueueSubscription`, which on
+  `enqueued` does a non-blocking signal to the worker's event loop
+  (`notifyToPullNextJobs` in `varmq/worker_eventloop.go`). Redis `PUBLISH`
+  reaches every subscribed connection, so every instance is woken by every
+  enqueue, and each wake runs the `LLEN` checks below. A worker is also woken
+  when a batch of jobs finishes (`varmq/worker_pool.go`) and by `Start`
+  (`varmq/worker_lifecycle.go`). `redisq.Notification` has no timer, so an idle
+  instance has no Redis traffic.
+- No `Listen` is needed: `Queue.Listen` (`redisq/queue.go`) only waits for
+  SIGINT or SIGTERM, and the subscription already runs after
+  `NewDistributedQueue`. The adapter does not call it.
+- Start-up race: `Client.Subscribe` (`go-redis/v9/redis.go`) writes `SUBSCRIBE`
+  before it returns, so the subscription is in place as soon as
+  `NewDistributedQueue` returns. A job enqueued before that is still in the
+  list. `NewWorker` starts the worker (`WithAutoRun` default) before
+  `WithDistributedQueue` binds the queue, so the `Start` wake can run before
+  the queue is bound. We did not see a job stranded that way: a test that
+  pre-filled 5 jobs and then started a consumer drained them in 150 of 150
+  rounds, and `TestSubjects` at 4 instances passed 30 runs in a row. Another
+  instance's notification or a job finishing wakes an idle worker anyway.
+- Extra `LLEN`, one mutex, visibility timeout, batch size: as for VarMQ
+  (persistent), with one `redisq.Queue` per instance. Four instances have four
+  mutexes.
+- Pool size: `redisq.New` parses `pool_size` from the URL, as for VarMQ
+  (persistent). The producer keeps `poolSize(0)`, which is `10*GOMAXPROCS`. The
+  pub/sub connection comes from go-redis's separate pub/sub pool
+  (`Client.pubSub` in `go-redis/v9/redis.go`), so it is not counted in
+  `pool_size`.
+- Close: `DistributedQueue.Close` (`redisq/distributed.go`) calls
+  `Notification.Stop`, which cancels the subscription, then `Queue.Close`. The
+  consumer calls `WaitAndStop` first, then closes the queue and the client.
+- Logging: `Notification.Send` and `Queue` use the std `log`, which `TestMain`
+  discards.
+
 ### Work table
 
 | Subject | Ack on hot path | Wake mechanism | Idle wait | Round trips per job | Serialization | Pool size | Forced settings |
@@ -152,3 +206,4 @@ Library version `asynq v0.26.0`. Paths are inside the module (`go env GOMODCACHE
 | RawRedis | none | blocking pop | `BRPOP` 1 s block timeout | 1 | raw JSON bytes | `poolSize(workers)` | none |
 | VarMQ (persistent) | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips) | in-process: `Add` signals the worker's event loop, no polling | none: no Redis polling or blocking wait; wakes come from in-process `Add`, `Start` and job completion, so an idle second instance is not woken by another process's adds | at least 6: `LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM` | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL | none; visibility timeout stays at its 5 min default |
 | Asynq | `EVALSHA` Lua scripts: dequeue (`RPOPLPUSH` pending to active, `HSET`/`HDEL`, `ZADD` lease, `HGET`), then done (`LREM`, `ZREM`, `DEL`, `INCR`/`GET`/`INCR`), 2 round trips | polling: no blocking pop, no push wake | `time.Sleep(TaskCheckInterval/2 + rand.N(TaskCheckInterval))` on an empty queue, `TaskCheckInterval` default 1 s, so 0.5 to 1.5 s; idle `Shutdown` waits out the current sleep | 2 consumer-side, 1 producer-side (plus 1 `SADD` per client) | protobuf `TaskMessage` wrapping the JSON payload, in a task hash | `poolSize(workers)` via `RedisClientOpt.PoolSize` | queue `bench`; defaults kept: retry 25, timeout 30 min, lease 30 s, no retention |
+| VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | none: no timer or blocking read; the subscription is idle until a message arrives | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
