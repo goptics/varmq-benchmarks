@@ -138,7 +138,7 @@ tasks:
       - rm -f *.test
       - rm -rf jsons
       - rm -rf dist
-      - rm -rf ./bench/*.txt
+      - rm -f ./bench/bench.txt ./bench/bench-4cpu.txt ./bench/bench-8cpu.txt
 
   format:
     desc: Format code

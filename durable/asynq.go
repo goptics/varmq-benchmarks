@@ -28,7 +28,14 @@ func asynqOpt(url string, workers int) asynq.RedisClientOpt {
 		panic(err) // the URL was already used by redisOrSkip
 	}
 
-	return asynq.RedisClientOpt{Addr: o.Addr, DB: o.DB, PoolSize: poolSize(workers)}
+	return asynq.RedisClientOpt{
+		Addr:      o.Addr,
+		DB:        o.DB,
+		Username:  o.Username,
+		Password:  o.Password,
+		TLSConfig: o.TLSConfig,
+		PoolSize:  poolSize(workers),
+	}
 }
 
 // asynqProducer enqueues one task per payload on the "bench" queue.

@@ -1,8 +1,19 @@
 # Durable queue benchmarks
 
 Benchmarks for Redis-backed job queues: VarMQ's persistent and distributed
-queues against Asynq, rmq, taskq and gocraft/work, with a raw Redis list as the
-floor. It lives in its own Go module so the other libraries' dependencies (some
+queues against Asynq, rmq, taskq and gocraft/work, with a raw Redis list
+(`RawRedis`) as a floor on Redis round trips per job: one `LPUSH`, one `BRPOP`,
+no ack. It is not a throughput ceiling. Each of its W x C workers holds its own
+connection blocked in `BRPOP` on one key, and libraries with one fetcher per
+instance (Rmq, Asynq, Taskq) can beat it at high fan-out. In the committed
+data, `NoopW1000C4/1u-100Kt` has RawRedis at 7,529 jobs/s against Rmq 17,546,
+Asynq 9,551 and VarMQDistributed 8,725; `NoopW100C4/1u-100Kt` has 9,837
+against Rmq 16,345; `NoopW1000C4/100u-1Kt` has 12,932 against Asynq 14,833,
+Rmq 20,793 and GocraftWork 20,752; `Sleep1msW1000C4/1u-100Kt` has 4,751 against
+Asynq 9,855 and Rmq 16,335. A reviewer's probe (not in `bench/durable.txt`)
+measured the RawRedis producer's enqueue rate falling from about 18.8K/s at
+W10C4 to about 6.7K/s at W1000C4; the stop cost was 46 ms, so teardown does not
+explain it. It lives in its own Go module so the other libraries' dependencies (some
 pull in go-redis v8) stay out of the root `go.mod`.
 
 ## Run
@@ -39,12 +50,18 @@ set it). Anything else a library forces us to choose is listed under
 `bench/durable.txt` is one `BenchmarkDurable` run (`-benchtime=2x`, default
 CPUs). The full matrix is 156 Durable rows (2 tasks x 3 worker counts x 2
 workloads x 13 subject/instance shapes). The file has 147 result rows and one
-`--- FAIL` row, so 148 were attempted. The run stopped at the VarMQDistributed
-stall described under "Known issues", and 8 `Sleep1msW1000C4` rows were never
+`--- FAIL` row, so 148 were attempted. `go test` carried on after the VarMQDistributed
+stall described under "Known issues" and completed
+`Sleep1msW1000C4/1u-100Kt/Rmq`; the run was then stopped by hand, and 8 `Sleep1msW1000C4` rows were never
 run: Taskq and GocraftWork at `1u-100Kt`, and the whole `100u-1Kt` workload for
 all 6 subjects. The failed VarMQDistributed row has no numbers. `BenchmarkEnqueue`
 and `BenchmarkLatency` are not in the file yet. `task durable-txt` regenerates
 the whole file.
+
+In `C4` rows the 4 consumer instances are stopped one after another inside the
+timed region, so subjects whose stop waits out an idle poll (Asynq about
+0.5 to 1.5 s, Taskq up to 1 s per instance) pay that up to 4 times; a later run
+will stop them concurrently.
 
 ## Work per job
 
@@ -227,8 +244,9 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
   stalled the same way, and isolated reruns of 10 and 40 iterations passed.
   The cause is not diagnosed (Redis was not inspected during a stall). It looks
   like a missed wake-up, since an idle instance is woken only by a later
-  `enqueued` notification, but that is unverified. The run stopped there, so the committed file has no
-  VarMQDistributed `Sleep1msW1000C4/1u-100Kt` numbers, and no `Sleep1msW1000C4/100u-1Kt` rows for
+  `enqueued` notification, but that is unverified. `go test` carried on after the FAIL and
+  completed `Sleep1msW1000C4/1u-100Kt/Rmq`, then the run was stopped by hand, so
+  the committed file has no VarMQDistributed `Sleep1msW1000C4/1u-100Kt` numbers, and no `Sleep1msW1000C4/100u-1Kt` rows for
   any subject (see "Results"). Treat them as unavailable until this is fixed.
 
 ### Rmq
@@ -497,7 +515,7 @@ Namespace `bench`, job name `bench`, so the job list is `bench:jobs:bench`.
 
 | Subject | Ack on hot path | Wake mechanism | Idle wait | Round trips per job | Serialization | Pool size | Forced settings |
 |---------|-----------------|----------------|-----------|---------------------|---------------|-----------|-----------------|
-| RawRedis | none | blocking pop | `BRPOP` 1 s block timeout | 1 | raw JSON bytes | `poolSize(workers)` | none |
+| RawRedis (floor on round trips per job, not a throughput ceiling: each of its W x C workers holds its own blocked `BRPOP` connection) | none | blocking pop | `BRPOP` 1 s block timeout | 1 | raw JSON bytes | `poolSize(workers)` | none |
 | VarMQ (persistent) | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips) | in-process: `Add` signals the worker's event loop, no polling | none: no Redis polling or blocking wait; wakes come from in-process `Add`, `Start` and job completion, so an idle second instance is not woken by another process's adds | at least 6: `LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM` | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL | none; visibility timeout stays at its 5 min default |
 | Asynq | `EVALSHA` Lua scripts: dequeue (`RPOPLPUSH` pending to active, `HSET`/`HDEL`, `ZADD` lease, `HGET`), then done (`LREM`, `ZREM`, `DEL`, `INCR`/`GET`/`INCR`), 2 round trips | polling: no blocking pop, no push wake | `time.Sleep(TaskCheckInterval/2 + rand.N(TaskCheckInterval))` on an empty queue, `TaskCheckInterval` default 1 s, so 0.5 to 1.5 s; idle `Shutdown` waits out the current sleep | 2 consumer-side, 1 producer-side (plus 1 `SADD` per client) | protobuf `TaskMessage` wrapping the JSON payload, in a task hash | `poolSize(workers)` via `RedisClientOpt.PoolSize` | queue `bench`; defaults kept: retry 25, timeout 30 min, lease 30 s, no retention |
 | VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | no job polling or blocking pop; the go-redis pub/sub channel health check pings every 3 s when idle (`pubsub.go`, `initHealthCheck`) | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
