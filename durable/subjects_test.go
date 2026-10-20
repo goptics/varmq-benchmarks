@@ -7,7 +7,9 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"testing"
+	"time"
 )
 
 var wantSubjects = []string{"RawRedis"} // each later task appends its name
@@ -90,6 +92,70 @@ func TestRunEndToEndFailsOnEnqueueError(t *testing.T) {
 
 	if len(fake.msgs) != 1 || !strings.Contains(fake.msgs[0], "boom") {
 		t.Fatalf("want one recorded failure mentioning boom, got %q", fake.msgs)
+	}
+}
+
+// slowFailProducer fails its first enqueue and makes every other one slow, so
+// the remaining producers are mid-enqueue when the failure lands. closeFn
+// records whether any enqueue was still running.
+func slowFailProducer() (producerFactory, *atomic.Int64, *atomic.Int64) {
+	var calls, inflight, inflightAtClose atomic.Int64
+
+	return func(string) (enqueueFunc, func()) {
+		return func(payload) error {
+				inflight.Add(1)
+				defer inflight.Add(-1)
+
+				if calls.Add(1) == 1 {
+					return errors.New("boom")
+				}
+
+				time.Sleep(20 * time.Millisecond)
+
+				return nil
+			}, func() {
+				inflightAtClose.Store(inflight.Load())
+			}
+	}, &calls, &inflightAtClose
+}
+
+func TestRunQuiescesProducersBeforeClose(t *testing.T) {
+	url := redisOrSkip(t)
+	w := workload{"4u-100t", 4, 100}
+	idle := func(string, int, handler) (enqueueFunc, func()) { return nil, func() {} }
+
+	runs := map[string]func(tb testing.TB, s durableSubject){
+		"EndToEnd": func(tb testing.TB, s durableSubject) { runEndToEnd(tb, s, url, w, shape{1, 1}, tasks[0]) },
+		"Enqueue":  func(tb testing.TB, s durableSubject) { runEnqueue(tb, s, url, w) },
+	}
+
+	for name, run := range runs {
+		t.Run(name, func(t *testing.T) {
+			producer, calls, inflightAtClose := slowFailProducer()
+			s := durableSubject{name: "Slow", maxInstances: 1, producer: producer, consumer: idle}
+
+			fake := &recordingTB{TB: t}
+			done := make(chan struct{})
+
+			go func() {
+				defer close(done)
+				run(fake, s)
+			}()
+			<-done
+
+			if len(fake.msgs) != 1 || !strings.Contains(fake.msgs[0], "boom") {
+				t.Fatalf("want one failure mentioning boom, got %q", fake.msgs)
+			}
+
+			if n := inflightAtClose.Load(); n != 0 {
+				t.Fatalf("%d enqueue calls still in flight when closeFn ran", n)
+			}
+
+			// stop took effect: far fewer calls than the 400 jobs.
+			if n := calls.Load(); n >= int64(w.total()) {
+				t.Fatalf("producers kept enqueuing after the failure: %d calls", n)
+			}
+		})
 	}
 }
 

@@ -7,6 +7,7 @@ import (
 	"os"
 	"slices"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -65,17 +66,24 @@ func flush(tb testing.TB, url string) {
 }
 
 // produce spawns one goroutine per producer. Each enqueues jobsEach payloads
-// and reports at most one error on the returned channel; done closes once all
-// producers have returned.
-func produce(enqueue enqueueFunc, w workload) (errs <-chan error, done <-chan struct{}) {
+// until it finishes, fails or stop is called, and reports at most one error on
+// errs. done closes once every producer goroutine has returned.
+func produce(enqueue enqueueFunc, w workload) (errs <-chan error, done <-chan struct{}, stop func()) {
 	errCh := make(chan error, w.producers)
 	doneCh := make(chan struct{})
 
-	var wg sync.WaitGroup
+	var (
+		wg      sync.WaitGroup
+		stopped atomic.Bool
+	)
 
 	for i := range w.producers {
 		wg.Go(func() {
 			for j := range w.jobsEach {
+				if stopped.Load() {
+					return
+				}
+
 				if err := enqueue(newPayload(int64(i*w.jobsEach + j))); err != nil {
 					errCh <- err
 
@@ -90,7 +98,19 @@ func produce(enqueue enqueueFunc, w workload) (errs <-chan error, done <-chan st
 		close(doneCh)
 	}()
 
-	return errCh, doneCh
+	return errCh, doneCh, func() { stopped.Store(true) }
+}
+
+// quiesce stops the producers and waits for any in-flight enqueue to return,
+// so the caller's deferred closeFn/stop never races a running enqueue. The
+// wait is bounded so a wedged library can't hang the run.
+func quiesce(stop func(), done <-chan struct{}) {
+	stop()
+
+	select {
+	case <-done:
+	case <-time.After(30 * time.Second):
+	}
 }
 
 // runEndToEnd starts sh.instances consumers, enqueues the workload and waits
@@ -119,7 +139,8 @@ func runEndToEnd(tb testing.TB, s durableSubject, url string, w workload, sh sha
 		enqueue = enq
 	}
 
-	errs, _ := produce(enqueue, w)
+	errs, done, stopProducers := produce(enqueue, w)
+	defer quiesce(stopProducers, done) // runs before the closeFn/stop defers above
 
 	select {
 	case <-c.done():
@@ -141,7 +162,8 @@ func runEnqueue(tb testing.TB, s durableSubject, url string, w workload) {
 	enqueue, closeFn := s.producer(url)
 	defer closeFn()
 
-	errs, done := produce(enqueue, w)
+	errs, done, stopProducers := produce(enqueue, w)
+	defer quiesce(stopProducers, done) // runs before closeFn
 
 	select {
 	case <-done:
