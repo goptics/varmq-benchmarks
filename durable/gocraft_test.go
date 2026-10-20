@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -41,6 +42,9 @@ func TestGocraftStopLeavesNothingRunning(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	closeW := sync.OnceFunc(func() { _ = w.Close() })
+	t.Cleanup(closeW)
+
 	stdout := os.Stdout
 	os.Stdout = w
 	t.Cleanup(func() { os.Stdout = stdout })
@@ -54,9 +58,13 @@ func TestGocraftStopLeavesNothingRunning(t *testing.T) {
 
 	var seen atomic.Int64
 
-	_, stop := gocraftConsumer(url, 5, func(payload) { seen.Add(1) })
+	_, consumerStop := gocraftConsumer(url, 5, func(payload) { seen.Add(1) })
+	stop := sync.OnceFunc(consumerStop)
+	t.Cleanup(stop)
 
-	enqueue, closeProducer := gocraftProducer(url)
+	enqueue, producerClose := gocraftProducer(url)
+	closeProducer := sync.OnceFunc(producerClose)
+	t.Cleanup(closeProducer)
 	for i := range 20 {
 		if err := enqueue(newPayload(int64(i))); err != nil {
 			t.Fatal(err)
@@ -73,7 +81,7 @@ func TestGocraftStopLeavesNothingRunning(t *testing.T) {
 	stop()
 
 	os.Stdout = stdout
-	_ = w.Close()
+	closeW()
 
 	if out := <-captured; out != "" {
 		t.Errorf("gocraft/work wrote to stdout: %q", out)
