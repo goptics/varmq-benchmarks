@@ -32,4 +32,5 @@ var (
 // subjects is every queue under test; each adapter file appends its own.
 var subjects = []durableSubject{
 	{name: "RawRedis", maxInstances: 4, producer: rawProducer, consumer: rawConsumer},
+	{name: "VarMQ", maxInstances: 1, producer: varmqProducer, consumer: varmqConsumer},
 }
