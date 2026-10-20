@@ -275,6 +275,87 @@ client.
 - Logging: rmq does not log. Errors go to `errChan`, which a goroutine drains
   until stop.
 
+### Taskq
+
+Library version `taskq/v3 v3.2.9`, redis backend `redisq` imported as
+`taskqredis`, which uses go-redis **v8** (`github.com/go-redis/redis/v8 v8.11.5`)
+rather than the v9 the other subjects use. Paths are inside the module (`go env
+GOMODCACHE`). The adapter builds one go-redis v8 client, one `redisq` factory and
+one queue named `bench` per consumer instance, and the same per producer.
+
+- Enqueue: `Queue.Add` (`redisq/queue.go`) calls `Queue.add`, which runs one
+  `XADD` on the stream `taskq:{bench}:stream` with a single field `body`. One
+  round trip per job, not pipelined. `add` also fills in a random UUID as the
+  message ID, unrelated to the stream entry ID. `isDuplicate` only touches Redis
+  when the message has a `Name`; ours has none.
+- Serialization: `Message.MarshalBinary` (`message.go`) msgpack-encodes the
+  message (task name, args bytes, reserved count, ID). The args are
+  `msgpack.Marshal([]interface{}{payloadJSON})` (`Message.MarshalArgs`), so the
+  adapter's JSON bytes ride as one msgpack `bin` inside a msgpack message
+  inside the stream field. `MarshalBinary` compresses the args with s2 only at
+  512 bytes or more; our JSON is about 140 bytes (computed, not measured on the
+  wire), so no compression applies.
+- Fetch: `Consumer.fetchMessages` (`consumer.go`) calls `Queue.ReserveN`, which
+  runs `XREADGROUP GROUP taskq <host:pid:rand> COUNT <n> BLOCK <WaitTimeout>
+  STREAMS taskq:{bench}:stream >`. `n` is `ReservationSize`. On `NOGROUP` it
+  runs `XGROUP CREATE ... MKSTREAM` from `0` and retries.
+- Fetchers: with `MinNumWorker == MaxNumWorker`, `Consumer.Start` does not
+  start the autotuner (`consumer.go`, `Start`: it only runs when min < max). It
+  calls `replaceConfig` with `NumFetcher: 0`, and `ensureFetcher`
+  (called from `waitMessage`) then starts one fetcher, id 0. Nothing raises
+  the count afterwards, so each consumer instance has one fetcher, regardless
+  of worker count, feeding a buffered channel of `BufferSize` (default =
+  `ReservationSize`, 10). The fetcher takes up to 10 jobs per `XREADGROUP`
+  and blocks on the channel when it is full.
+- Ack: `Consumer.Put` calls `Consumer.delete`, which calls `Queue.Delete`
+  (`redisq/queue.go`): `XACK` and then `XDEL`, two separate commands, two
+  round trips, run by the worker goroutine after the handler returns. The
+  handler always returns nil, because a returned error makes taskq `Release`
+  the message for a retry.
+- Round trips per job: 2 consumer-side (`XACK`, `XDEL`) plus one `XREADGROUP`
+  per up to 10 jobs; 1 producer-side (`XADD`).
+- Idle wait: the fetcher blocks in `XREADGROUP` for `WaitTimeout`. The default
+  is 10 s in `QueueOptions.Init` (`queue.go`), but `redisq.NewQueue` sets it to
+  1 s first when it is zero (`redisq/queue.go`), so it is 1 s here. A worker
+  with an empty buffer waits on a 1 s timer (`waitMessage`,
+  `workerIdleTimeout`) and then loops. Redis wakes the fetcher as soon as an
+  `XADD` arrives, so blocking is a push wake for a single consumer.
+- Scheduler loops: `NewQueue` starts three goroutines per queue, producers
+  included (`scheduler`: `delayed`, `pending`, `clean_zombie_consumers`).
+  Each pass takes a Redis lock with `redislock.Obtain` and releases it
+  (`withRedisLock`), runs one query, and sleeps `1000 + rand(500)` ms when it
+  found nothing (`schedulerBackoff`). They are idle work, not job work, but they
+  issue a few Redis commands per second per queue and run for every producer
+  too: the `100u` workloads create 100 producer queues, so 300 loops. `pending`
+  (`schedulePending`) re-queues entries unacked for `ReservationTimeout`
+  (5 min), so a run longer than 5 min with slow acks could redeliver; the
+  collector counts duplicates, and none were seen in `TestSubjects`.
+- Stop: `Consumer.Stop` (`consumer.go`, `StopTimeout`) stops the fetchers first
+  and waits for them, which means waiting out the fetcher's current
+  `XREADGROUP` block (up to 1 s); idle workers return immediately on `stopCh`.
+  The adapter then calls `factory.Close`, which closes the queue
+  (`Queue.CloseTimeout` sets `_closed` and runs `XGROUP DELCONSUMER`), and
+  then closes the client. The scheduler goroutines are not waited on
+  (`CloseTimeout` never touches the queue's `WaitGroup`): they exit at their
+  next wake because `scheduler` checks `closed()` first, and any call they have
+  in flight when the client closes fails. So every stop costs up to about
+  1 s, inside the timed region. `TestTaskqStopLeavesNothingWriting` checks
+  that nothing writes to Redis after stop returns (a mutant that skips the
+  close makes it fail: a scheduler recreates the stream group).
+- Registry: `taskq.RegisterTask` is global and panics on a second register of
+  the same name (`registry.go`, `TaskMap.Register`), so the adapter registers
+  the task `bench` once at package level and routes to the current handler
+  through an `atomic.Pointer`. All instances of one run share one handler, and
+  the harness stops a round before the next starts. The queue registry is per
+  factory (`internal/base/factory.go`, `Factory.Register`), so each instance
+  has its own factory.
+- Pool size: `poolSize(workers)` on our go-redis v8 `Options.PoolSize` per
+  consumer instance, `poolSize(0)` per producer (v8's own default is
+  `10 * GOMAXPROCS` as well).
+- Logging: taskq logs through `internal.Logger`, set with `taskq.SetLogger`,
+  and go-redis v8 through `redis.SetLogger`; the adapter sets both to no-ops
+  in `init`.
+
 ### Work table
 
 | Subject | Ack on hot path | Wake mechanism | Idle wait | Round trips per job | Serialization | Pool size | Forced settings |
@@ -284,3 +365,4 @@ client.
 | Asynq | `EVALSHA` Lua scripts: dequeue (`RPOPLPUSH` pending to active, `HSET`/`HDEL`, `ZADD` lease, `HGET`), then done (`LREM`, `ZREM`, `DEL`, `INCR`/`GET`/`INCR`), 2 round trips | polling: no blocking pop, no push wake | `time.Sleep(TaskCheckInterval/2 + rand.N(TaskCheckInterval))` on an empty queue, `TaskCheckInterval` default 1 s, so 0.5 to 1.5 s; idle `Shutdown` waits out the current sleep | 2 consumer-side, 1 producer-side (plus 1 `SADD` per client) | protobuf `TaskMessage` wrapping the JSON payload, in a task hash | `poolSize(workers)` via `RedisClientOpt.PoolSize` | queue `bench`; defaults kept: retry 25, timeout 30 min, lease 30 s, no retention |
 | VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | no job polling or blocking pop; the go-redis pub/sub channel health check pings every 3 s when idle (`pubsub.go`, `initHealthCheck`) | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
 | Rmq | `LREM unacked 1 <payload>` per job (`redisDelivery.Ack`, `delivery.go`), 1 round trip; fetch is one `RPOPLPUSH` ready to unacked per job (`consumeBatch`, `queue.go`) | polling only: no blocking pop, no push | `time.Sleep(jitteredDuration(pollDuration))` after every fetch pass, +/-10% (90 to 110 ms at our setting), not only when empty; no back-off found in `consume` | 2 consumer-side (`RPOPLPUSH`, `LREM`) plus 1 `LLEN` per pass, 1 producer-side (`LPUSH`) | plain string payload (the JSON) | `poolSize(workers)` on our go-redis client (rmq does not create it) | poll duration 100 ms and prefetch limit `max(1000, 2*workers)`: rmq has no default for either; both follow `example/consumer/main.go` in rmq v5.2.0 (`prefetchLimit = 1000`, `pollDuration = 100 * time.Millisecond`), with the prefetch raised to 2 x workers because rmq's `README.md` says the prefetch limit should always be greater than the number of consumers; `consume` sleeps after every batch, so a connection is capped near prefetch / poll (about 10,000 jobs/s at 1000 / 100 ms; derived from `consume`, not measured); queue `bench`, tag `bench`; no cleaner |
+| Taskq | `XACK`, then `XDEL`, run separately by the worker after the handler (`Queue.Delete`, `redisq/queue.go`), 2 round trips | blocking: `XREADGROUP ... BLOCK` by one fetcher per instance, woken by `XADD` | `WaitTimeout` 1 s: `redisq.NewQueue` sets it before the 10 s default in `QueueOptions.Init`; workers re-check an empty buffer every 1 s; 3 scheduler loops per queue sleep 1 to 1.5 s between passes; `Stop` waits out the fetcher's current block (up to 1 s) | 2 consumer-side (`XACK`, `XDEL`) plus 1 `XREADGROUP` per up to 10 jobs, 1 producer-side (`XADD`) | msgpack `Message` holding msgpack args holding the JSON payload as bytes, in the stream field `body` | `poolSize(workers)` on our go-redis v8 client (`Options.PoolSize`) | `MinNumWorker = MaxNumWorker = workers` (disables autotune, so one fetcher); defaults kept: `ReservationSize` 10, `BufferSize` 10, `ReservationTimeout` 5 min, `WaitTimeout` 1 s, retry limit 64; queue `bench`, task `bench`; handler always returns nil |

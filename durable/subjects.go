@@ -36,4 +36,5 @@ var subjects = []durableSubject{
 	{name: "Asynq", maxInstances: 4, producer: asynqProducer, consumer: asynqConsumer},
 	{name: "VarMQDistributed", maxInstances: 4, producer: varmqDistributedProducer, consumer: varmqDistributedConsumer},
 	{name: "Rmq", maxInstances: 4, producer: rmqProducer, consumer: rmqConsumer},
+	{name: "Taskq", maxInstances: 4, producer: taskqProducer, consumer: taskqConsumer},
 }
