@@ -359,6 +359,108 @@ one queue named `bench` per consumer instance, and the same per producer.
   and go-redis v8 through `redis.SetLogger`; the adapter sets both to no-ops
   in `init`.
 
+### GocraftWork
+
+Library version `github.com/gocraft/work v0.5.1`, which imports redigo as
+`github.com/gomodule/redigo/redis` (`worker_pool.go`, `enqueue.go`), so the
+adapter uses redigo `v1.9.3` and no old `garyburd` import is involved. Paths are
+inside the module (`go env GOMODCACHE`). The adapter builds one redigo pool per
+consumer instance (one `WorkerPool`), and one per producer (one `Enqueuer`).
+Namespace `bench`, job name `bench`, so the job list is `bench:jobs:bench`.
+
+- Enqueue: `Enqueuer.Enqueue` (`enqueue.go`) runs one `LPUSH bench:jobs:bench
+  <job JSON>`, then `addToKnownJobs`, which runs `SADD bench:known_jobs bench`
+  only on the first call and again after 300 s, per `Enqueuer`. So one round
+  trip per job, not pipelined, plus one extra on the first job. The adapter
+  holds one `Enqueuer` per producer factory call; the N producer goroutines of
+  a run share it and its pool.
+- Serialization: `Job.serialize` (`job.go`) is `json.Marshal` of a `Job`
+  (`name`, `id`, `t`, `args`). The adapter's JSON rides as the string argument
+  `p` inside `args`, so it is JSON-escaped inside the job JSON. The `id` is 12
+  bytes from `crypto/rand` as hex (`identifier.go`, `makeIdentifier`), made on
+  every `Enqueue`. The consumer side runs `json.Unmarshal` into a `Job`
+  (`newJob`, `job.go`) and the adapter then unmarshals `p` a second time.
+- Fetch: each worker is one goroutine running `worker.loop` (`worker.go`),
+  which calls `fetchJob` and `processJob` in turn, so `concurrency` workers mean
+  `concurrency` jobs in flight. `fetchJob` runs one Lua script through
+  `redis.Script.Do` (`redisLuaFetchJob`, `redis.go`), which sends `EVALSHA` and
+  falls back to `EVAL` once on `NOSCRIPT` (redigo `redis/script.go`, `Do`). For a
+  non-empty queue the script runs `GET max_concurrency`, `LLEN`, `GET paused`,
+  `GET lock`, `INCR lock`, `HINCRBY lock_info` and `RPOPLPUSH
+  bench:jobs:bench bench:jobs:bench:<poolID>:inprogress`: 1 round trip and 7
+  commands inside the script. On an empty queue it stops after the first two
+  (`GET`, `LLEN`) and returns nil. The in-progress list is per `WorkerPool`.
+- Priority sampling: `prioritySampler.sample` (`priority_sampler.go`) runs on
+  every fetch, but its loop only runs while more than one job type is
+  registered; we register one, so it does nothing. The default priority is 1
+  (`applyDefaultsAndValidate`, `worker_pool.go`).
+- Ack: after the handler returns, `removeJobFromInProgress` (`worker.go`) sends
+  `MULTI`, `LREM <inprogress> 1 <raw job JSON>`, `DECR lock` and `HINCRBY
+  lock_info <poolID> -1` with `conn.Send`, then runs `EXEC` with `conn.Do`,
+  which flushes all five commands and reads all five replies (redigo
+  `redis/conn.go`, `DoWithTimeout`): 1 round trip. The handler returns nil, so `jobFate` is not
+  reached: no retry or dead-queue write.
+- Per job, consumer side: 2 round trips (the fetch script, then the
+  `MULTI`/`EXEC` pipeline). Idle polls and the background loops below come on
+  top. `Job.Unique` is false, so `deleteUniqueJob` (an extra `DEL`) is skipped.
+- Idle wait: polling only, no blocking pop and no push wake-up.
+  `sleepBackoffsInMilliseconds = {0, 10, 100, 1000, 5000}` (`worker.go`).
+  `loop` counts consecutive empty fetches; the first empty fetch sleeps 10 ms
+  (index 1; index 0 is never used after an empty fetch), the second 100 ms, the
+  third 1 s, and the fourth and every later one 5 s. A fetched job resets the
+  count and the timer to 0. The sleep is a timer in the same `select` as the
+  stop channel, so `Stop` does not wait out a sleep; it waits for a worker's
+  current job to finish.
+- Background loops, per `WorkerPool` (`WorkerPool.Start`, `worker_pool.go`):
+  - observer, one per worker (`observer.loop`, `observer.go`): 1 s ticker,
+    writes `HMSET`+`EXPIRE` (or `DEL` when idle) only when something changed
+    since the last write, and writes immediately on its first observation. The
+    worker hands it a start and a done observation per job over a 1,024-slot
+    channel without touching Redis. So up to one 2-command pipeline per worker
+    per second.
+  - heartbeater (`heartbeater.go`, `beatPeriod`): 5 s, `SADD` + `HMSET`
+    pipelined, and once right at start; `SREM` + `DEL` on stop.
+  - retry and scheduled requeuers (`requeuer.loop`, `requeuer.go`): 1 s ticker
+    each, one Lua `ZRANGEBYSCORE` per tick on `bench:retry` and
+    `bench:scheduled`, which stay empty.
+  - dead pool reaper (`dead_pool_reaper.go`): first pass after `deadTime`
+    10 s, then every `reapPeriod` 10 min plus up to 29 s of jitter. It treats a
+    pool as dead when its `heartbeat_at` is 10 s old or its heartbeat key is
+    gone (`findDeadPools`), and then requeues that pool's in-progress jobs
+    (`requeueInProgressJobs`). Every instance runs one. With the 5 s heartbeat a
+    live pool is not reaped unless its heartbeat is late by more than 5 s; if it
+    were, its in-flight jobs would be redelivered. Four probe runs of about 10 to 17 s
+    (W10C1 `Sleep1ms` on both workloads, W10C4 `Sleep1ms` and W1000C4 `Noop` on
+    `1u-100Kt`) saw no duplicates; that was not kept as a test.
+  - periodic enqueuer (`periodic_enqueuer.go`): `GET last_periodic_enqueue` and
+    a `SET` at start, then every 2 min plus up to 29 s of jitter. We register no
+    periodic jobs.
+  - `Start` also runs `SET max_concurrency 0` for the job synchronously and
+    launches `SADD bench:known_jobs bench` in a goroutine it never waits for
+    (`writeConcurrencyControlsToRedis`, `writeKnownJobsToRedis`).
+  So each instance runs 2 goroutines per worker (loop and observer) plus 5
+  background goroutines.
+- Stop: `WorkerPool.Stop` (`worker_pool.go`) sends a stop message to every
+  worker (which also drains and stops its observer), then to the heartbeater,
+  both requeuers, the reaper and the periodic enqueuer, and waits for each
+  reply, so all of them have returned when it returns. The only goroutine it
+  does not wait for is the known-jobs `SADD` above, which normally finishes
+  right after `Start`. The adapter then closes the pool.
+  `TestGocraftStopLeavesNothingRunning` checks that no goroutine inside
+  `gocraft/work` remains after stop, that nothing writes after `FLUSHDB` (waits
+  6 s, longer than the 5 s heartbeat), and that stdout stays empty (a mutant that
+  skips `wp.Stop()` fails it).
+- Pool size: `poolSize(workers)` for `MaxActive` and `MaxIdle` per consumer
+  instance, `poolSize(0)` per producer. `Wait: true` is our choice, not a
+  default: without it `Pool.Get` returns `ErrPoolExhausted` at `MaxActive`
+  (redigo `redis/pool.go`), which gocraft/work would log instead of waiting.
+- Logging: `logError` (`log.go`) is `fmt.Printf` to **stdout**, not the std
+  `log` package, and has no hook, so `log.SetOutput` does not silence it. It is
+  only called when a Redis call or a job fails (fetch, ack, heartbeat, requeue
+  and observer errors, handler panics), so a healthy run prints nothing; the
+  stop test above pins that for a short run. A line there would break the
+  `vizb` parse of `durable.txt` and is a run failure to investigate.
+
 ### Work table
 
 | Subject | Ack on hot path | Wake mechanism | Idle wait | Round trips per job | Serialization | Pool size | Forced settings |
@@ -369,3 +471,4 @@ one queue named `bench` per consumer instance, and the same per producer.
 | VarMQDistributed | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips), same as VarMQ | push: `PUBLISH enqueued` on `bench:notifications` after each `RPUSH`, received by every instance's subscriber; also job completion and `Start` | no job polling or blocking pop; the go-redis pub/sub channel health check pings every 3 s when idle (`pubsub.go`, `initHealthCheck`) | at least 6 consumer-side (`LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM`), 2 producer-side (`RPUSH` pipeline, `PUBLISH`) | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL; pub/sub uses its own connection | none; visibility timeout stays at its 5 min default |
 | Rmq | `LREM unacked 1 <payload>` per job (`redisDelivery.Ack`, `delivery.go`), 1 round trip; fetch is one `RPOPLPUSH` ready to unacked per job (`consumeBatch`, `queue.go`) | polling only: no blocking pop, no push | `time.Sleep(jitteredDuration(pollDuration))` after every fetch pass, +/-10% (90 to 110 ms at our setting), not only when empty; no back-off found in `consume` | 2 consumer-side (`RPOPLPUSH`, `LREM`) plus 1 `LLEN` per pass, 1 producer-side (`LPUSH`) | plain string payload (the JSON) | `poolSize(workers)` on our go-redis client (rmq does not create it) | poll duration 100 ms and prefetch limit `max(1000, 2*workers)`: rmq has no default for either; both follow `example/consumer/main.go` in rmq v5.2.0 (`prefetchLimit = 1000`, `pollDuration = 100 * time.Millisecond`), with the prefetch raised to 2 x workers because rmq's `README.md` says the prefetch limit should always be greater than the number of consumers; `consume` sleeps after every batch, so a connection is capped near prefetch / poll (about 10,000 jobs/s at 1000 / 100 ms; derived from `consume`, not measured); queue `bench`, tag `bench`; no cleaner |
 | Taskq | `XACK`, then `XDEL`, run separately by the worker after the handler (`Queue.Delete`, `redisq/queue.go`), 2 round trips | blocking: `XREADGROUP ... BLOCK` by one fetcher per instance, woken by `XADD` | `WaitTimeout` 1 s: `redisq.NewQueue` sets it before the 10 s default in `QueueOptions.Init`; workers re-check an empty buffer every 1 s; 3 scheduler loops per queue sleep 1 to 1.5 s between passes; `Stop` waits out the fetcher's current block (up to 1 s) | 2 consumer-side (`XACK`, `XDEL`) plus 1 `XREADGROUP` per up to 10 jobs, 1 producer-side (`XADD`) | msgpack `Message` holding msgpack args holding the JSON payload as bytes, in the stream field `body` | `poolSize(workers)` on our go-redis v8 client (`Options.PoolSize`) | `MinNumWorker = MaxNumWorker = workers` (disables autotune, so one fetcher); defaults kept (all in `QueueOptions.Init`, `queue.go`, except as noted): `ReservationSize` 10, `BufferSize` = `ReservationSize`, `ReservationTimeout` 5 min, `WaitTimeout` 1 s (`redisq.NewQueue`, `redisq/queue.go`), retry limit 64 (`TaskOptions.init`, `task.go`); queue `bench`, task `bench`; handler always returns nil |
+| GocraftWork | `LREM <inprogress> 1 <raw job>` in a `MULTI`/`EXEC` with `DECR lock` and `HINCRBY lock_info` (`removeJobFromInProgress`, `worker.go`), after the handler, 1 round trip; fetch is one Lua script (`redisLuaFetchJob`, `redis.go`) doing `RPOPLPUSH` to a per-pool in-progress list, 1 round trip | polling only: no blocking pop, no push | per-worker backoff `{0, 10, 100, 1000, 5000}` ms after consecutive empty fetches, reset to 0 by a job (`sleepBackoffsInMilliseconds`, `worker.loop`, `worker.go`); `Stop` does not wait out a sleep; other loops: observer 1 s per worker, heartbeat 5 s, requeuers 1 s, reaper first at 10 s then every 10 min, periodic enqueuer 2 min | 2 consumer-side (fetch script, `MULTI`/`EXEC`) plus 1 script per idle poll, 1 producer-side (`LPUSH`; plus 1 `SADD` on first enqueue per `Enqueuer` and every 300 s) | JSON `Job` whose `args.p` holds the JSON payload as a string | `poolSize(workers)` for redigo `MaxActive` and `MaxIdle`, `Wait: true` (our choice) | none beyond pool size; `MaxFails` 4 and priority 1 stay at their defaults (`applyDefaultsAndValidate`, `worker_pool.go`) and are not reached because the handler returns nil; namespace `bench`, job `bench`; `logError` prints to stdout (`log.go`) and cannot be redirected |

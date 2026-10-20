@@ -5,6 +5,8 @@ go 1.26.0
 require (
 	github.com/adjust/rmq/v5 v5.2.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/gocraft/work v0.5.1
+	github.com/gomodule/redigo v1.9.3
 	github.com/goptics/redisq v1.4.0
 	github.com/goptics/varmq v1.9.0
 	github.com/hibiken/asynq v0.26.0
@@ -25,6 +27,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/lucsky/cuid v1.2.1 // indirect
+	github.com/robfig/cron v1.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/stretchr/testify v1.12.1 // indirect

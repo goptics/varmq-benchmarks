@@ -20,8 +20,9 @@ type nopLogger struct{}
 func (nopLogger) Printf(context.Context, string, ...any) {}
 
 func TestMain(m *testing.M) {
-	// redisq and gocraft/work log through the std logger, and `go test` sends
-	// stderr to the same file as stdout, so it must stay quiet.
+	// redisq logs through the std logger, and `go test` sends stderr to the same
+	// file as stdout, so it must stay quiet. gocraft/work does not use it: it
+	// prints to stdout, but only when a call fails.
 	log.SetOutput(io.Discard)
 	redis.SetLogger(nopLogger{})
 
