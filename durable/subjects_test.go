@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var wantSubjects = []string{"RawRedis", "VarMQ"} // each later task appends its name
+var wantSubjects = []string{"RawRedis", "VarMQ", "Asynq"} // each later task appends its name
 
 func TestSubjectNames(t *testing.T) {
 	var got []string

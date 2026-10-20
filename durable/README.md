@@ -76,9 +76,78 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
 - Logging: varmq prints nothing (its default error handler is a no-op).
   `redisq` logs through the std `log` package; `TestMain` discards it.
 
+### Asynq
+
+Library version `asynq v0.26.0`. Paths are inside the module (`go env GOMODCACHE`).
+
+- Dequeue: `processor.exec` (`processor.go`) calls `RDB.Dequeue`
+  (`internal/rdb/rdb.go`), which runs `dequeueCmd`, a Lua script, with
+  `EVALSHA` (falling back to `EVAL` on `NOSCRIPT`, `Script.Run` in
+  `go-redis/v9/script.go`). Keys: `asynq:{bench}:pending`, `:paused`, `:active`,
+  `:lease`. The script checks `EXISTS` on the paused key, `RPOPLPUSH` pending to
+  active, `HSET`+`HDEL` on the task hash `asynq:{bench}:t:<id>`, `ZADD` on the
+  lease zset, then `HGET`s the message. Enqueue is `RDB.Enqueue`: one
+  `enqueueCmd` script (`EXISTS`, `HSET`, `LPUSH`), plus one `SADD` of the queue
+  name on a client's first enqueue (`Client.EnqueueContext`, `client.go`).
+- Dequeue concurrency: one goroutine (`processor.start`) loops `exec`, so one
+  `Dequeue` is in flight per server. The handler and its ack run in a goroutine
+  per task, up to `Concurrency` (the `sema` channel).
+- Ack: a handler that returns nil goes to `processor.handleSucceededMessage`.
+  `Retention` is 0 unless the caller sets it (`composeOptions`, `client.go`),
+  so it calls `markAsDone` and `RDB.Done`: one `doneCmd` script (`LREM` active,
+  `ZREM` lease, `DEL` task hash, `INCR` the daily processed counter plus
+  `EXPIREAT` on its first hit, `GET` then `INCR`/`SET` of the total). Completed
+  tasks are not kept.
+- Wake: none. Polling only. The comment in `processor.exec` says it polls the
+  queues instead of using a blocking pop. An empty
+  `Dequeue` makes the processor sleep. Pub/sub exists (`subscriber.go`,
+  `RDB.CancelationPubSub`), but its use here is task cancelation, not job wake
+  (read from the file name and calls; not traced further).
+- Idle wait: when `Dequeue` returns `ErrNoProcessableTask`, `processor.exec`
+  runs `time.Sleep(taskCheckInterval/2 + rand.N(taskCheckInterval))`.
+  `TaskCheckInterval` defaults to 1 s (`defaultTaskCheckInterval`,
+  `server.go`; `NewServerFromRedisClient`), so each idle sleep is uniform in
+  [0.5 s, 1.5 s). The sleep is not interruptible and holds a worker token.
+  Jobs enqueued during it wait it out. Measured: median enqueue-to-handled
+  latency about 990 ms and max 1.4 s over 40 sequential jobs, so the
+  `Latency` benchmark (10,000 jobs, one at a time) takes about 2.75 hours per
+  iteration for this subject.
+- Shutdown: `Server.Shutdown` (`server.go`) calls `processor.shutdown`, whose
+  `stop` does `p.done <- struct{}{}`. That send is received only after the
+  processor goroutine finishes its current `exec`, including the sleep above.
+  So an idle `Shutdown` inside the timed region blocks for the rest of a
+  0.5 to 1.5 s sleep. Measured on an idle server: 41 ms, 296 ms, 432 ms,
+  795 ms, 1.07 s over 5 runs; 6 ms when stopped right after `Start`. The
+  8 s `ShutdownTimeout` (`defaultShutdownTimeout`) only bounds in-flight
+  handlers, and idle shutdown does not wait for it. We do not tune either.
+- Round trips per job, consumer side: 2 (`Dequeue` script, `Done` script).
+  Not per job: `heartbeater.beat` (`heartbeat.go`) writes server state and
+  extends leases for active tasks every 5 s. Producer side: 1 per job (one
+  `EVALSHA`), plus 1 `SADD` per client.
+- Serialization: `base.EncodeMessage` (`internal/base/base.go`) marshals a
+  protobuf `TaskMessage` (`internal/proto/asynq.proto`) carrying type, payload
+  (our JSON bytes), id (UUID), queue, retry, timeout and the other fields. It
+  is stored in the task hash field `msg`; the pending list holds only the id.
+- Pool size: `RedisClientOpt.PoolSize` goes to `redis.Options.PoolSize`
+  (`asynq.go`, `MakeRedisClient`). The server uses one pool for the processor,
+  heartbeater and the other background jobs. The adapter sets `poolSize(workers)`
+  on the server and on the client; the client passes 0 workers, which gives
+  `10*GOMAXPROCS`, the go-redis default.
+- Forced settings: queue `bench` with priority 1 (`Config.Queues`; asynq falls
+  back to a `default` queue if none is set, `NewServerFromRedisClient`),
+  `Concurrency = workers`, `Logger` no-op and `LogLevel = FatalLevel`. Task
+  options are the defaults: `MaxRetry` 25 and `Timeout` 30 min (`client.go`),
+  lease 30 s (`rdb.LeaseDuration`), no `Retention`, no unique key.
+- Logging: `internal/log` writes to stderr when no logger is set
+  (`NewLogger`). The adapter passes a no-op `asynq.Logger`. Nothing else in
+  the library's non-test code prints to stdout or stderr: no startup banner,
+  and the only std `log.Printf` is a bad-call path in `internal/errors`, which
+  `TestMain` discards.
+
 ### Work table
 
 | Subject | Ack on hot path | Wake mechanism | Idle wait | Round trips per job | Serialization | Pool size | Forced settings |
 |---------|-----------------|----------------|-----------|---------------------|---------------|-----------|-----------------|
 | RawRedis | none | blocking pop | `BRPOP` 1 s block timeout | 1 | raw JSON bytes | `poolSize(workers)` | none |
 | VarMQ (persistent) | `LPOP`, then `HSET`+`ZADD` pipeline, then `HDEL`+`ZREM` pipeline (5 commands, 3 round trips) | in-process: `Add` signals the worker's event loop, no polling | none: no Redis polling or blocking wait; wakes come from in-process `Add`, `Start` and job completion, so an idle second instance is not woken by another process's adds | at least 6: `LLEN` x3, `LPOP`, `HSET`+`ZADD`, `HDEL`+`ZREM` | `varmq.Job` JSON wrapping the payload | `poolSize(workers)` via `pool_size` in the URL | none; visibility timeout stays at its 5 min default |
+| Asynq | `EVALSHA` Lua scripts: dequeue (`RPOPLPUSH` pending to active, `HSET`/`HDEL`, `ZADD` lease, `HGET`), then done (`LREM`, `ZREM`, `DEL`, `INCR`/`GET`/`INCR`), 2 round trips | polling: no blocking pop, no push wake | `time.Sleep(TaskCheckInterval/2 + rand.N(TaskCheckInterval))` on an empty queue, `TaskCheckInterval` default 1 s, so 0.5 to 1.5 s; idle `Shutdown` waits out the current sleep | 2 consumer-side, 1 producer-side (plus 1 `SADD` per client) | protobuf `TaskMessage` wrapping the JSON payload, in a task hash | `poolSize(workers)` via `RedisClientOpt.PoolSize` | queue `bench`; defaults kept: retry 25, timeout 30 min, lease 30 s, no retention |
