@@ -26,7 +26,7 @@ iteration, so don't point it at a Redis you care about.
 - Tasks: `Noop`, `Sleep1ms`
 - Names: `BenchmarkDurable/<Task>W<workers>C<instances>/<workload>/<subject>`,
   `BenchmarkEnqueue/<workload>/<subject>`,
-  `BenchmarkLatency/NoopW10C1/1u-10Kt/<subject>`
+  `BenchmarkLatency/NoopW10C1/1u-1Kt/<subject>`
 - Metrics: `jobs/s` (Durable, Enqueue); `p50-ms`, `p99-ms`, `max-ms` (Latency)
 
 Each subject runs at its library defaults, apart from worker concurrency and
@@ -110,8 +110,9 @@ Library version `asynq v0.26.0`. Paths are inside the module (`go env GOMODCACHE
   [0.5 s, 1.5 s). The sleep is not interruptible and holds a worker token.
   Jobs enqueued during it wait it out. Measured: median enqueue-to-handled
   latency about 990 ms and max 1.4 s over 40 sequential jobs, so the
-  `Latency` benchmark (10,000 jobs, one at a time) takes about 2.75 hours per
-  iteration for this subject.
+  `Latency` benchmark runs 1,000 jobs, one at a time, for every subject:
+  Asynq's default idle poll would make a 10,000-job paced run take about 2.75
+  hours per iteration.
 - Shutdown: `Server.Shutdown` (`server.go`) calls `processor.shutdown`, whose
   `stop` does `p.done <- struct{}{}`. That send is received only after the
   processor goroutine finishes its current `exec`, including the sleep above.

@@ -25,7 +25,7 @@ var tasks = []task{
 }
 
 var (
-	latencyWorkload = workload{"1u-10Kt", 1, 10_000}
+	latencyWorkload = workload{"1u-1Kt", 1, 1_000}
 	latencyShape    = shape{10, 1}
 )
 
