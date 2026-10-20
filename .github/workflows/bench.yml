@@ -24,6 +24,11 @@ jobs:
             output: bench-4cpu
             name: "Benchmarking (4 CPUs)"
 
+          - file: durable.txt
+            output: durable
+            name: "Durable queues (Redis)"
+            chart: "bar:border-radius=8,8,0,0"
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -36,7 +41,7 @@ jobs:
           time-unit: s
           mem-unit: MB
           charts: bar
-          chart: "bar:border-radius=8,8,0,0;stack=true"
+          chart: ${{ matrix.chart || 'bar:border-radius=8,8,0,0;stack=true' }}
           round: "true"
           output-json: out/${{ matrix.output }}.json
 
@@ -62,6 +67,12 @@ jobs:
           # explicit order: merge-dir globs *.json, which sorts by name (4cpu, 8cpu, then 24)
           merge-files: /tmp/jsons/bench.json /tmp/jsons/bench-8cpu.json /tmp/jsons/bench-4cpu.json
           output-html: public/index.html
+
+      # the durable page is its own site section, not a tab of the pool report
+      - uses: goptics/vizb@v0.22.0
+        with:
+          merge-files: /tmp/jsons/durable.json
+          output-html: public/durable/index.html
 
       - uses: peaceiris/actions-gh-pages@v4
         with:

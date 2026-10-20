@@ -188,4 +188,30 @@ tasks:
     desc: Run the durable benchmarks once each (needs durable-up)
     dir: durable
     cmds:
-      - go test -run xxx -bench . -benchtime=1x -benchmem
+      - go test -run xxx -bench . -benchtime=1x -benchmem -timeout 0
+
+  durable-txt:
+    desc: Run the durable benchmarks and save output to bench/durable.txt (needs durable-up, takes hours)
+    dir: durable
+    cmds:
+      - mkdir -p ../bench
+      - go test -run xxx -bench . -benchtime=2x -benchmem -timeout 0 > ../bench/durable.txt
+
+  durable-vizb:
+    desc: Generate the durable benchmark chart JSON from bench/durable.txt
+    cmds:
+      - mkdir -p jsons
+      - vizb bar bench/durable.txt -p /n/y/x -T s -M MB -o jsons/durable.json -l --round 2 --border-radius="8,8,0,0" -n "Durable queues (Redis)"
+
+  durable-report:
+    desc: Run the durable benchmarks, build the chart page, and open it
+    cmds:
+      - task: durable-up
+      - task: durable-txt
+      - task: durable-vizb
+      - mkdir -p dist/durable
+      - vizb ui jsons/durable.json -o dist/durable/index.html
+      - cmd: xdg-open dist/durable/index.html
+        platforms: [linux]
+      - cmd: open dist/durable/index.html
+        platforms: [darwin]

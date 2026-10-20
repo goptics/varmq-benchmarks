@@ -116,9 +116,10 @@ subjects.go          types.go            benchmark_test.go
 
 Defined in [.github/workflows/bench.yml](.github/workflows/bench.yml). It runs whenever anything under `bench/` changes on `main`:
 
-1. Three parallel jobs convert `bench.txt`, `bench-8cpu.txt` and `bench-4cpu.txt` to chart JSON.
-2. A merge job combines them into a single `public/index.html`.
-3. The page is pushed to the `gh-pages` branch and served at <https://goptics.github.io/varmq-benchmarks/>.
+1. Four parallel jobs convert `bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt` and `durable.txt` to chart JSON.
+2. A merge job combines the first three into a single `public/index.html`.
+3. A fourth job converts `durable.txt`; the merge job renders it to its own page, `public/durable/index.html`, not a tab of the pool report.
+4. Both pages are pushed to the `gh-pages` branch together and served at <https://goptics.github.io/varmq-benchmarks/> and <https://goptics.github.io/varmq-benchmarks/durable/>.
 
 Benchmarks themselves do not run in CI. Runner hardware is noisy and shared, so numbers are generated on a known machine and committed.
 
@@ -186,10 +187,20 @@ That is the whole integration. The harness picks it up on the next run. The fact
 | `types.go` | Harness types and the task generator |
 | `benchmark_test.go` | The benchmark loop |
 | `bench/` | Committed raw benchmark output (`bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt`), source of truth for the charts |
-| `jsons/` | Local chart JSON, one per CPU count. Gitignored. |
+| `durable/` | Separate Go module: the Redis-backed durable queue benchmarks, with its own [README](durable/README.md) |
+| `bench/durable.txt` | Committed raw output of the durable benchmarks, source of truth for the durable chart page |
+| `jsons/` | Local chart JSON, one per CPU count, plus `durable.json`. Gitignored. |
 | `dist/` | Local merged chart data and the rendered `index.html`. Gitignored. |
 | `Taskfile.yml` | Shortcuts for running, profiling and charting |
 | `.github/workflows/bench.yml` | Chart build and GitHub Pages deploy |
+
+## Durable queues
+
+The pool benchmark above needs nothing but Go. Redis-backed job queues are a different race, so they live in their own module, [durable/](durable/): VarMQ's persistent and distributed queues against Asynq, rmq, taskq and gocraft/work, with a raw Redis list as the floor. The harness measures end-to-end jobs/s, enqueue-only jobs/s and per-job latency. The committed `bench/durable.txt` so far holds the end-to-end rows only (it stopped at a known stall, see [durable/README.md](durable/README.md)); enqueue and latency rows arrive with the next full run.
+
+[![Durable Charts](https://img.shields.io/badge/%F0%9F%93%8A-Durable_Charts-blue?style=for-the-badge)](https://goptics.github.io/varmq-benchmarks/durable/)
+
+These benchmarks need Redis. `task durable-up` starts one on port 6390 (Docker), then `task durable-report` runs the full matrix and builds the page. The root pool benchmark still needs nothing. Subject notes, forced settings and the work each library does per job are in [durable/README.md](durable/README.md).
 
 ## License
 

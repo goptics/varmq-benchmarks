@@ -34,6 +34,14 @@ the Redis pool size (`max(workers, 10*GOMAXPROCS)`, where the library lets us
 set it). Anything else a library forces us to choose is listed under
 "Forced settings".
 
+## Results
+
+`bench/durable.txt` is one full `BenchmarkDurable` run (`-benchtime=2x`, default
+CPUs, 147 rows). It stopped early at the VarMQDistributed stall described under
+"Known issues", so the last `Sleep1msW1000C4` rows (Rmq's second workload, Taskq
+and GocraftWork) are missing, and `BenchmarkEnqueue` and `BenchmarkLatency` are
+not in it yet. `task durable-txt` regenerates the whole file.
+
 ## Work per job
 
 Each row of the work table is read from the library source. The notes per subject
@@ -108,8 +116,10 @@ Library version `asynq v0.26.0`. Paths are inside the module (`go env GOMODCACHE
   `TaskCheckInterval` defaults to 1 s (`defaultTaskCheckInterval`,
   `server.go`; `NewServerFromRedisClient`), so each idle sleep is uniform in
   [0.5 s, 1.5 s). The sleep is not interruptible and holds a worker token.
-  Jobs enqueued during it wait it out. Measured: median enqueue-to-handled
-  latency about 990 ms and max 1.4 s over 40 sequential jobs, so the
+  Jobs enqueued during it wait it out. Measured in a 40-job probe (not the
+  `Latency` benchmark; those rows are not in `bench/durable.txt` yet): median
+  enqueue-to-handled latency about 990 ms and max 1.4 s over 40 sequential
+  jobs, so the
   `Latency` benchmark runs 1,000 jobs, one at a time, for every subject:
   Asynq's default idle poll would make a 10,000-job paced run take about 2.75
   hours per iteration.
@@ -203,6 +213,19 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
   consumer calls `WaitAndStop` first, then closes the queue and the client.
 - Logging: `Notification.Send` and `Queue` use the std `log`, which `TestMain`
   discards.
+
+- Known issue: the row `Sleep1msW1000C4/1u-100Kt/VarMQDistributed` (4 instances
+  x 1000 workers, `Sleep1ms`, 1 producer x 100,000 jobs) stalled with
+  99,819/100,000 jobs handled, 0 duplicates, until the harness's 5-minute
+  limit (`runEndToEnd`) failed it. That is in the committed full run, and the
+  `--- FAIL` line is kept in `bench/durable.txt`. The stall is intermittent: an
+  isolated rerun of 1 iteration passed, an isolated rerun of 8 iterations
+  stalled the same way, and isolated reruns of 10 and 40 iterations passed.
+  The cause is not diagnosed (Redis was not inspected during a stall). It looks
+  like a missed wake-up, since an idle instance is woken only by a later
+  `enqueued` notification, but that is unverified. The `W1000C4` rows after it
+  are missing from the committed run, so read the VarMQDistributed
+  `Sleep1msW1000C4` numbers as unavailable until this is fixed.
 
 ### Rmq
 
