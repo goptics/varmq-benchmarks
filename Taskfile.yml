@@ -138,7 +138,7 @@ tasks:
       - rm -f *.test
       - rm -rf jsons
       - rm -rf dist
-      - rm -rf ./bench/*.txt
+      - rm -f ./bench/bench.txt ./bench/bench-4cpu.txt ./bench/bench-8cpu.txt
 
   format:
     desc: Format code
@@ -165,3 +165,53 @@ tasks:
       - go version
       - task deps
       - echo "Development environment ready!"
+
+  durable-up:
+    desc: Start the Redis used by the durable benchmarks
+    dir: durable
+    cmds:
+      - docker compose -f compose.yml up -d --wait
+
+  durable-down:
+    desc: Stop the durable benchmarks' Redis
+    dir: durable
+    cmds:
+      - docker compose -f compose.yml down
+
+  durable-test:
+    desc: Run the durable module tests (needs durable-up)
+    dir: durable
+    cmds:
+      - go test ./...
+
+  durable-bench-quick:
+    desc: Run the durable benchmarks once each (needs durable-up)
+    dir: durable
+    cmds:
+      - go test -run xxx -bench . -benchtime=1x -benchmem -timeout 0
+
+  durable-txt:
+    desc: Run the durable benchmarks and save output to bench/durable.txt (needs durable-up, takes hours)
+    dir: durable
+    cmds:
+      - mkdir -p ../bench
+      - go test -run xxx -bench . -benchtime=2x -benchmem -timeout 0 > ../bench/durable.txt
+
+  durable-vizb:
+    desc: Generate the durable benchmark chart JSON from bench/durable.txt
+    cmds:
+      - mkdir -p jsons
+      - vizb bar bench/durable.txt -p /n/y/x -T s -M MB -o jsons/durable.json -l --round 2 --border-radius="8,8,0,0" -n "Durable queues (Redis)"
+
+  durable-report:
+    desc: Run the durable benchmarks, build the chart page, and open it
+    cmds:
+      - task: durable-up
+      - task: durable-txt
+      - task: durable-vizb
+      - mkdir -p dist/durable
+      - vizb ui jsons/durable.json -o dist/durable/index.html
+      - cmd: xdg-open dist/durable/index.html
+        platforms: [linux]
+      - cmd: open dist/durable/index.html
+        platforms: [darwin]
