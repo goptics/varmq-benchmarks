@@ -116,8 +116,8 @@ subjects.go          types.go            benchmark_test.go
 
 Defined in [.github/workflows/bench.yml](.github/workflows/bench.yml). It runs whenever anything under `bench/` changes on `main`:
 
-1. Five parallel jobs convert `bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt`, `durable.txt` and `sqlite.txt` to chart JSON.
-2. A merge job combines the first three into `public/index.html` and renders `durable.json` and `sqlite.json` each on its own, to `public/durable/index.html` and `public/sqlite/index.html`.
+1. Six parallel jobs convert `bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt`, `durable.txt`, `sqlite.txt` and `sqlite-4cpu.txt` to chart JSON.
+2. A merge job combines the first three into `public/index.html`, renders `durable.json` on its own to `public/durable/index.html`, and combines `sqlite.json` with `sqlite-4cpu.json` into `public/sqlite/index.html`.
 3. The pages are pushed to the `gh-pages` branch together and served at <https://goptics.github.io/varmq-benchmarks/>, <https://goptics.github.io/varmq-benchmarks/durable/> and <https://goptics.github.io/varmq-benchmarks/sqlite/>.
 
 Benchmarks themselves do not run in CI. Runner hardware is noisy and shared, so numbers are generated on a known machine and committed.
@@ -189,8 +189,8 @@ That is the whole integration. The harness picks it up on the next run. The fact
 | `durable/` | Separate Go module: the Redis-backed durable queue benchmarks, with its own [README](durable/README.md) |
 | `bench/durable.txt` | Committed raw output of the durable benchmarks, source of truth for the durable chart page |
 | `sqlite/` | Separate Go module: the SQLite-backed durable queue benchmarks (sqliteq), with its own [README](sqlite/README.md) |
-| `bench/sqlite.txt` | Committed raw output of the SQLite benchmarks, source of truth for the SQLite chart page |
-| `jsons/` | Local chart JSON, one per CPU count, plus `durable.json` and `sqlite.json`. Gitignored. |
+| `bench/sqlite.txt`, `bench/sqlite-4cpu.txt` | Committed raw output of the SQLite benchmarks (24 and 4 CPUs), source of truth for the SQLite chart page |
+| `jsons/` | Local chart JSON, one per CPU count, plus `durable.json`, `sqlite.json` and `sqlite-4cpu.json`. Gitignored. |
 | `dist/` | Local merged chart data and the rendered `index.html`. Gitignored. |
 | `Taskfile.yml` | Shortcuts for running, profiling and charting |
 | `.github/workflows/bench.yml` | Chart build and GitHub Pages deploy |
@@ -205,7 +205,7 @@ These benchmarks need Redis. `task durable-up` starts one on port 6390 (Docker),
 
 ## SQLite queues
 
-[sqlite/](sqlite/) is the same idea for [sqliteq](https://github.com/goptics/sqliteq), VarMQ's SQLite-backed persistent queue. It has no rivals to race: each row runs the same four scenarios (one queue, a paused-then-resumed drain, a priority queue, ten queues) through a VarMQ worker, so the committed `bench/sqlite.txt` is a baseline that a later sqliteq version is compared against, not a ranking. It needs nothing but Go and a real disk; `task bench-sqlite` runs it. See [sqlite/README.md](sqlite/README.md).
+[sqlite/](sqlite/) is the same idea for [sqliteq](https://github.com/goptics/sqliteq), VarMQ's SQLite-backed persistent queue. It has no rivals to race: each row runs the same four scenarios (one queue, a paused-then-resumed drain, a priority queue, ten queues) through a VarMQ worker, so the committed `bench/sqlite.txt` and `bench/sqlite-4cpu.txt` are a baseline that a later sqliteq version is compared against, not a ranking. It needs nothing but Go and a real disk; `task bench-sqlite` runs it. See [sqlite/README.md](sqlite/README.md).
 
 [![SQLite Charts](https://img.shields.io/badge/%F0%9F%93%8A-SQLite_Charts-blue?style=for-the-badge)](https://goptics.github.io/varmq-benchmarks/sqlite/)
 

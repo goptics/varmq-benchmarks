@@ -217,10 +217,10 @@ tasks:
         platforms: [darwin]
 
   bench-sqlite:
-    desc: Run the SQLite queue benchmarks and save output to bench/sqlite.txt (set SQLITEQ_LABEL to name the sqliteq version)
+    desc: Run the SQLite queue benchmarks and save the 24-CPU run to bench/sqlite.txt and the 4-CPU run to bench/sqlite-4cpu.txt (set SQLITEQ_LABEL to name the sqliteq version)
     dir: sqlite
     cmds:
       # One -cpu value per go test process: with -cpu=4,24 in one process, the first
       # sample of the -4 rows runs at GOMAXPROCS 24 (see sqlite/README.md).
-      - set -o pipefail; go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4 -timeout 60m | tee ../bench/sqlite.txt
-      - set -o pipefail; go test -run xxx -bench . -benchtime=1x -count=2 -cpu=24 -timeout 60m | tee -a ../bench/sqlite.txt
+      - set -o pipefail; go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4 -timeout 60m | tee ../bench/sqlite-4cpu.txt
+      - set -o pipefail; go test -run xxx -bench . -benchtime=1x -count=2 -cpu=24 -timeout 60m | tee ../bench/sqlite.txt

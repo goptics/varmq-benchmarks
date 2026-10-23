@@ -4,8 +4,9 @@ End-to-end benchmarks for [sqliteq](https://github.com/goptics/sqliteq), VarMQ's
 SQLite storage adapter: jobs go in through a VarMQ persistent queue, a worker
 runs them, and the benchmark waits until the queue is empty. Unlike
 [durable/](../durable/README.md) there are no rival libraries. The committed
-`bench/sqlite.txt` is a baseline for one sqliteq version (v0.2.3), and the same
-benchmark is run again on a later version to see what a change bought.
+`bench/sqlite.txt` (24 CPUs) and `bench/sqlite-4cpu.txt` (4 CPUs) are a baseline
+for one sqliteq version (v0.2.3), and the same benchmark is run again on a later
+version to see what a change bought.
 
 It lives in its own Go module, like `durable/`, so sqliteq's cgo SQLite driver
 stays out of the root `go.mod`. It needs a C compiler and nothing else.
@@ -18,8 +19,12 @@ SQLITEQ_LABEL=v0.2.3 go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4
 SQLITEQ_LABEL=v0.2.3 go test -run xxx -bench . -benchtime=1x -count=2 -cpu=24
 ```
 
-or `task bench-sqlite` from the repo root, which runs both and saves
-`bench/sqlite.txt` (about 4 minutes).
+or `task bench-sqlite` from the repo root, which runs both and saves the
+`-cpu=24` run to `bench/sqlite.txt` and the `-cpu=4` run to
+`bench/sqlite-4cpu.txt` (about 4 minutes). Each run replaces its own file. They
+are two files, like `bench.txt` and `bench-4cpu.txt`, because the chart tool
+drops the `-N` suffix from row names, so one file with both CPU counts would be
+charted as one bar per row mixing 4- and 24-CPU samples.
 
 Run each `-cpu` value in its own `go test` process, never `-cpu=4,24`. Go's
 testing package runs a benchmark's first iteration (run1) before it sets
@@ -30,7 +35,8 @@ comparisons between sqliteq versions must also use separate processes per `-cpu`
 value.
 
 - `SQLITEQ_LABEL` is the last part of every row name (default `sqliteq`). Run
-  two versions with two labels and put both files into one chart.
+  two versions with two labels and put both versions' rows into one chart per
+  CPU count.
 - `SQLITEQ_BENCH_DIR` is where the databases are created (default
   `<user cache dir>/varmq-bench-sqlite`). **Use a real disk.** Durable writes
   pay for fsync, and `/tmp` is often a tmpfs where that cost vanishes. Each
@@ -73,9 +79,12 @@ job therefore fails the benchmark instead of making it look fast.
 
 ## Results
 
-`bench/sqlite.txt`: sqliteq v0.2.3, `-benchtime=1x -count=2 -cpu=4,24`. Every
-row is repeated four times (two counts, two CPU settings); the numbers below
-are the range over those four.
+`bench/sqlite.txt` and `bench/sqlite-4cpu.txt`: sqliteq v0.2.3, from one
+`-benchtime=1x -count=2 -cpu=4,24` run, split by CPU count afterwards. This is a
+baseline only: it predates the one-process-per-`-cpu` rule above, so the first
+`-4` sample of every row ran at GOMAXPROCS 24, and both files are regenerated
+before sqliteq v0.3.0 publishes. Every row is repeated four times (two counts,
+two CPU settings); the numbers below are the range over those four.
 
 | Scenario | Layout | jobs/s |
 |----------|--------|-------:|

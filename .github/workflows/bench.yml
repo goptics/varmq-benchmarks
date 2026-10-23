@@ -31,7 +31,12 @@ jobs:
 
           - file: sqlite.txt
             output: sqlite
-            name: "Durable queues (SQLite)"
+            name: "Durable queues (SQLite, 24 CPUs)"
+            chart: "bar:border-radius=8,8,0,0"
+
+          - file: sqlite-4cpu.txt
+            output: sqlite-4cpu
+            name: "Durable queues (SQLite, 4 CPUs)"
             chart: "bar:border-radius=8,8,0,0"
 
     runs-on: ubuntu-latest
@@ -83,10 +88,10 @@ jobs:
           output-json: out/durable-page.json
           output-html: public/durable/index.html
 
-      # same for the SQLite page
+      # same for the SQLite page, 24 CPUs first like the pool page
       - uses: goptics/vizb@v0.22.0
         with:
-          merge-files: /tmp/jsons/sqlite.json
+          merge-files: /tmp/jsons/sqlite.json /tmp/jsons/sqlite-4cpu.json
           output-json: out/sqlite-page.json
           output-html: public/sqlite/index.html
 
