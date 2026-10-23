@@ -215,3 +215,9 @@ tasks:
         platforms: [linux]
       - cmd: open dist/durable/index.html
         platforms: [darwin]
+
+  bench-sqlite:
+    desc: Run the SQLite queue benchmarks and save output to bench/sqlite.txt (set SQLITEQ_LABEL to name the sqliteq version)
+    dir: sqlite
+    cmds:
+      - go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4,24 | tee ../bench/sqlite.txt

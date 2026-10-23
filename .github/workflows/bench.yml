@@ -29,6 +29,11 @@ jobs:
             name: "Durable queues (Redis)"
             chart: "bar:border-radius=8,8,0,0"
 
+          - file: sqlite.txt
+            output: sqlite
+            name: "Durable queues (SQLite)"
+            chart: "bar:border-radius=8,8,0,0"
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -77,6 +82,13 @@ jobs:
           merge-files: /tmp/jsons/durable.json
           output-json: out/durable-page.json
           output-html: public/durable/index.html
+
+      # same for the SQLite page
+      - uses: goptics/vizb@v0.22.0
+        with:
+          merge-files: /tmp/jsons/sqlite.json
+          output-json: out/sqlite-page.json
+          output-html: public/sqlite/index.html
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
