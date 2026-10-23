@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -110,7 +111,8 @@ func bind(tb testing.TB, st store, sc scenario, name string, ran *atomic.Int64) 
 // over the timed part only: setup, teardown and the leftover check are not
 // timed. Mixed times the first Add to Wait. Drain times Resume to Wait. It
 // also reports walMB, the largest size any one -wal file reached in any
-// iteration, untimed parts included.
+// iteration, untimed parts included. procs is the GOMAXPROCS the benchmark
+// function itself ran at, so every row shows what it was measured with.
 func runScenario(b *testing.B, sc scenario, l layout, ckpt int) {
 	b.Helper()
 
@@ -126,6 +128,7 @@ func runScenario(b *testing.B, sc scenario, l layout, ckpt int) {
 	}
 
 	b.ReportMetric(float64(walPeak)/1e6, "walMB")
+	b.ReportMetric(float64(runtime.GOMAXPROCS(0)), "procs")
 }
 
 // walSampleEvery is how often sampleWAL reads the -wal file sizes.

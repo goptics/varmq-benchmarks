@@ -14,11 +14,20 @@ stays out of the root `go.mod`. It needs a C compiler and nothing else.
 
 ```sh
 cd sqlite
-SQLITEQ_LABEL=v0.2.3 go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4,24
+SQLITEQ_LABEL=v0.2.3 go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4
+SQLITEQ_LABEL=v0.2.3 go test -run xxx -bench . -benchtime=1x -count=2 -cpu=24
 ```
 
-or `task bench-sqlite` from the repo root, which also saves `bench/sqlite.txt`
-(about 4 minutes).
+or `task bench-sqlite` from the repo root, which runs both and saves
+`bench/sqlite.txt` (about 4 minutes).
+
+Run each `-cpu` value in its own `go test` process, never `-cpu=4,24`. Go's
+testing package runs a benchmark's first iteration (run1) before it sets
+GOMAXPROCS for the current `-cpu` entry, and with `-benchtime=1x` the first
+sample reuses it, so in a multi-value process the first `-4` sample runs at the
+GOMAXPROCS left over from the last entry (24) under a `-4` label. A/B
+comparisons between sqliteq versions must also use separate processes per `-cpu`
+value.
 
 - `SQLITEQ_LABEL` is the last part of every row name (default `sqliteq`). Run
   two versions with two labels and put both files into one chart.
@@ -47,8 +56,11 @@ Row names are `BenchmarkSQLite/<scenario>/<layout>-ckpt<n>/<label>`:
 - `ckpt<n>` is the WAL checkpoint size in pages, 1000 or 10000. sqliteq v0.2.3
   cannot set it, so its `ckpt10000` rows are skipped and do not appear in the
   output; later versions fill them in.
-- Metrics: `jobs/s`, and `walMB`. Setup, teardown and the checks below are not
-  timed.
+- Metrics: `jobs/s`, `walMB` and `procs`. Setup, teardown and the checks below
+  are not timed.
+- `procs` is the GOMAXPROCS the benchmark function actually ran at, read inside
+  it. It must equal the row's `-N` suffix: a row whose `procs` does not match
+  its suffix is invalid and must be discarded and re-run.
 - `walMB` is the largest size, in MB (10^6 bytes), that any one `-wal` file of
   the run reached. A goroutine reads the size of every `-wal` file in the run's
   directory every 50 ms, from the store's opening until just before it closes,
