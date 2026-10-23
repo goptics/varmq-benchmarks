@@ -8,6 +8,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"testing"
+	"time"
 
 	"github.com/goptics/varmq"
 	_ "github.com/mattn/go-sqlite3"
@@ -69,16 +70,20 @@ func freshDir(tb testing.TB) string {
 	return dir
 }
 
+// waitDeadline bounds how long one iteration waits for its workers to drain,
+// so a stuck job fails its row instead of hanging the whole run.
+const waitDeadline = 5 * time.Minute
+
 // bound is one queue with its worker.
 type bound struct {
 	worker varmq.Worker
 	add    func(i int) bool // enqueues job number i
 }
 
-func bind(tb testing.TB, st store, sc scenario, name string) bound {
+func bind(tb testing.TB, st store, sc scenario, name string, ran *atomic.Int64) bound {
 	tb.Helper()
 
-	w := varmq.NewWorker(func(varmq.Job[int]) {}, varmq.WithConcurrency(16))
+	w := varmq.NewWorker(func(varmq.Job[int]) { ran.Add(1) }, varmq.WithConcurrency(16))
 
 	if sc.priority {
 		q, err := st.priorityQueue(name)
@@ -129,9 +134,11 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) {
 
 	st := openStore(b, path, l, ckpt)
 
+	var ran atomic.Int64 // handler runs over all queues
+
 	bounds := make([]bound, sc.queues)
 	for i := range bounds {
-		bounds[i] = bind(b, st, sc, fmt.Sprintf("q%d", i))
+		bounds[i] = bind(b, st, sc, fmt.Sprintf("q%d", i), &ran)
 
 		if sc.drain {
 			if err := bounds[i].worker.Pause(); err != nil {
@@ -175,11 +182,28 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) {
 		produce()
 	}
 
-	for _, bd := range bounds {
-		bd.worker.Wait()
+	waited := make(chan struct{})
+
+	go func() {
+		defer close(waited)
+
+		for _, bd := range bounds {
+			bd.worker.Wait()
+		}
+	}()
+
+	select {
+	case <-waited:
+	case <-time.After(waitDeadline):
+		b.StopTimer()
+		b.Fatalf("%s: workers still busy %s after the last Add: a job is stuck", sc.name, waitDeadline)
 	}
 
 	b.StopTimer()
+
+	if n := ran.Load(); n != int64(sc.total) {
+		b.Fatalf("%s: handler ran %d times, want %d: a job was lost or run twice", sc.name, n, sc.total)
+	}
 
 	if n := failed.Load(); n > 0 {
 		b.Fatalf("%d Add calls returned false", n)

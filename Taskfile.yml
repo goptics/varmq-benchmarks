@@ -220,4 +220,4 @@ tasks:
     desc: Run the SQLite queue benchmarks and save output to bench/sqlite.txt (set SQLITEQ_LABEL to name the sqliteq version)
     dir: sqlite
     cmds:
-      - go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4,24 | tee ../bench/sqlite.txt
+      - set -o pipefail; go test -run xxx -bench . -benchtime=1x -count=2 -cpu=4,24 -timeout 60m | tee ../bench/sqlite.txt
