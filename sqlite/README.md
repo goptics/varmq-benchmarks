@@ -47,7 +47,13 @@ Row names are `BenchmarkSQLite/<scenario>/<layout>-ckpt<n>/<label>`:
 - `ckpt<n>` is the WAL checkpoint size in pages, 1000 or 10000. sqliteq v0.2.3
   cannot set it, so its `ckpt10000` rows are skipped and do not appear in the
   output; later versions fill them in.
-- Metric: `jobs/s`. Setup, teardown and the checks below are not timed.
+- Metrics: `jobs/s`, and `walMB`. Setup, teardown and the checks below are not
+  timed.
+- `walMB` is the largest size, in MB (10^6 bytes), that any one `-wal` file of
+  the run reached. A goroutine reads the size of every `-wal` file in the run's
+  directory every 50 ms, from the store's opening until just before it closes,
+  so a drain row includes its untimed adding phase. With several iterations the
+  largest peak is reported. A peak that lasts under 50 ms can be missed.
 
 After `Wait`, a run fails if any `Add` returned false or any row is still in a
 queue table (counted with `database/sql`, not through sqliteq). A lost or stuck

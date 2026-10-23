@@ -108,21 +108,77 @@ func bind(tb testing.TB, st store, sc scenario, name string, ran *atomic.Int64) 
 
 // runScenario runs sc b.N times, each on a fresh database, and reports jobs/s
 // over the timed part only: setup, teardown and the leftover check are not
-// timed. Mixed times the first Add to Wait. Drain times Resume to Wait.
+// timed. Mixed times the first Add to Wait. Drain times Resume to Wait. It
+// also reports walMB, the largest size any one -wal file reached in any
+// iteration, untimed parts included.
 func runScenario(b *testing.B, sc scenario, l layout, ckpt int) {
 	b.Helper()
 
+	var walPeak int64
+
 	for range b.N {
 		b.StopTimer()
-		runOnce(b, sc, l, ckpt)
+		walPeak = max(walPeak, runOnce(b, sc, l, ckpt))
 	}
 
 	if sec := b.Elapsed().Seconds(); sec > 0 {
 		b.ReportMetric(float64(sc.total*b.N)/sec, "jobs/s")
 	}
+
+	b.ReportMetric(float64(walPeak)/1e6, "walMB")
 }
 
-func runOnce(b *testing.B, sc scenario, l layout, ckpt int) {
+// walSampleEvery is how often sampleWAL reads the -wal file sizes.
+const walSampleEvery = 50 * time.Millisecond
+
+// sampleWAL reads the size of every -wal file in dir every walSampleEvery, on
+// its own goroutine, until the returned stop is called. stop takes one last
+// sample and returns the largest size any one file reached; it may be called
+// more than once.
+func sampleWAL(dir string) (stop func() int64) {
+	var peak int64 // owned by the goroutine until done closes
+
+	sample := func() {
+		files, _ := filepath.Glob(filepath.Join(dir, "*-wal"))
+		for _, f := range files {
+			if fi, err := os.Stat(f); err == nil {
+				peak = max(peak, fi.Size())
+			}
+		}
+	}
+
+	quit, done := make(chan struct{}), make(chan struct{})
+
+	go func() {
+		defer close(done)
+
+		t := time.NewTicker(walSampleEvery)
+		defer t.Stop()
+
+		for {
+			select {
+			case <-t.C:
+				sample()
+			case <-quit:
+				sample()
+
+				return
+			}
+		}
+	}()
+
+	var once sync.Once
+
+	return func() int64 {
+		once.Do(func() { close(quit) })
+		<-done
+
+		return peak
+	}
+}
+
+// runOnce runs one iteration and returns its WAL peak in bytes.
+func runOnce(b *testing.B, sc scenario, l layout, ckpt int) int64 {
 	b.Helper()
 
 	dir := freshDir(b)
@@ -133,6 +189,9 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) {
 	}
 
 	st := openStore(b, path, l, ckpt)
+
+	stopWAL := sampleWAL(dir)
+	defer stopWAL() // a failed iteration still stops the sampler
 
 	var ran atomic.Int64 // handler runs over all queues
 
@@ -221,9 +280,14 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) {
 		}
 	}
 
+	// Closing checkpoints and removes the WAL, so the sampling stops first
+	walPeak := stopWAL()
+
 	if err := st.close(); err != nil {
 		b.Fatalf("close store: %v", err)
 	}
+
+	return walPeak
 }
 
 // rowsLeft counts the rows in every table of the store's database files, read
