@@ -1,195 +1,129 @@
 # VarMQ Benchmarks
 
-[![Benchmark Charts](https://img.shields.io/badge/%F0%9F%93%8A-Live_Charts-blue?style=for-the-badge)](https://goptics.github.io/varmq-benchmarks/)
+[![Benchmark Charts](https://img.shields.io/badge/%F0%9F%93%8A-Live_Charts-blue?style=for-the-badge)](https://benchmarks.goptics.org)
 
-How fast is [VarMQ](https://github.com/goptics/varmq) compared to other Go worker pools, and under which conditions?
+How fast is [VarMQ](https://github.com/goptics/varmq) compared to other Go worker pools and job queues, and under which conditions?
 
-This repo answers that with one benchmark harness, a fixed set of workloads, and a live chart site that updates itself on every push.
+This repo answers that with three benchmark suites, fixed workloads, and one live chart site at <https://benchmarks.goptics.org>.
 
 ## Vision
 
 Benchmark numbers in library READMEs are easy to cherry-pick. We wanted the opposite:
 
-- **One harness, many pools.** Every pool is driven by the exact same code path. A pool is just a `submit` function and a `teardown` function.
+- **One harness per suite, many subjects.** Every subject in a suite is driven by the exact same code path.
 - **Realistic shapes, not a single number.** A pool that shines with one producer and a million tasks can fall apart with a million producers submitting one task each. We test both ends and the middle.
 - **Overhead in isolation.** With tens or hundreds of thousands of workers a slow pool can hide behind parallelism. A pool of one worker takes that cover away and shows what each pool costs per task.
-- **Reproducible and public.** Raw `go test -bench` output is committed to `bench/`. Charts are built from those files in CI and published to GitHub Pages, so anyone can see the data behind every bar.
-- **Honest baselines.** Alongside real libraries we include two hand-rolled channel pools. If a library cannot beat a `for task := range ch` loop, that is worth knowing.
+- **Reproducible and public.** Raw `go test -bench` output is committed to each suite's `bench/` directory. The site is built from those files, so anyone can see the data behind every bar.
+- **Honest baselines.** In the pool suite, alongside real libraries, we include two hand-rolled channel pools. If a library cannot beat a `for task := range ch` loop, that is worth knowing.
 
-## What gets benchmarked
+## Suites
 
-### Subjects
+| Suite | Module | What is raced | Datasets | README |
+|-------|--------|---------------|----------|--------|
+| Pool | `pool/` | VarMQ and eight other in-process worker pools | [24 CPUs](https://benchmarks.goptics.org/?id=pool-24cpu), [8 CPUs](https://benchmarks.goptics.org/?id=pool-8cpu), [4 CPUs](https://benchmarks.goptics.org/?id=pool-4cpu) | [pool/README.md](pool/README.md) |
+| Redis | `redis/` | VarMQ on Redis against Asynq, rmq, taskq and gocraft/work | [Persistent](https://benchmarks.goptics.org/?id=redis-persistent), [Distributed](https://benchmarks.goptics.org/?id=redis-distributed) | [redis/README.md](redis/README.md) |
+| Sqlite | `sqlite/` | sqliteq driven through a VarMQ worker | [Persistent](https://benchmarks.goptics.org/?id=sqlite-persistent) | [sqlite/README.md](sqlite/README.md) |
 
-| Name | What it is |
-|------|------------|
-| **VarMQ** | [goptics/varmq](https://github.com/goptics/varmq), worker bound to a queue |
-| **Pond** | [alitto/pond](https://github.com/alitto/pond) v2 |
-| **Ants** | [panjf2000/ants](https://github.com/panjf2000/ants) v2 |
-| **WorkerPool** | [gammazero/workerpool](https://github.com/gammazero/workerpool) |
-| **Conc** | [sourcegraph/conc](https://github.com/sourcegraph/conc) `pool` with a goroutine cap |
-| **ErrGroup** | [x/sync/errgroup](https://pkg.go.dev/golang.org/x/sync/errgroup) with `SetLimit`. Not a pool: a new goroutine per task behind a semaphore, the stdlib-adjacent default many projects reach for |
-| **Gopool** | [bytedance/gopkg](https://github.com/bytedance/gopkg) `util/gopool`. Tasks go to an unbounded list, so `submit` never blocks; idle workers exit on their own. The worker cap is soft and can overshoot slightly under contention |
-| **GoroutinePool** | N goroutines reading from an **unbuffered** channel. Baseline. |
-| **BufferedPool** | Same, but the channel holds 1M tasks. Baseline. |
+**Pool.** Nine subjects (VarMQ, Pond, Ants, WorkerPool, Conc, ErrGroup, Gopool and two channel baselines) run the same five workload shapes of 1M tasks, at three pool sizes plus a single worker. The same matrix is recorded at 24, 8 and 4 CPUs, one dataset each.
 
-All subjects live in [subjects.go](subjects.go).
+**Redis.** VarMQ's Redis queue (redisq) is raced against Asynq, rmq, taskq and gocraft/work with real consumer processes. The Persistent dataset uses one consumer process and also carries enqueue-only and pickup-latency rows. The Distributed dataset uses four consumer processes.
 
-### Dimensions
+**Sqlite.** sqliteq, the SQLite-backed persistent queue, through a VarMQ worker: one queue, drain, priority and ten queues, with a WAL checkpoint of 1000 and 10000 pages. It has its own module because it needs cgo.
 
-Every subject is run across the full product of these axes, except that a pool of one worker runs only the CPU tasks (see **Pool size**):
+## How results get published
 
-**Workload shape** (producers x tasks per producer, always 1M tasks total)
+1. `<module>/bench/*.txt` is raw `go test -bench` output, committed from the reference machine. Benchmarks never run in CI.
+2. `task site:build` converts each file to a dataset JSON with [vizb](https://github.com/goptics/vizb), writes a catalog, and builds one HTML page, all under `worker/public/`.
+3. CI runs `task site:build` and then `wrangler deploy`. Pull requests build only; the deploy runs on pushes to `main`. The workflow is [.github/workflows/site.yml](.github/workflows/site.yml).
+4. A small Cloudflare Worker ([worker/](worker/)) serves the page and the datasets from Workers Static Assets at `benchmarks.goptics.org`.
 
-| Name | Producers | Tasks each |
-|------|-----------|------------|
-| `1u-1Mt` | 1 | 1,000,000 |
-| `100u-10Kt` | 100 | 10,000 |
-| `1Ku-1Kt` | 1,000 | 1,000 |
-| `10Ku-100t` | 10,000 | 100 |
-| `1Mu-1t` | 1,000,000 | 1 |
+| URL | Serves |
+|-----|--------|
+| `/` | The dashboard with the dataset switcher. Loads the catalog, then the first dataset |
+| `/?id=<id>` | The same dashboard with one dataset selected, for example `/?id=redis-persistent` |
+| `/<id>` | A single dataset with no switcher |
+| `/dataset` | The catalog, `[{id, name}]` in dashboard order |
+| `/dataset/<id>` | One dataset as JSON |
 
-**Task type**
+The dataset ids are `pool-24cpu`, `pool-8cpu`, `pool-4cpu`, `redis-persistent`, `redis-distributed` and `sqlite-persistent`. Only the latest run of each is kept.
 
-| Name | Behaviour |
-|------|-----------|
-| `Sleep10ms` | I/O-like: sleep 10 ms |
-| `Loop10` | CPU-like: 10 iterations of trivial math |
-| `Sleep5msLoop5` | Mixed: 5 iterations then sleep 5 ms |
-| `Loop10K` | CPU-like: 10,000 iterations, about 1 µs. Pool of 1 only. |
+Deploying needs two GitHub secrets:
 
-**Pool size**
-
-| Size | Tasks | What it shows |
-|------|-------|---------------|
-| 50K workers | `Sleep10ms`, `Loop10`, `Sleep5msLoop5` | How the pool scales when work can run in parallel |
-| 100K workers | `Sleep10ms`, `Loop10`, `Sleep5msLoop5` | The same, with twice the goroutines to spawn and schedule |
-| 300K workers | `Sleep10ms`, `Loop10`, `Sleep5msLoop5` | The same, at six times the 50K size |
-| 1 worker | `Loop10`, `Loop10K` | What each pool costs per task: submit, hand-off and wake-up, with no parallelism to hide it |
-
-A pool of one runs no sleeping tasks: every pool would show the same `time.Sleep`, and one worker sleeping 10 ms per task needs almost three hours for 1M tasks. Sizes and their tasks live in `poolSizes` in [subjects.go](subjects.go).
-
-**CPU count**: results are recorded for the machine default (24 cores on the reference machine), 8 cores and 4 cores (`-cpu` flag).
-
-### Benchmark names
-
-Every row is named `BenchmarkTasks/<Task>W<size>/<workload>/<pool>`, where `W` stands for workers and sizes in thousands end in `K` (`W50K`, `W100K`, `W300K`, `W1`), in the same style as the workload names:
-
-| Row | Task | Pool size | Workload | Pool |
-|-----|------|-----------|----------|------|
-| `BenchmarkTasks/Loop10W50K/100u-10Kt/VarMQ` | `Loop10` | 50,000 workers | 100 producers x 10K tasks | VarMQ |
-| `BenchmarkTasks/Sleep10msW300K/1Mu-1t/Pond` | `Sleep10ms` | 300,000 workers | 1M producers x 1 task | Pond |
-| `BenchmarkTasks/Loop10KW1/1u-1Mt/Ants` | `Loop10K` | 1 worker | 1 producer x 1M tasks | Ants |
-
-### Metrics
-
-Each benchmark reports the standard Go numbers plus throughput:
-
-- `ns/op`: wall time to push all 1M tasks through the pool and drain it
-- `ops/s`: tasks completed per second (custom metric, higher is better)
-- `B/op` and `allocs/op`: memory cost
-
-On a `W1` row there is no parallelism, so `ns/op` divided by 1,000,000 is the time per task: the task itself plus everything the pool adds to it.
-
-## How it works
-
-```
-subjects.go          types.go            benchmark_test.go
-┌──────────────┐     ┌──────────────┐    ┌──────────────────────────────┐
-│ VarMQ        │     │ poolSubmit   │    │ for each pool size           │
-│ Pond         │ ──▶ │ poolTeardown │ ──▶│   for each of its task types │
-│ Ants         │     │ workload     │    │     for each workload        │
-│ WorkerPool   │     │ TaskConfig   │    │       for each subject       │
-│ Conc         │     │              │    │                              │
-│ ErrGroup     │     └──────────────┘    │         spawn producers      │
-│ Gopool       │                         │         submit, wait, teardown│
-│ GoroutinePool│                         │                              │
-│ BufferedPool │                         │                              │
-└──────────────┘                         └──────────────────────────────┘
-```
-
-1. **A subject is a factory.** Given `maxWorkers`, it returns `submit(task)` and `teardown()`. Nothing else leaks into the harness.
-2. **Producers are goroutines.** For a `100u-10Kt` run the harness starts 100 goroutines, each calling `submit` 10,000 times. A `WaitGroup` counts task completions.
-3. **One iteration = full lifecycle.** Build the pool, push 1M tasks, wait for all to finish, tear the pool down. Pool construction and shutdown are deliberately inside the timed region.
-4. **Results go to text, text goes to charts.** `go test -bench` output is saved to `bench/*.txt`. [Vizb](https://github.com/goptics/vizb) turns each file into a chart JSON, merges them, and renders one HTML page.
-
-### Publishing pipeline
-
-Defined in [.github/workflows/bench.yml](.github/workflows/bench.yml). It runs whenever anything under `bench/` changes on `main`:
-
-1. Three parallel jobs convert `bench.txt`, `bench-8cpu.txt` and `bench-4cpu.txt` to chart JSON.
-2. A merge job combines them into a single `public/index.html`.
-3. The page is pushed to the `gh-pages` branch and served at <https://goptics.github.io/varmq-benchmarks/>.
-
-Benchmarks themselves do not run in CI. Runner hardware is noisy and shared, so numbers are generated on a known machine and committed.
+- `CLOUDFLARE_API_TOKEN` with Workers Scripts: Edit, plus Zone goptics.org: DNS Edit and Workers Routes Edit for the custom domain.
+- `CLOUDFLARE_ACCOUNT_ID`.
 
 ## Running it yourself
 
-Requires Go 1.26+. [Task](https://taskfile.dev) and [Vizb](https://github.com/goptics/vizb) are optional.
+Requires Go 1.26+, [Task](https://taskfile.dev), [vizb](https://github.com/goptics/vizb) and `jq`. Redis suite: Docker. Sqlite suite: a C compiler. `task site:dev`: Node.
 
 ```bash
-# quick sanity pass, one iteration of everything
-go test -bench=. -benchtime=1x -benchmem
+# every task, per suite and for the site
+task --list
 ```
 
 ```bash
-# one slice: Loop10 task, 50K workers, 100 producers, only the baselines
-go test -run xxx -bench 'Tasks/Loop10W50K/100u-10Kt/(GoroutinePool|BufferedPool)$' -benchtime=1x
+# one iteration of every pool benchmark
+task pool:bench
 ```
 
 ```bash
-# only the pool of one worker, every task, workload and subject (about 40 s)
-go test -run xxx -bench 'Tasks/W1$' -benchtime=1x
+# one iteration of every Redis benchmark (starts Redis on localhost:6390 first)
+task redis:up redis:bench
 ```
 
 ```bash
-# only one pool size, here 100K workers (also W50K, W300K)
-go test -run xxx -bench 'Tasks/W100K$' -benchtime=1x
+# one iteration of every sqlite scenario
+task sqlite:bench
 ```
 
 ```bash
-# regenerate bench/*.txt, build charts, merge, open dist/index.html (slow, runs the full matrix three times)
+# build all six datasets from bench/*.txt into one HTML, no Worker
+task site:preview
+```
+
+```bash
+# build against localhost:8787 and run the Worker with wrangler dev
+task site:dev
+```
+
+```bash
+# regenerate every bench/*.txt (hours), then open the local preview
 task report
 ```
 
-Run `task --list` for everything else (filtered runs, profiling, clean).
+To run a slice, call `go test` inside the suite's module:
 
-### Adding a pool
-
-Append an entry to `subjects` in [subjects.go](subjects.go):
-
-```go
-{
-    name: "MyPool",
-    factory: func(maxWorkers int) (poolSubmit, poolTeardown) {
-        p := mypool.New(maxWorkers)
-        return p.Submit, p.StopAndWait
-    },
-},
+```bash
+# pool: Loop10 task, 50K workers, 100 producers, only the baselines
+cd pool && go test -run xxx -bench 'Tasks/Loop10W50K/100u-10Kt/(GoroutinePool|BufferedPool)$' -benchtime=1x
 ```
 
-That is the whole integration. The harness picks it up on the next run. The factory is called with every pool size in `poolSizes`, including `1`, so it must work with a single worker.
+```bash
+# pool: only the pool of one worker, every task, workload and subject (about 40 s)
+cd pool && go test -run xxx -bench 'Tasks/W1$' -benchtime=1x
+```
 
-## Reading the charts
+```bash
+# redis: one Durable cell, needs task redis:up
+cd redis && go test -run xxx -bench 'Durable/NoopW10C1' -benchtime=1x -timeout 0
+```
 
-- Chart groups are named after the task and pool size, for example `Loop10W50K` or `Loop10W1`. Inside a group, bars are grouped by workload shape, then by subject.
-- The `W50K`, `W100K` and `W300K` groups show how each pool scales with parallel work; comparing the same group across sizes shows what more workers cost or buy. The `W1` groups show what each pool costs per task, with nothing running in parallel to hide it.
-- Hover a bar for exact `ns/op`, `ops/s` and memory values.
-- Switch between the default, 8-CPU and 4-CPU tabs to see how each pool scales down.
-- Compare each library against **GoroutinePool** first. The gap to that baseline is the real overhead of the library.
-- **ErrGroup** shows what skipping a pool costs: no worker reuse, one goroutine spawned per task. A pool that loses to it adds overhead without saving any.
+```bash
+# sqlite: one scenario
+cd sqlite && go test -run xxx -bench Mixed10Q -benchtime=1x
+```
 
 ## Layout
 
 | Path | Purpose |
 |------|---------|
-| `subjects.go` | Pools under test, workloads, task types, pool sizes |
-| `types.go` | Harness types and the task generator |
-| `benchmark_test.go` | The benchmark loop |
-| `bench/` | Committed raw benchmark output (`bench.txt`, `bench-8cpu.txt`, `bench-4cpu.txt`), source of truth for the charts |
-| `jsons/` | Local chart JSON, one per CPU count. Gitignored. |
-| `dist/` | Local merged chart data and the rendered `index.html`. Gitignored. |
-| `Taskfile.yml` | Shortcuts for running, profiling and charting |
-| `.github/workflows/bench.yml` | Chart build and GitHub Pages deploy |
+| `pool/` | Pool suite: its own Go module, `bench/pool-{24,8,4}cpu.txt`, Taskfile and README |
+| `redis/` | Redis suite: its own Go module, `compose.yml`, `bench/redis.txt`, Taskfile and README |
+| `sqlite/` | Sqlite suite: its own Go module, `bench/sqlite.txt`, Taskfile and README |
+| `worker/` | Cloudflare Worker (`worker.js`, `wrangler.jsonc`). `worker/public/` is build output and gitignored |
+| `dist/` | Local preview from `task site:preview`. Gitignored |
+| `Taskfile.yml` | Includes the three suite Taskfiles, plus `site:*`, `report` and `clean` |
+| `.github/workflows/site.yml` | Site build and deploy |
 
 ## License
 

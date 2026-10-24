@@ -1,167 +1,101 @@
 version: "3"
 
+includes:
+  pool:   { taskfile: pool/Taskfile.yml,   dir: pool }
+  redis:  { taskfile: redis/Taskfile.yml,  dir: redis }
+  sqlite: { taskfile: sqlite/Taskfile.yml, dir: sqlite }
+
 vars:
-  BINARY_NAME: varmq-benchmarks
-  BUILD_DIR: ./bin
+  PUBLIC: worker/public
+  DATA: worker/public/data
+  DATA_URL: https://benchmarks.goptics.org/dataset
+  BAR: vizb bar -p /n/y/x -T s -M MB --round -l --border-radius 8,8,0,0
+  SUBJECTS: '(VarMQ|Asynq|Rmq|Taskq|GocraftWork)'
+  # catalog order = dashboard order; listed literally (a glob sorts 4cpu before 24cpu)
+  JSONS: >-
+    worker/public/data/pool-24cpu.json worker/public/data/pool-8cpu.json worker/public/data/pool-4cpu.json
+    worker/public/data/redis-persistent.json worker/public/data/redis-distributed.json
+    worker/public/data/sqlite-persistent.json
 
 tasks:
   default:
-    desc: Show available tasks
     cmds:
       - task --list
 
-  deps:
-    desc: Download and tidy dependencies
+  site:json:
+    desc: Convert every bench txt to dataset JSON plus the catalog
     cmds:
-      - go mod download
-      - go mod tidy
+      - mkdir -p {{.DATA}}
+      - '{{.BAR}} --stack pool/bench/pool-24cpu.txt -n "Pool (24 CPUs)" --id pool-24cpu -d "9 Go worker pools, 5 workload shapes, 1M tasks, GOMAXPROCS 24" -o {{.DATA}}/pool-24cpu.json'
+      - '{{.BAR}} --stack pool/bench/pool-8cpu.txt  -n "Pool (8 CPUs)"  --id pool-8cpu  -d "Same matrix at GOMAXPROCS 8" -o {{.DATA}}/pool-8cpu.json'
+      - '{{.BAR}} --stack pool/bench/pool-4cpu.txt  -n "Pool (4 CPUs)"  --id pool-4cpu  -d "Same matrix at GOMAXPROCS 4" -o {{.DATA}}/pool-4cpu.json'
+      - >-
+        {{.BAR}} redis/bench/redis.txt -n "Redis (Persistent)" --id redis-persistent
+        -d "One consumer process: VarMQ persistent queue vs Asynq, rmq, taskq, gocraft/work; plus enqueue-only and pickup latency"
+        -f '^(Benchmark)?(Durable/[^/]+C1|Enqueue/Enqueue|Latency/[^/]+)/[^/]+/{{.SUBJECTS}}$'
+        --better p50-ms:low,p99-ms:low,max-ms:low
+        -o {{.DATA}}/redis-persistent.json
+      - >-
+        {{.BAR}} redis/bench/redis.txt -n "Redis (Distributed)" --id redis-distributed
+        -d "Four consumer processes: VarMQ distributed queue vs Asynq, rmq, taskq, gocraft/work"
+        -f '^(Benchmark)?Durable/[^/]+C4/'
+        -o {{.DATA}}/redis-distributed.json
+      - >-
+        {{.BAR}} sqlite/bench/sqlite.txt -n "Sqlite (Persistent)" --id sqlite-persistent
+        -d "sqliteq through a VarMQ worker: one queue, drain, priority, ten queues; WAL checkpoint 1000 vs 10000 pages"
+        --better walMB:low -o {{.DATA}}/sqlite-persistent.json
+      - jq -se 'all(.data | length > 0)' {{.JSONS}}
+      - jq -s 'map({id, name})' {{.JSONS}} > {{.DATA}}/_catalog.json
 
-  build:
-    desc: Build the binary
-    deps: [deps]
+  site:html:
+    desc: Build the lazy-catalog page against DATA_URL
     cmds:
-      - mkdir -p {{.BUILD_DIR}}
-      - go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}} .
+      - mkdir -p {{.PUBLIC}}
+      - vizb ui -c bar --data-url {{.DATA_URL}} -o {{.PUBLIC}}/index.html
 
-  test:
-    desc: Run all tests
-    deps: [deps]
+  site:build:
+    desc: json + html, what CI runs before wrangler deploy
     cmds:
-      - go test -v ./...
+      - task: site:json
+      - task: site:html
+        vars: { DATA_URL: '{{.DATA_URL}}' }
 
-  bench:
-    desc: Run all benchmarks with default settings
-    deps: [deps]
+  site:preview:
+    desc: Same six datasets embedded in one HTML, no Worker
     cmds:
-      - go test -bench=. -benchtime=2x -benchmem
-
-  bench-quick:
-    desc: Run quick benchmarks (1x iteration)
-    deps: [deps]
-    cmds:
-      - go test -bench=. -benchtime=1x -benchmem
-
-  bench-sleep:
-    desc: Run only Sleep10ms benchmarks
-    deps: [deps]
-    cmds:
-      - go test -bench=BenchmarkTasks/Sleep10ms -benchtime=3x -benchmem
-
-  bench-loop:
-    desc: Run only Loop10 benchmarks
-    deps: [deps]
-    cmds:
-      - go test -bench=BenchmarkTasks/Loop10 -benchtime=3x -benchmem
-
-  bench-mixed:
-    desc: Run only Sleep5msLoop5 benchmarks
-    deps: [deps]
-    cmds:
-      - go test -bench=BenchmarkTasks/Sleep5msLoop5 -benchtime=3x -benchmem
-
-  bench-varmq:
-    desc: Run benchmarks for VarMQ only
-    deps: [deps]
-    cmds:
-      - go test -run xxx -bench='BenchmarkTasks/.*/.*/VarMQ$' -benchtime=3x -benchmem
-
-  bench-pond:
-    desc: Run benchmarks for Pond only
-    deps: [deps]
-    cmds:
-      - go test -run xxx -bench='BenchmarkTasks/.*/.*/Pond$' -benchtime=3x -benchmem
-
-  bench-profile:
-    desc: Run benchmarks with CPU profiling
-    deps: [deps]
-    cmds:
-      - go test -bench=. -benchtime=1x -cpuprofile=cpu.prof -memprofile=mem.prof
-
-  bench-txt:
-    desc: Run benchmarks and save output to bench/ directory
-    deps: [deps]
-    cmds:
-      - mkdir -p bench
-      - go test -bench=. -benchtime=2x -benchmem > bench/bench.txt
-      - go test -bench=. -benchtime=2x -benchmem -cpu=4 > bench/bench-4cpu.txt
-      - go test -bench=. -benchtime=2x -benchmem -cpu=8 > bench/bench-8cpu.txt
-
-
-  # Vizb Visualization Tasks
-  vizb:
-    desc: Generate benchmark charts from bench.txt
-    cmds:
-      - mkdir -p jsons
-      - vizb bar bench/bench.txt -p /n/y/x -T s -M MB -o jsons/bench.json -l --round 2 --stack --border-radius="8,8,0,0" -n "Benchmarking (24 CPUs)"
-
-  vizb-8cpu:
-    desc: Generate benchmark charts from bench-8cpu.txt
-    cmds:
-      - mkdir -p jsons
-      - vizb bar bench/bench-8cpu.txt -p /n/y/x -T s -M MB -o jsons/bench-8cpu.json -l --round 2 --stack --border-radius="8,8,0,0" -n "Benchmarking (8 CPUs)"
-
-  vizb-4cpu:
-    desc: Generate benchmark charts from bench-4cpu.txt
-    cmds:
-      - mkdir -p jsons
-      - vizb bar bench/bench-4cpu.txt -p /n/y/x -T s -M MB -o jsons/bench-4cpu.json -l --round 2 --stack --border-radius="8,8,0,0" -n "Benchmarking (4 CPUs)"
-
-  vizb-all:
-    desc: Generate benchmark charts for all CPU configurations
-    cmds:
-      - task: vizb
-      - task: vizb-8cpu
-      - task: vizb-4cpu
-
-  merge:
-    desc: Merge all benchmark jsons
-    cmds:
-      - vizb merge jsons/bench.json jsons/bench-8cpu.json jsons/bench-4cpu.json -o dist/output.json
-      - vizb ui dist/output.json -o dist/index.html
-
-  report:
-    desc: Run benchmarks, build charts, merge, and open the HTML report
-    cmds:
-      - task: bench-txt
-      - task: vizb-all
-      - task: merge
+      - task: site:json
+      - mkdir -p dist
+      - jq -s . {{.JSONS}} > dist/all.json
+      - vizb ui -c bar dist/all.json -o dist/index.html
       - cmd: xdg-open dist/index.html
         platforms: [linux]
       - cmd: open dist/index.html
         platforms: [darwin]
 
+  site:dev:
+    desc: Build against localhost:8787 and run wrangler dev
+    cmds:
+      - task: site:build
+        vars: { DATA_URL: http://localhost:8787/dataset }
+      - cd worker && npx -y wrangler@4 dev
+
+  site:deploy:
+    desc: Production build then deploy (CI does the same)
+    cmds:
+      - task: site:build
+      - cd worker && npx -y wrangler@4 deploy
+
+  report:
+    desc: Run every suite (hours), then open the local preview
+    cmds:
+      - task: redis:up
+      - task: pool:txt
+      - task: redis:txt
+      - task: redis:down
+      - task: sqlite:txt
+      - task: site:preview
+
   clean:
-    desc: Clean build artifacts and profiles
     cmds:
-      - rm -rf {{.BUILD_DIR}}
-      - rm -f *.prof
-      - rm -f *.test
-      - rm -rf jsons
-      - rm -rf dist
-      - rm -rf ./bench/*.txt
-
-  format:
-    desc: Format code
-    cmds:
-      - go fmt ./...
-
-  lint:
-    desc: Run linter (requires golangci-lint)
-    cmds:
-      - golangci-lint run
-
-  vet:
-    desc: Run go vet
-    cmds:
-      - go vet ./...
-
-  check:
-    desc: Run all checks (format, vet, test)
-    deps: [format, vet, test]
-
-  setup:
-    desc: Setup development environment
-    cmds:
-      - go version
-      - task deps
-      - echo "Development environment ready!"
+      - rm -rf dist {{.PUBLIC}} worker/.wrangler
+      - find . -name '*.prof' -o -name '*.test' | xargs rm -f

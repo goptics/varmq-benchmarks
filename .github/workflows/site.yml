@@ -1,0 +1,31 @@
+name: site
+on:
+  push:
+    branches: [main]
+    paths: ["*/bench/*.txt", "Taskfile.yml", "worker/**", ".github/workflows/site.yml"]
+  pull_request:
+    paths: ["*/bench/*.txt", "Taskfile.yml", "worker/**", ".github/workflows/site.yml"]
+  workflow_dispatch:
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') == ''
+        run: echo "::notice::no bench txt on this ref yet, nothing to build"
+      - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') != ''
+        run: |
+          sh -c "$(curl -fsSL https://taskfile.dev/install.sh)" -- -d -b "$HOME/.local/bin" v3.50.0
+          VIZB_RELEASE_TAG=v0.23.0 bash -c "$(curl -fsSL https://vizb.goptics.org/install.sh)"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') != ''
+        run: task site:build
+      - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') != '' && github.event_name != 'pull_request'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          wranglerVersion: "4"
+          command: deploy

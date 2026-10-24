@@ -13,8 +13,10 @@
 
 # Build directory
 bin/
-jsons/
 dist/
+worker/public/
+worker/.wrangler/
+worker/node_modules/
 
 # Profile files
 *.prof
