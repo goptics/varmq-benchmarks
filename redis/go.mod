@@ -1,4 +1,4 @@
-module github.com/goptics/varmq-benchmarks/durable
+module github.com/goptics/varmq-benchmarks/redis
 
 go 1.26.0
 

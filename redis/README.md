@@ -150,13 +150,11 @@ Library version `asynq v0.26.0`. Paths are inside the module (`go env GOMODCACHE
   `TaskCheckInterval` defaults to 1 s (`defaultTaskCheckInterval`,
   `server.go`; `NewServerFromRedisClient`), so each idle sleep is uniform in
   [0.5 s, 1.5 s). The sleep is not interruptible and holds a worker token.
-  Jobs enqueued during it wait it out. Measured in a 40-job probe (not the
-  `Latency` benchmark; those rows are not in `bench/redis.txt` yet): median
-  enqueue-to-handled latency about 990 ms and max 1.4 s over 40 sequential
-  jobs, so the
-  `Latency` benchmark runs 1,000 jobs, one at a time, for every subject:
-  Asynq's default idle poll would make a 10,000-job paced run take about 2.75
-  hours per iteration.
+  Jobs enqueued during it wait it out. Measured in a separate 40-job probe, not
+  the `Latency` benchmark: median enqueue-to-handled latency about 990 ms and
+  max 1.4 s over 40 sequential jobs, so the `Latency` benchmark runs 1,000
+  jobs, one at a time, for every subject: Asynq's default idle poll would make
+  a 10,000-job paced run take about 2.75 hours per iteration.
 - Shutdown: `Server.Shutdown` (`server.go`) calls `processor.shutdown`, whose
   `stop` does `p.done <- struct{}{}`. That send is received only after the
   processor goroutine finishes its current `exec`, including the sleep above.
@@ -254,19 +252,21 @@ Library versions `varmq v1.9.0` and `redisq v1.4.0`.
 - Logging: `Notification.Send` and `Queue` use the std `log`, which `TestMain`
   discards.
 
-- Known issue (observed on redisq v1.4.0, re-check on v1.5.0): the row `Sleep1msW1000C4/1u-100Kt/VarMQDistributed` (4 instances
-  x 1000 workers, `Sleep1ms`, 1 producer x 100,000 jobs) stalled with
-  99,819/100,000 jobs handled, 0 duplicates, until the harness's 5-minute
-  limit (`runEndToEnd`) failed it. That is in the committed full run, and the
-  `--- FAIL` line is kept in `bench/redis.txt`. The stall is intermittent: an
-  isolated rerun of 1 iteration passed, an isolated rerun of 8 iterations
-  stalled the same way, and isolated reruns of 10 and 40 iterations passed.
-  The cause is not diagnosed (Redis was not inspected during a stall). It looks
-  like a missed wake-up, since an idle instance is woken only by a later
-  `enqueued` notification, but that is unverified. `go test` carried on after the FAIL and
-  completed `Sleep1msW1000C4/1u-100Kt/Rmq`, then the run was stopped by hand, so
-  the committed file has no VarMQDistributed `Sleep1msW1000C4/1u-100Kt` numbers, and no `Sleep1msW1000C4/100u-1Kt` rows for
-  any subject (see "Results"). Treat them as unavailable until this is fixed.
+- Known issue (observed on redisq v1.4.0, re-check on v1.5.0): the row
+  `Sleep1msW1000C4/1u-100Kt/VarMQDistributed` (4 instances x 1000 workers,
+  `Sleep1ms`, 1 producer x 100,000 jobs) stalled with 99,819/100,000 jobs
+  handled, 0 duplicates, until the harness's 5-minute limit (`runEndToEnd`)
+  failed it. That is in the committed full run, and the `--- FAIL` line is kept
+  in `bench/redis.txt`. The stall is intermittent: an isolated rerun of 1
+  iteration passed, an isolated rerun of 8 iterations stalled the same way, and
+  isolated reruns of 10 and 40 iterations passed. The cause is not diagnosed
+  (Redis was not inspected during a stall). It looks like a missed wake-up,
+  since an idle instance is woken only by a later `enqueued` notification, but
+  that is unverified. `go test` carried on after the FAIL and completed
+  `Sleep1msW1000C4/1u-100Kt/Rmq`, then the run was stopped by hand, so the
+  committed file has no VarMQDistributed `Sleep1msW1000C4/1u-100Kt` numbers,
+  and no `Sleep1msW1000C4/100u-1Kt` rows for any subject (see "Results"). Treat
+  them as unavailable until this is fixed.
 
 ### Rmq
 
