@@ -34,7 +34,7 @@ Benchmark numbers in library READMEs are easy to cherry-pick. We wanted the oppo
 
 1. `<module>/bench/*.txt` is raw `go test -bench` output, committed from the reference machine. Benchmarks never run in CI.
 2. `task site:build` converts each file to a dataset JSON with [vizb](https://github.com/goptics/vizb), writes a catalog, and builds one HTML page, all under `worker/public/`.
-3. CI runs `task site:build` and then `wrangler deploy`. Pull requests build only; the deploy runs on pushes to `main`. The workflow is [.github/workflows/site.yml](.github/workflows/site.yml).
+3. CI runs `task site:build` and then `wrangler deploy`. Pull requests build only; the deploy runs on pushes and manual runs on `main`. The workflow is [.github/workflows/site.yml](.github/workflows/site.yml).
 4. A small Cloudflare Worker ([worker/](worker/)) serves the page and the datasets from Workers Static Assets at `benchmarks.goptics.org`.
 
 | URL | Serves |
@@ -69,6 +69,7 @@ task pool:bench
 ```bash
 # one iteration of every Redis benchmark (starts Redis on localhost:6390 first)
 task redis:up redis:bench
+# stop it afterwards with task redis:down
 ```
 
 ```bash
@@ -110,7 +111,7 @@ cd redis && go test -run xxx -bench 'Durable/NoopW10C1' -benchtime=1x -timeout 0
 
 ```bash
 # sqlite: one scenario
-cd sqlite && go test -run xxx -bench Mixed10Q -benchtime=1x
+cd sqlite && go test -run xxx -bench 'SQLite/Mixed10Q' -benchtime=1x
 ```
 
 ## Layout

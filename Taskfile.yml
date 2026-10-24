@@ -10,6 +10,7 @@ vars:
   DATA: worker/public/data
   DATA_URL: https://benchmarks.goptics.org/dataset
   BAR: vizb bar -p /n/y/x -T s -M MB --round -l --border-radius 8,8,0,0
+  # keep in step with redis/subjects.go: a subject missing here is dropped from redis-persistent
   SUBJECTS: '(VarMQ|Asynq|Rmq|Taskq|GocraftWork)'
   # catalog order = dashboard order; listed literally (a glob sorts 4cpu before 24cpu)
   JSONS: >-
@@ -25,7 +26,7 @@ tasks:
   site:json:
     desc: Convert every bench txt to dataset JSON plus the catalog
     cmds:
-      - mkdir -p {{.DATA}}
+      - rm -rf {{.DATA}} && mkdir -p {{.DATA}}
       - '{{.BAR}} --stack pool/bench/pool-24cpu.txt -n "Pool (24 CPUs)" --id pool-24cpu -d "9 Go worker pools, 5 workload shapes, 1M tasks, GOMAXPROCS 24" -o {{.DATA}}/pool-24cpu.json'
       - '{{.BAR}} --stack pool/bench/pool-8cpu.txt  -n "Pool (8 CPUs)"  --id pool-8cpu  -d "Same matrix at GOMAXPROCS 8" -o {{.DATA}}/pool-8cpu.json'
       - '{{.BAR}} --stack pool/bench/pool-4cpu.txt  -n "Pool (4 CPUs)"  --id pool-4cpu  -d "Same matrix at GOMAXPROCS 4" -o {{.DATA}}/pool-4cpu.json'
@@ -96,6 +97,7 @@ tasks:
       - task: site:preview
 
   clean:
+    desc: Remove dist, the built site and local build artifacts
     cmds:
       - rm -rf dist {{.PUBLIC}} worker/.wrangler
       - find . -name '*.prof' -o -name '*.test' | xargs rm -f

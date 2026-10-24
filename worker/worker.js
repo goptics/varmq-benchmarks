@@ -6,6 +6,7 @@ export default {
     let path;
     if (url.pathname === "/dataset") path = "/data/_catalog.json";
     else if (ID.test(url.pathname)) path = `/data/${ID.exec(url.pathname)[1]}.json`;
+    else if (url.pathname.startsWith("/dataset/")) return new Response("not found", { status: 404 });
     else return env.ASSETS.fetch(request); // index.html and the SPA fallback
 
     const res = await env.ASSETS.fetch(new Request(new URL(path, url), request));

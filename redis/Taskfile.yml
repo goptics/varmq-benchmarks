@@ -5,11 +5,13 @@ tasks:
     cmds:
       - docker compose up -d --wait
   down:
+    desc: Stop Redis
     cmds:
       - docker compose down
   test:
     desc: Module tests (needs up)
     cmds:
+      - go vet ./...
       - go test ./...
   bench:
     desc: Every benchmark once (needs up)

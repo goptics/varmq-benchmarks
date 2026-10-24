@@ -7,6 +7,10 @@ on:
     paths: ["*/bench/*.txt", "Taskfile.yml", "worker/**", ".github/workflows/site.yml"]
   workflow_dispatch:
 
+concurrency:
+  group: site
+  cancel-in-progress: false
+
 jobs:
   site:
     runs-on: ubuntu-latest
@@ -21,7 +25,7 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') != ''
         run: task site:build
-      - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') != '' && github.event_name != 'pull_request'
+      - if: hashFiles('pool/bench/*.txt', 'redis/bench/*.txt', 'sqlite/bench/*.txt') != '' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
