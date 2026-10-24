@@ -1,9 +1,12 @@
 // Package sqlite benchmarks sqliteq, the SQLite storage adapter, end to end
-// through a varmq worker. Everything that depends on the sqliteq version lives
-// behind openStore, so the same benchmarks run against any release.
+// through a varmq worker.
 package sqlite
 
-import "github.com/goptics/varmq"
+import (
+	"testing"
+
+	"github.com/goptics/sqliteq"
+)
 
 // layout is how queues map onto database files.
 type layout int
@@ -23,13 +26,20 @@ func (l layout) String() string {
 	return "SingleFile"
 }
 
-// defaultCkpt is the checkpoint page count a store uses when it is not asked
-// for another one (SQLite's own wal_autocheckpoint default).
-const defaultCkpt = 1000
+// openStore opens one sqliteq database set at path with the given WAL
+// checkpoint page count.
+func openStore(tb testing.TB, path string, l layout, ckpt int) sqliteq.Queues {
+	tb.Helper()
 
-// store opens the persistent queues of one sqliteq database set.
-type store interface {
-	queue(name string) (varmq.IPersistentQueue, error)
-	priorityQueue(name string) (varmq.IPersistentPriorityQueue, error)
-	close() error
+	opts := []sqliteq.StoreOption{sqliteq.WithCheckpointPages(ckpt)}
+	if l == singleFile {
+		opts = append(opts, sqliteq.WithSingleFile())
+	}
+
+	qs, err := sqliteq.New(path, opts...)
+	if err != nil {
+		tb.Fatalf("sqliteq.New(%s): %v", path, err)
+	}
+
+	return qs
 }

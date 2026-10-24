@@ -1,0 +1,16 @@
+version: "3"
+tasks:
+  test:
+    desc: Vet and compile (needs a C compiler)
+    cmds:
+      - go vet ./...
+      - go test ./...
+  bench:
+    desc: Every scenario once
+    cmds:
+      - go test -run xxx -bench . -benchtime=1x -timeout 60m
+  txt:
+    desc: Full run into bench/sqlite.txt (real disk; SQLITEQ_BENCH_DIR picks it)
+    cmds:
+      - mkdir -p bench
+      - set -o pipefail; go test -run xxx -bench . -benchtime=2x -timeout 60m | tee bench/sqlite.txt

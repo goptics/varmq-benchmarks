@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
 
+	"github.com/goptics/sqliteq"
 	"github.com/goptics/varmq"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -81,13 +81,13 @@ type bound struct {
 	add    func(i int) bool // enqueues job number i
 }
 
-func bind(tb testing.TB, st store, sc scenario, name string, ran *atomic.Int64) bound {
+func bind(tb testing.TB, qs sqliteq.Queues, sc scenario, name string, ran *atomic.Int64) bound {
 	tb.Helper()
 
 	w := varmq.NewWorker(func(varmq.Job[int]) { ran.Add(1) }, varmq.WithConcurrency(16))
 
 	if sc.priority {
-		q, err := st.priorityQueue(name)
+		q, err := qs.NewPriorityQueue(name)
 		if err != nil {
 			tb.Fatal(err)
 		}
@@ -97,7 +97,7 @@ func bind(tb testing.TB, st store, sc scenario, name string, ran *atomic.Int64) 
 		return bound{worker: pq.Worker(), add: func(i int) bool { return pq.Add(i, i%4) }}
 	}
 
-	q, err := st.queue(name)
+	q, err := qs.NewQueue(name)
 	if err != nil {
 		tb.Fatal(err)
 	}
@@ -111,8 +111,7 @@ func bind(tb testing.TB, st store, sc scenario, name string, ran *atomic.Int64) 
 // over the timed part only: setup, teardown and the leftover check are not
 // timed. Mixed times the first Add to Wait. Drain times Resume to Wait. It
 // also reports walMB, the largest size any one -wal file reached in any
-// iteration, untimed parts included. procs is the GOMAXPROCS the benchmark
-// function itself ran at, so every row shows what it was measured with.
+// iteration, untimed parts included.
 func runScenario(b *testing.B, sc scenario, l layout, ckpt int) {
 	b.Helper()
 
@@ -128,7 +127,6 @@ func runScenario(b *testing.B, sc scenario, l layout, ckpt int) {
 	}
 
 	b.ReportMetric(float64(walPeak)/1e6, "walMB")
-	b.ReportMetric(float64(runtime.GOMAXPROCS(0)), "procs")
 }
 
 // walSampleEvery is how often sampleWAL reads the -wal file sizes.
@@ -191,7 +189,7 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) int64 {
 		path = filepath.Join(dir, "bench.db")
 	}
 
-	st := openStore(b, path, l, ckpt)
+	qs := openStore(b, path, l, ckpt)
 
 	stopWAL := sampleWAL(dir)
 	defer stopWAL() // a failed iteration still stops the sampler
@@ -200,7 +198,7 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) int64 {
 
 	bounds := make([]bound, sc.queues)
 	for i := range bounds {
-		bounds[i] = bind(b, st, sc, fmt.Sprintf("q%d", i), &ran)
+		bounds[i] = bind(b, qs, sc, fmt.Sprintf("q%d", i), &ran)
 
 		if sc.drain {
 			if err := bounds[i].worker.Pause(); err != nil {
@@ -286,7 +284,7 @@ func runOnce(b *testing.B, sc scenario, l layout, ckpt int) int64 {
 	// Closing checkpoints and removes the WAL, so the sampling stops first
 	walPeak := stopWAL()
 
-	if err := st.close(); err != nil {
+	if err := qs.Close(); err != nil {
 		b.Fatalf("close store: %v", err)
 	}
 
