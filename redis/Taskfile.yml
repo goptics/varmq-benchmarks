@@ -18,7 +18,8 @@ tasks:
     cmds:
       - go test -run xxx -bench . -benchtime=1x -benchmem -timeout 0
   txt:
-    desc: Durable + Enqueue + Latency into bench/redis.txt (needs up, hours)
+    desc: Durable + Enqueue + Latency into bench/redis.txt, client pinned off the Redis core (needs up, hours)
     cmds:
       - mkdir -p bench
-      - set -o pipefail; go test -run xxx -bench . -benchtime=2x -benchmem -timeout 0 | tee bench/redis.txt
+      # client on every core except 14 (Redis) and its sibling 15, like the compose cpuset
+      - set -o pipefail; taskset -c 0-13,16-23 go test -run xxx -bench . -benchtime=2x -benchmem -timeout 0 | tee bench/redis.txt

@@ -8,12 +8,16 @@ of the other modules.
 ## Run
 
 ```sh
-task redis:up      # Redis 7.2 on localhost:6390, no volume
+task redis:up      # Redis 7.2 (Debian image) on localhost:6390, pinned to CPU 14, no volume
 task redis:test    # smoke tests
 task redis:bench   # every benchmark once (-benchtime=1x)
 task redis:txt     # full run into bench/redis.txt (hours)
 task redis:down
 ```
+
+`task redis:txt` runs the client with `taskset -c 0-13,16-23`, so Redis keeps
+core 14 and its sibling thread to itself. Compare runs on this setup only: the
+alpine image, unpinned, measured about 2.5x lower on the same code.
 
 Set `REDIS_URL` to use another Redis (default `redis://localhost:6390/0`). The
 tests and benchmarks skip when it isn't reachable. `FLUSHDB` runs before every

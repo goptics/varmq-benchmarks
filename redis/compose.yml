@@ -1,6 +1,9 @@
 services:
   redis:
-    image: redis:7.2-alpine
+    # Debian image, pinned to one core: the committed numbers come from this
+    # setup, with the benchmark client on the other cores (see Taskfile.yml txt).
+    image: redis:7.2
+    cpuset: "14"
     ports:
       - "6390:6379"
     healthcheck:
