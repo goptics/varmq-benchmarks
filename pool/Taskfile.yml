@@ -1,0 +1,18 @@
+version: "3"
+tasks:
+  test:
+    desc: Vet and compile
+    cmds:
+      - go vet ./...
+      - go test ./...
+  bench:
+    desc: Every benchmark once
+    cmds:
+      - go test -run xxx -bench . -benchtime=1x -benchmem
+  txt:
+    desc: Full matrix at 24, 8 and 4 CPUs into bench/ (hours)
+    cmds:
+      - mkdir -p bench
+      - set -o pipefail; go test -run xxx -bench . -benchtime=2x -benchmem -cpu=24 -timeout 0 | tee bench/pool-24cpu.txt
+      - set -o pipefail; go test -run xxx -bench . -benchtime=2x -benchmem -cpu=8  -timeout 0 | tee bench/pool-8cpu.txt
+      - set -o pipefail; go test -run xxx -bench . -benchtime=2x -benchmem -cpu=4  -timeout 0 | tee bench/pool-4cpu.txt

@@ -1,4 +1,4 @@
-module github.com/goptics/varmq-benchmarks
+module github.com/goptics/varmq-benchmarks/pool
 
 go 1.26.0
 
