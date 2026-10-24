@@ -49,7 +49,7 @@ func redisOrSkip(tb testing.TB) string {
 	defer c.Close()
 
 	if err := c.Ping(ctx).Err(); err != nil {
-		tb.Skipf("redis not reachable at %s: run `task durable-up` or set REDIS_URL", url)
+		tb.Skipf("redis not reachable at %s: run `task redis:up` or set REDIS_URL", url)
 	}
 
 	return url

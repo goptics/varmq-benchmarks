@@ -1,0 +1,22 @@
+version: "3"
+tasks:
+  up:
+    desc: Redis 7.2 on localhost:6390
+    cmds:
+      - docker compose up -d --wait
+  down:
+    cmds:
+      - docker compose down
+  test:
+    desc: Module tests (needs up)
+    cmds:
+      - go test ./...
+  bench:
+    desc: Every benchmark once (needs up)
+    cmds:
+      - go test -run xxx -bench . -benchtime=1x -benchmem -timeout 0
+  txt:
+    desc: Durable + Enqueue + Latency into bench/redis.txt (needs up, hours)
+    cmds:
+      - mkdir -p bench
+      - set -o pipefail; go test -run xxx -bench . -benchtime=2x -benchmem -timeout 0 | tee bench/redis.txt

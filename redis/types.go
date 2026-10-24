@@ -8,6 +8,8 @@ import (
 	"runtime"
 	"sync/atomic"
 	"time"
+
+	"github.com/redis/go-redis/v9"
 )
 
 // payload is the job body every subject carries through Redis.
@@ -153,4 +155,17 @@ func withPoolSize(rawURL string, n int) string {
 	u.RawQuery = q.Encode()
 
 	return u.String()
+}
+
+func rawClient(url string, pool int) *redis.Client {
+	opt, err := redis.ParseURL(url)
+	if err != nil {
+		panic(err) // the URL was already used by redisOrSkip
+	}
+
+	if pool > 0 {
+		opt.PoolSize = pool
+	}
+
+	return redis.NewClient(opt)
 }

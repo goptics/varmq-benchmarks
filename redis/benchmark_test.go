@@ -43,30 +43,32 @@ func BenchmarkDurable(b *testing.B) {
 func BenchmarkEnqueue(b *testing.B) {
 	url := redisOrSkip(b)
 
-	for _, w := range workloads {
-		b.Run(w.name, func(b *testing.B) {
-			for _, s := range subjects {
-				b.Run(s.name, func(b *testing.B) {
-					for range b.N {
-						b.StopTimer()
-						flush(b, url)
-						b.StartTimer()
+	b.Run("Enqueue", func(b *testing.B) {
+		for _, w := range workloads {
+			b.Run(w.name, func(b *testing.B) {
+				for _, s := range subjects {
+					b.Run(s.name, func(b *testing.B) {
+						for range b.N {
+							b.StopTimer()
+							flush(b, url)
+							b.StartTimer()
 
-						runEnqueue(b, s, url, w)
-					}
+							runEnqueue(b, s, url, w)
+						}
 
-					reportJobsPerSec(b, w)
-				})
-			}
-		})
-	}
+						reportJobsPerSec(b, w)
+					})
+				}
+			})
+		}
+	})
 }
 
 // BenchmarkLatency reports enqueue-to-handled latency, one job in flight.
 func BenchmarkLatency(b *testing.B) {
 	url := redisOrSkip(b)
 
-	b.Run("Noop"+latencyShape.label(), func(b *testing.B) {
+	b.Run("Latency"+latencyShape.label(), func(b *testing.B) {
 		b.Run(latencyWorkload.name, func(b *testing.B) {
 			for _, s := range subjects {
 				b.Run(s.name, func(b *testing.B) {
