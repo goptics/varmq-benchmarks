@@ -19,3 +19,5 @@ require (
 )
 
 // replace github.com/goptics/varmq => ../varmq
+
+replace github.com/goptics/varmq => ../../varmq

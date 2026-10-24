@@ -1,0 +1,16 @@
+goos: linux
+goarch: amd64
+pkg: github.com/goptics/varmq-benchmarks/sqlite
+cpu: 13th Gen Intel(R) Core(TM) i7-13700
+BenchmarkSQLite/Mixed1Q/SingleFile/ckpt1000-24         	       2	3149068829 ns/op	      6351 jobs/s	         4.153 walMB
+BenchmarkSQLite/Mixed1Q/SingleFile/ckpt10000-24        	       2	1953916054 ns/op	     10236 jobs/s	        41.22 walMB
+BenchmarkSQLite/Drain1Q/SingleFile/ckpt1000-24         	       2	1426568010 ns/op	     14020 jobs/s	         4.145 walMB
+BenchmarkSQLite/Drain1Q/SingleFile/ckpt10000-24        	       2	1043378285 ns/op	     19169 jobs/s	        41.22 walMB
+BenchmarkSQLite/DrainPrio/SingleFile/ckpt1000-24       	       2	 811688704 ns/op	     12320 jobs/s	         4.149 walMB
+BenchmarkSQLite/DrainPrio/SingleFile/ckpt10000-24      	       2	 416049300 ns/op	     24036 jobs/s	        41.22 walMB
+BenchmarkSQLite/Mixed10Q/Folder/ckpt1000-24            	       2	 949778238 ns/op	     21058 jobs/s	         4.132 walMB
+BenchmarkSQLite/Mixed10Q/Folder/ckpt10000-24           	       2	 287843161 ns/op	     69482 jobs/s	        39.75 walMB
+BenchmarkSQLite/Mixed10Q/SingleFile/ckpt1000-24        	       2	3805894852 ns/op	      5255 jobs/s	         4.244 walMB
+BenchmarkSQLite/Mixed10Q/SingleFile/ckpt10000-24       	       2	1727460905 ns/op	     11578 jobs/s	        41.29 walMB
+PASS
+ok  	github.com/goptics/varmq-benchmarks/sqlite	59.913s

@@ -7,3 +7,5 @@ require (
 	github.com/goptics/varmq v1.9.0
 	github.com/mattn/go-sqlite3 v1.14.28
 )
+
+replace github.com/goptics/varmq => ../../varmq

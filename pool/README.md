@@ -30,6 +30,17 @@ One pool size, here 100K workers (also `W50K`, `W300K`):
 go test -run xxx -bench 'Tasks/W100K$' -benchtime=1x
 ```
 
+## Results
+
+`bench/pool-24cpu.txt`, `pool-8cpu.txt` and `pool-4cpu.txt` are one run from
+2026-10-24: varmq 415ad73 (unreleased, through the `replace` directive in
+`go.mod`), `-benchtime=2x`, 495 rows each. Counting the fastest pool per row
+over the 55 rows of each file (11 task and size groups x 5 workloads): VarMQ is
+first in 40 rows at 24 CPUs, 36 at 8 and 20 at 4; BufferedPool takes 13, 13
+and 20; ErrGroup 2, 6 and 11; Ants 4 at 4 CPUs. The one-worker `Loop10W1`
+rows are the consistent loss, where VarMQ runs at about a quarter of
+BufferedPool: with no parallelism the hand-off cost is all there is.
+
 ## Subjects
 
 | Name | What it is |
